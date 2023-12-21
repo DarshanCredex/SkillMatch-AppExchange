@@ -9,7 +9,9 @@
     <div>
         <lightning-input 
           type="file"
-          label="Upload file"
+          label={filename}
+          name="fileUploader" 
+          onchange={handleUpload}
         ></lightning-input>
     </div>
 </template>
