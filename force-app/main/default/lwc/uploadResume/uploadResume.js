@@ -1,13 +1,21 @@
 import { LightningElement } from 'lwc';
+import Base64ToJsonMethod from '@salesforce/apex/Base64ToJson.Base64ToJsonMethod';
 
 export default class UploadResume extends LightningElement {
 
     uploadedFile;
-    filename;
-    handleUpload(event){
+    filename = '';
+    fileUrl;
+    base64Data;
+
+    handleUpload(event) {
         let file = event.target.files[0];
-        this.filename=file.name;
-        console.log('this.filename-------->',this.filename);
-        this.uploadedFile=file;
+        this.filename = file.name;
+
     }
+
+    
+    
+        
+    
 }
