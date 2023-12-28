@@ -1,8 +1,27 @@
-.main{
+.main {
     background: white;
 }
 
-.jobs-discover{
+.text-content {
+    width: 35%;
+    height: 20%;
+    padding-left: 10%;
+}
+
+.university-text-content {
+    width: 35%;
+    height: 20%;
+    padding-right: 10%;
+}
+
+.university-logo,
+.discover-jobs-logo {
+    width: 15%;
+    height: 15%;
+}
+
+.jobs-discover,
+.universities {
     display: flex;
     width: 100%;
     height: 100%;
@@ -10,21 +29,182 @@
     justify-content: center;
     margin-top: 10%;
 }
-.discover-jobs-logo{
-    width: 15%;
-    height: 15%;
-}
-.text-content{
-    width: 35%;
-    height: 20%;
-    padding-left: 10%;
+
+.text-content div h1,
+.university-text-content div h1 {
+    font-weight: 600;
+    font-size: 3vw;
 }
 
-.text-content div h1{
-    font-weight: 600;
-    font-size: 3rem;
-}
-.text-content div p{
+.text-content div p,
+.university-text-content div p {
     font-weight: normal;
-    font-size: 1rem;
+    font-size: 1vw;
+}
+
+.testimonials {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    background: rgb(253, 247, 247);
+}
+
+.test-1,
+.test-2,
+.test-3 {
+    width: 30%;
+    height: 30%;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.test-1 div h1,
+.test-2 div h1,
+.test-3 div h1 {
+    font-weight: 500;
+    padding-top: 7%;
+}
+
+.test-1 div h2,
+.test-2 div h2,
+.test-3 div h2 {
+    font-weight: 700;
+    font-size: 5vw;
+}
+
+
+@media screen and (min-width: 480px) and (max-width: 768px) {
+    .university-logo {
+        width: 25%;
+        height: 25%;
+    }
+
+    .discover-jobs-logo {
+        width: 20%;
+        height: 20%;
+    }
+
+    .text-content div h1,
+    .university-text-content div h1 {
+        font-weight: 600;
+        font-size: 5vw;
+    }
+
+    .text-content div p,
+    .university-text-content div p {
+        font-weight: normal;
+        font-size: 2vw;
+    }
+
+    .text-content {
+        width: 45%;
+        height: 20%;
+        padding-left: 10%;
+    }
+
+    .university-text-content {
+        width: 50%;
+        height: 20%;
+        padding-right: 10%;
+    }
+
+    .test-1 div h2,
+    .test-2 div h2,
+    .test-3 div h2 {
+        font-weight: 700;
+        font-size: 3vw;
+    }
+
+    .test-1,
+    .test-2,
+    .test-3 {
+        width: 25%;
+        height: 25%;
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .jobs-discover,
+    .universities {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .text-content div h1,
+    .university-text-content div h1 {
+        text-align: center;
+    }
+
+    .text-content div p,
+    .university-text-content div p {
+        text-align: left;
+    }
+
+    .text-content,
+    .university-text-content {
+        width: 70%;
+        height: 20%;
+        padding: 0;
+    }
+
+    .discover-jobs-logo,
+    .university-logo {
+        width: 40%;
+        height: 40%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+    }
+
+    .text-content div h1,
+    .university-text-content div h1 {
+        font-weight: 600;
+        font-size: 6vw;
+    }
+
+    .text-content div p,
+    .university-text-content div p {
+        font-weight: normal;
+        font-size: 3vw;
+    }
+
+    .discover-jobs-logo {
+        order: 1;
+    }
+
+    .testimonials {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 5%;
+        padding-top: 5%;
+        padding-bottom: 5%;
+        background: rgb(253, 247, 247);
+    }
+
+    .test-1,
+    .test-2,
+    .test-3 {
+        width: 70%;
+        padding-left: 3%;
+        padding-right: 3%;
+        text-align: center;
+        padding-top: 5%;
+    }
 }
