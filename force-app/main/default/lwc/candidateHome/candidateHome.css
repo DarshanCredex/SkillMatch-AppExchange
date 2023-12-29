@@ -3,21 +3,21 @@
 }
 
 .text-content {
-    width: 35%;
+    width: 50%;
     height: 20%;
     padding-left: 10%;
 }
 
 .university-text-content {
-    width: 35%;
+    width: 50%;
     height: 20%;
     padding-right: 10%;
 }
 
 .university-logo,
 .discover-jobs-logo {
-    width: 15%;
-    height: 15%;
+    width: 25%;
+    height: 25%;
 }
 
 .jobs-discover,
@@ -33,13 +33,13 @@
 .text-content div h1,
 .university-text-content div h1 {
     font-weight: 600;
-    font-size: 3vw;
+    font-size: 3.5vw;
 }
 
 .text-content div p,
 .university-text-content div p {
     font-weight: normal;
-    font-size: 1vw;
+    font-size: 1.5vw;
 }
 
 .testimonials {
