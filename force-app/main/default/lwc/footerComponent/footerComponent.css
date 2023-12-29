@@ -49,6 +49,11 @@
     padding-left: 2%;
 }
 
+.icon {
+    --slds-c-icon-color-foreground-default: #ff6900;
+
+}
+
 /*tablet*/
 @media screen and (min-width: 480px) and (max-width: 768px) {
     .logo {
@@ -113,6 +118,12 @@
     }
 
     .box-2 {
-        order: 1;
+        order: -1;
+    }
+
+    .mail p,
+    .phone p {
+        margin: 0;
+        padding-left: 3%;
     }
 }
