@@ -1,4 +1,38 @@
 public with sharing class JobListController {
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getTypeValues() {
+        Schema.DescribeFieldResult fieldResult = Job__c.Type__c.getDescribe();
+        List<Schema.PicklistEntry> typeValues = fieldResult.getPicklistValues();
+        List<String> values = new List<String>();
+        for (Schema.PicklistEntry entry : typeValues) {
+            values.add(entry.getLabel());
+        }
+        return values;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getIndustryValues() {
+        Schema.DescribeFieldResult fieldResult = Job__c.Industry__c.getDescribe();
+        List<Schema.PicklistEntry> industryValues = fieldResult.getPicklistValues();
+        List<String> values = new List<String>();
+        for (Schema.PicklistEntry entry : industryValues) {
+            values.add(entry.getLabel());
+        }
+        return values;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<String> getExperienceValues() {
+        Schema.DescribeFieldResult fieldResult = Job__c.Experience__c.getDescribe();
+        List<Schema.PicklistEntry> experienceValues = fieldResult.getPicklistValues();
+        List<String> values = new List<String>();
+        for (Schema.PicklistEntry entry : experienceValues) {
+            values.add(entry.getLabel());
+        }
+        return values;
+    }
+    
     @AuraEnabled(cacheable=true)
     public static List<JobWrapper> getJobList() {
         // Replace this query with your actual logic to fetch jobs

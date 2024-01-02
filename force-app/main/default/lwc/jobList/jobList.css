@@ -1,90 +1,150 @@
-.job-list {
+.job-list-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .job-filter-header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     border-radius: 5px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .job-search-box {
+        border-radius: 0.625rem;
+        line-height: 2.4375rem;
+        padding-right: 1rem;
+        width: auto;
+    }
+
+    .job-search-button {
+        line-height: 2.4375rem;
+    }
+
+    .job-sort-text {
+        font-size: 0.875rem;
+        line-height: 1.125rem;
+    }
+
+    .job-sort-bar {
+        display: flex;
+        gap: 0.625rem;
+        align-items: center;
+        color: #737373;
+    }
+
+    .job-sort-by {
+        line-height: 2.4375rem;
+    }
 }
 
-.job-list-container {
+.job-list-content {
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
-.job-list-header {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
+    .job-filter-tab {
+        display: flex;
+        flex-direction: column;
+        width: 25%;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-.job-card {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    height: 7rem;
-    /* Responsive layout using flexbox */
-    /*display: flex;*/
-    flex-direction: column;
-}
-.job-header {
-    display: flex;
-    font-size: 1.1rem;
-    color: #4978d1;
-    gap: 1rem;
-    margin-bottom: 0.5rem; /* Add spacing between header and details */
-}
+        .job-filter-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+        }
 
-.job-company {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #131313;
-}
+        .job-filter-type {
+            padding: 1rem;
+        }
+    }
 
-.job-info {
-    font-size: 0.9rem;
-    color: #777;
-}
+    .job-list {
+        width: 75%;
+        border-radius: 5px;
 
-.job-information {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.9rem;
-    color: #999;
-}
+        .job-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            height: 9rem;
 
-.job-details {
-    margin-top: 1rem; /* Add spacing between header and details */
-}
+            .job-card-top {
+                display: flex;
+                -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
 
-.job-logo {
-    height: 100%;
-    width: 100%;
-}
+                .job-card-top-left {
+                    width: 85%;
 
-.job-summary {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #737373;
-    height: 80%;
+                    .job-header {
+                        display: flex;
+                        font-size: 1.1rem;
+                        color: #4978d1;
+                        gap: 1rem;
+                        margin-bottom: 0.5rem;
+                        /* Add spacing between header and details */
+                    }
+
+                    .job-information {
+                        display: flex;
+                        gap: 1rem;
+                        font-size: 0.9rem;
+                        color: #999;
+
+                        .job-company {
+                            font-size: 1rem;
+                            font-weight: 600;
+                            color: #131313;
+                        }
+                        
+                        .job-info {
+                            font-size: 0.9rem;
+                            color: #777;
+                        }
+                    }
+                }
+
+                .job-logo {
+                    height: 3.5rem;
+                    width: 3.5rem;
+                }
+            }
+
+            .job-details {
+                margin-top: 1rem;
+
+                .job-summary {
+                    font-size: 0.9rem;
+                    line-height: 1.5;
+                    color: #737373;
+                    height: 80%;
+                }
+            }
+        }
+
+    }
 }
 
 /* Media queries for responsiveness */
-@media (max-width: 768px) {
-    /* Adjust styles for smaller screens here */
-    .job-card {
-        flex-direction: row; /* Switch to horizontal layout on smaller screens */
+@media (max-width: 480px) {
+
+    .job-filter-tab {
+        display: none !important;
+    }
+
+    .job-list-content {
+        width: 100%;
+    }
+
+    .job-list {
+        width: 100%;
     }
 }
