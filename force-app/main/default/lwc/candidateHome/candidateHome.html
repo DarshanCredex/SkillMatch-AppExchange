@@ -2,54 +2,90 @@
   @description       : candidate portal home page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-02-2024
+  @last modified on  : 01-03-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <div class="main">
-        <div>
-            <div class="jobs-discover">
-                <div class="discover-jobs-logo">
-                    <img src={discoverjobs} alt="na">
-                </div>
-                <div class="text-content">
-                    <div>
-                        <h1>Discover Jobs</h1>
-                    </div>
-                    <div>
-                        <p>We source millions of jobs from thousands of the world’s top companies. Our jobs come
-                            directly
-                            from employer career sites, so we can ensure reliable and fresh opportunities.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="universities">
-                <div class="university-text-content">
-                    <div>
-                        <h1>Loved by job seekers</h1>
-                    </div>
-                    <div>
-                        <p> SkillMatch has helped over 160k job seekers from all over the world, including students and
-                            graduates from hundreds of educational institutions. </p>
-                    </div>
-                </div>
-                <div class="university-logo">
-                    <img src={universities} alt="na">
-                </div>
-            </div>
+  <div class="main">
+    <div>
+      <div class="jobs-discover">
+        <div class="discover-jobs-logo">
+          <img src={discoverjobs} alt="na" />
         </div>
-        <div class="testimonials">
-            <div class="test-1">
+        <div class="text-content">
+          <div>
+            <h1>Discover Jobs</h1>
+          </div>
+          <div>
+            <p>
+              We source millions of jobs from thousands of the world’s top
+              companies. Our jobs come directly from employer career sites, so
+              we can ensure reliable and fresh opportunities.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="universities">
+        <div class="university-text-content">
+          <div>
+            <h1>Loved by job seekers</h1>
+          </div>
+          <div>
+            <p>
+              SkillMatch has helped over 160k job seekers from all over the
+              world, including students and graduates from hundreds of
+              educational institutions.
+            </p>
+          </div>
+        </div>
+        <div class="university-logo">
+          <img src={universities} alt="na" />
+        </div>
+      </div>
+    </div>
+    <div class="testimonials">
+      <div class="test-1">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_1}</p>
+        </div>
+        <div>
+          <h1>{author1}</h1>
+        </div>
+      </div>
+      <div class="test-2">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_2}</p>
+        </div>
+        <div>
+          <h1>{author2}</h1>
+        </div>
+      </div>
+      <div class="test-3">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_3}</p>
+        </div>
+        <div>
+          <h1>{author3}</h1>
+        </div>
+      </div>
+      <!-- <div class="test-1">
                 <div>
                     <h2>"</h2>
                 </div>
                 <div>
-                    <p>Securing my dream job was a breeze with SkillMatch. The intuitive interface and personalized job
-                        recommendations made my job hunt efficient and effective. I landed my ideal position faster than
-                        I ever imagined. Thank you, SkillMatch, for turning my career aspirations into reality!</p>
+                    <p>{strings.testimonial1}</p>
                 </div>
                 <div>
-                    <h1> Sagar Medatwal/ Salesforce Inc.</h1>
+                    <h1>{strings.testimonial1Author}</h1>
                 </div>
             </div>
             <div class="test-2">
@@ -57,29 +93,23 @@
                     <h2>"</h2>
                 </div>
                 <div>
-                    <p>I was skeptical about online job platforms until I tried SkillMatch. The vast array of job
-                        listings, user-friendly design, and real-time updates made my job search a game-changer. Within
-                        weeks, I had multiple interviews lined up, and I'm now happily employed in a role I love.
-                        SkillMatch is a true job seeker's ally!</p>
+                    <p>{strings.testimonial2}</p>
                 </div>
                 <div>
-                    <h1>Darshan Yadav/ JP Morgan Chase</h1>
+                    <h1>{strings.testimonial2Author}</h1>
                 </div>
             </div>
-            <div class="test-3">
+            <div class="test-2">
                 <div>
                     <h2>"</h2>
                 </div>
                 <div>
-                    <p>Kudos to SkillMatch for revolutionizing my job search journey! The tailored job matches,
-                        insightful resources, and seamless application process made job hunting stress-free. I not only
-                        found a job that aligns with my skills but also discovered new opportunities I hadn't considered
-                        before. Thank you, SkillMatch, for being the catalyst in my career success!</p>
+                    <p>{strings.testimonial2}</p>
                 </div>
                 <div>
-                    <h1> Prateek Tyagi/ Deloitte </h1>
+                    <h1>{strings.testimonial2Author}</h1>
                 </div>
-            </div>
-        </div>
+            </div> -->
     </div>
+  </div>
 </template>

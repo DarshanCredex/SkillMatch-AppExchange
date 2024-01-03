@@ -1,0 +1,14 @@
+<!--
+  @description       : skill  match logo for login page component
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 01-03-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page>
+    <html>
+    <body>
+        <apex:image url="{!$Resource.skillMatch_logo}" alt="Image Alt Text" />
+    </body>
+    </html>
+</apex:page>

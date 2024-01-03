@@ -136,15 +136,42 @@
 /* Media queries for responsiveness */
 @media (max-width: 480px) {
 
-    .job-filter-tab {
-        display: none !important;
-    }
-
-    .job-list-content {
-        width: 100%;
+    /* Adjust styles for smaller screens here */
+    .job-card {
+        flex-direction: row;
+        /* Switch to horizontal layout on smaller screens */
     }
 
     .job-list {
-        width: 100%;
+        width: 100% !important;
+    }
+
+    .job-information {
+        flex-direction: column;
+        gap: 0rem !important;
+    }
+
+    .job-logo {
+        display: none !important;
+    }
+
+    .job-filter-tab {
+        display: none !important;
+    }
+}
+@media screen and (min-width: 480px) and (max-width: 768px) {
+
+    /* Adjust styles for smaller screens here */
+    .job-card {
+        flex-direction: row;
+        /* Switch to horizontal layout on smaller screens */
+    }
+
+    .job-list {
+        width: 100% !important;
+    }
+
+    .job-filter-tab {
+        display: none !important;
     }
 }

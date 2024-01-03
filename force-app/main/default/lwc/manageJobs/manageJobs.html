@@ -1,0 +1,47 @@
+<!--
+  @description       : Manage Jobs Component for Recruitment Portal
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 01-03-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="main">
+        <div class="header-content">
+            <div class="header-content-text">
+                <h1>Manage Jobs and Responses</h1>
+            </div>
+            <div class="post-job-button">
+                <lightning-button 
+                  variant="brand"
+                  label="Post a Job" 
+                  type="button" 
+                  icon-name="utility:down"
+                  icon-position="right"
+                ></lightning-button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="filter">
+                <div class="filter-text">
+                    <lightning-icon icon-name="utility:down" alternative-text="NA" size="small"
+                        variant="brand"></lightning-icon>
+                    <p>Filter</p>
+                </div>
+                <div class="job-filters">
+                    <p>Active Jobs</p>
+                    <p>Closed Jobs</p>
+                    <p>Expired Jobs</p>
+                </div>
+            </div>
+            <div class="all-jobs">
+                <div class="no-jobs">
+                    <h1>No Jobs Posted</h1>
+                    <p>To post click on post jobs in the upper right corner</p>
+                </div>
+                <div class="posted-jobs"></div>
+            </div>
+        </div>
+    </div>
+</template>

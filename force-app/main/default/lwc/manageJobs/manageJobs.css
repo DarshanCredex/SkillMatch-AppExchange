@@ -1,0 +1,25 @@
+.main {
+  width: 100vw;
+  height: 70vh;
+  background-color: white;
+}
+.header-content{
+    display: flex;
+    justify-content: space-between;
+    padding: 5%;
+}
+.header-content-text{
+    font-size: 2vw;
+}
+.post-job-button{
+    font-size: 1vw;
+}
+.filter-text{
+    display: flex;
+    flex-direction: row;
+}
+.filter-text p{
+    font-size: 1.5vw;
+    padding-left: 0.5%;
+}
+

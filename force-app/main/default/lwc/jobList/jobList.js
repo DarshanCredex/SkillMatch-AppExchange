@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { LightningElement, wire } from 'lwc';
 import getJobs from '@salesforce/apex/JobListController.getJobList';
 import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo';
@@ -11,8 +12,11 @@ export default class JobList extends LightningElement {
     typeValues = [];
     experienceValues = [];
     industryValues = [];
+    showJobInfo = true;
+    separateJobList = [];
 
     connectedCallback() {
+        
         getTypePicklistValues()
             .then(result => {
                 this.typeValues = result;
@@ -34,10 +38,14 @@ export default class JobList extends LightningElement {
             .catch(error => {
                 console.error('Error fetching industry picklist values:', error);
             });
+
+           
     }
 
     @wire(getJobs)
-    jobList;
+    jobsList;
+
+    
 
     //console.log('type option ---> ', this.propertyOrFunction);
     get sortOptions() {
@@ -50,14 +58,8 @@ export default class JobList extends LightningElement {
     getDaysAgo() {
         
         const createdDate = new Date(this.record.CreatedDate);
-
-        // Get the current date
         const currentDate = new Date();
-
-        // Calculate the difference in milliseconds
         const timeDifference = currentDate - createdDate;
-
-        // Convert the difference to days
         const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
         return daysAgo;
@@ -65,17 +67,15 @@ export default class JobList extends LightningElement {
 
     handleTypeChange(event) {
         const selectedTypeValues = event.target.checked ? [event.target.value] : [];
-        // Store or process the selected values as needed
     }
 
     handleExperienceChange(event) {
         const selectedExperienceValues = event.target.checked ? [event.target.value] : [];
-        // Store or process the selected values as needed
+        
     }
 
     handleIndustryChange(event) {
         const selectedIndustryValues = event.target.checked ? [event.target.value] : [];
-        // Store or process the selected values as needed
     }
 
     handleChange(event) {
