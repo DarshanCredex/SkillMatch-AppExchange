@@ -6,7 +6,7 @@
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class populateCandidateObject {
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static void populateCandidateObjectMethod(string name, integer experience, string skills, string email) {
     
     system.debug('name--->' + name);
@@ -14,7 +14,7 @@ public with sharing class populateCandidateObject {
     system.debug('email------>' + email);
 
     try {
-      list<Candidate_Details__c> candidateList = [select name, Experience__c, Skills__c, Candidate_Email__c from Candidate_Details__c limit 1];
+      list<Candidate_Details__c> candidateList = new List<Candidate_Details__c>();
 
       Candidate_Details__c newCandidate = new Candidate_Details__c();
 

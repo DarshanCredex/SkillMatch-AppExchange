@@ -2,7 +2,7 @@ import { LightningElement } from "lwc";
 import experienceFieldValues from "@salesforce/apex/JobPicklistController.experienceFieldValues";
 import typePickListValues from "@salesforce/apex/JobPicklistController.typePickListValues";
 import IndustryPickListValues from "@salesforce/apex/JobPicklistController.IndustryPickListValues";
-import jobObjectControllerMehtod from "@salesforce/apex/jobObjectController.jobObjectControllerMehtod";
+import postJob from "@salesforce/apex/jobObjectController.postJob";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
 
@@ -40,7 +40,7 @@ export default class AddJobsPage extends LightningElement {
       console.log("this.industryValues", JSON.stringify(this.industryValues));
     });
   }
-  
+
   handleExperienceChange(event) {
     this.experienceValue = event.target.value;
     console.log(" this.experienceValue----->", this.experienceValue);
@@ -80,7 +80,7 @@ export default class AddJobsPage extends LightningElement {
   }
 
   postJobData() {
-    jobObjectControllerMehtod({
+    postJob({
       jobTitle: this.jobTitle,
       description: this.description,
       salaryRange: this.salaryRange,
@@ -105,7 +105,7 @@ export default class AddJobsPage extends LightningElement {
         );
       });
   }
-  
+
   saveToDraft() {
     saveToDraft({
       jobTitle: this.jobTitle,

@@ -29,10 +29,12 @@ public class CommunitiesSelfRegController {
             ApexPages.addMessage(msg);
             return null;
         }    
-
-        String profileId = null; // To be filled in by customer.
-        String roleEnum = null; // To be filled in by customer.
-        String accountId = ''; // To be filled in by customer.
+        Id candidateProfile = [SELECT Id FROM Profile WHERE Name = 'Candidate' LIMIT 1].Id;
+        String profileId = candidateProfile;
+        
+        //String roleEnum = 'Community User';
+        //Id roleId = [SELECT Id FROM UserRole WHERE Name = :roleEnum LIMIT 1].Id;
+        String accountId = '0015h00001ZN5iuAAD';
         
         String userName = email;
 
@@ -43,7 +45,6 @@ public class CommunitiesSelfRegController {
         u.LastName = lastName;
         u.CommunityNickname = communityNickname;
 		u.ProfileId = profileId;
-		
         String userId;
 
         try {
