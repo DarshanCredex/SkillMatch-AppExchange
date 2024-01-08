@@ -6,65 +6,69 @@
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <div class="main">
-        <div class="Add-jobs-text">
-            <h1>Add Jobs</h1>
-        </div>
-        <hr />
-        <div>
-            <div class="job-content">
-                <div class="about-job">
-                    <h1>About Job</h1>
-                    <lightning-input type="text" label="Job Title"></lightning-input>
-                    <lightning-input type="text" label="Summary"></lightning-input>
-                    <lightning-input type="text" label="Description"></lightning-input>
-                    <lightning-input type="text" label="Salary Range"></lightning-input>
-                    <lightning-input type="text" label="Company Name"></lightning-input>
-                </div>
-                <div class="location">
-                    <h1>Location</h1>
-                    <lightning-input type="text" label="Country"></lightning-input>
-                    <lightning-input type="text" label="City"></lightning-input>
-                </div>
-            </div>
-            <hr />
-            <div class="requirements">
-                <h1>Job Requirements</h1>
-                <div class="picklist">
-                    <label for="experience">Select Experience</label>
-                    <select id="experience" onchange={handleExperienceChange}>
-                        <option value="" disabled selected>Select Experience</option>
-                        <template for:each={experienceValues} for:item="experience">
-                            <option key={experience} value={experience}>{experience}</option>
-                        </template>
-                    </select>
-
-                    <label for="type">Select Type</label>
-                    <select id="type" onchange={handleTypeChange}>
-                        <option value="" disabled selected>Select Type</option>
-                        <template for:each={typeValues} for:item="type">
-                            <option key={type} value={type}>{type}</option>
-                        </template>
-                    </select>
-
-                    <label for="industry">Select Industry</label>
-                    <select id="industry" onchange={handleIndustryChange}>
-                        <option value="" disabled selected>Select Industry</option>
-                        <template for:each={industryValues} for:item="industry">
-                            <option key={industry} value={industry}>{industry}</option>
-                        </template>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="buttons">
-            <div class="draft">
-                <lightning-button variant="neutral" label="Save To Draft" style="text-align: center;"></lightning-button>
-            </div>
-            <div class="post">
-                <lightning-button variant="brand" label="Post Now"></lightning-button>
-            </div>
-        </div>
+  <div class="main">
+    <div class="Add-jobs-text">
+      <h1>Add Jobs</h1>
     </div>
+    <hr />
+    <div>
+      <div class="job-content">
+        <div class="about-job">
+          <h1>About Job</h1>
+          <lightning-input type="text" label="Job Title" value={jobTitle}
+            onchange={handleJobTitleChange}></lightning-input>
+          <lightning-input type="text" label="Summary" value={summary} onchange={handleSummaryChange}></lightning-input>
+          <lightning-input type="text" label="Description" value={description}
+            onchange={handleDescriptionChange}></lightning-input>
+          <lightning-input type="text" label="Salary Range" value={salaryRange}
+            onchange={handleSalaryChange}></lightning-input>
+          <lightning-input type="text" label="Company Name" value={companyName}
+            onchange={handleCompanyName}></lightning-input>
+        </div>
+        <div class="location">
+          <h1>Location</h1>
+          <lightning-input type="text" label="Country" value={country} onchange={handleCountryChange}></lightning-input>
+          <lightning-input type="text" label="City" value={city} onchange={handleCityChange}></lightning-input>
+        </div>
+      </div>
+      <hr />
+      <div class="requirements">
+        <h1>Job Requirements</h1>
+        <div class="picklist">
+          <label for="experience">Select Experience</label>
+          <select id="experience" onchange={handleExperienceChange}>
+            <option value="" disabled selected>Select Experience</option>
+            <template for:each={experienceValues} for:item="experience">
+              <option key={experience} value={experience}>{experience}</option>
+            </template>
+          </select>
+
+          <label for="type">Select Type</label>
+          <select id="type" onchange={handleTypeChange}>
+            <option value="" disabled selected>Select Type</option>
+            <template for:each={typeValues} for:item="type">
+              <option key={type} value={type}>{type}</option>
+            </template>
+          </select>
+
+          <label for="industry">Select Industry</label>
+          <select id="industry" onchange={handleIndustryChange}>
+            <option value="" disabled selected>Select Industry</option>
+            <template for:each={industryValues} for:item="industry">
+              <option key={industry} value={industry}>{industry}</option>
+            </template>
+          </select>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="buttons">
+      <div class="draft">
+        <lightning-button variant="neutral" label="Save To Draft" style="text-align: center" onclick={saveToDraft}></lightning-button>
+      </div>
+      <div class="post">
+        <lightning-button variant="brand" label="Post Now" onclick={postJobData}></lightning-button>
+      </div>
+    </div>
+  </div>
 </template>
