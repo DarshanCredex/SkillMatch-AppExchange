@@ -12,33 +12,72 @@
         <h1>Manage Jobs and Responses</h1>
       </div>
       <div class="post-job-button">
-        <lightning-button variant="brand" label="Post a Job" type="button" onclick={handlePageReference} icon-name="utility:down"
-          icon-position="right"></lightning-button>
+        <lightning-button
+          variant="brand"
+          label="Post a Job"
+          type="button"
+          onclick={handlePageReference}
+          icon-name="utility:down"
+          icon-position="right"
+        ></lightning-button>
       </div>
     </div>
 
     <div class="main-content">
       <div class="filter">
         <div class="filter-text">
-          <lightning-icon icon-name="utility:down" alternative-text="NA" size="small" variant="brand"></lightning-icon>
+          <lightning-icon
+            icon-name="utility:down"
+            alternative-text="NA"
+            size="small"
+            variant="brand"
+          ></lightning-icon>
           <p>Filter Jobs</p>
         </div>
         <hr class="hr-1" />
         <div class="job-filters">
           <h1>Job Status</h1>
-          <p>Active Jobs</p>
-          <p>Closed Jobs</p>
+          <p>Posted Jobs</p>
+          <p>Drafts</p>
           <p>Expired Jobs</p>
         </div>
       </div>
-      <div class="all-jobs">
-        <div class="no-jobs">
+      <div class="IsEmptyJobList ? posted-all-jobs : all-jobs">
+        <div class="posted-jobs">
+          <h1>Jobs Posted by you-</h1>
+          <table>
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Salary</td>
+                <td>Experience</td>
+                <td>Organisation</td>
+                <td>City</td>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={postedJobList} for:item="job">
+                <tr key={job.id}>
+                  <td>{job.Title_of_position__c}</td>
+                  <td>{job.Salary__c}</td>
+                  <td>{job.Experience__c}</td>
+                  <td>{job.Company_Name__c}</td>
+                  <td>{job.City__c}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-jobs" if:false={IsEmptyJobList}>
           <img src={noJobs} alt="NA" />
           <h1>No Jobs Posted</h1>
           <p>Once you post jobs you can the list here</p>
-          <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
+          <lightning-button
+            variant="brand"
+            label="Post a job"
+            onclick={handlePageReference}
+          ></lightning-button>
         </div>
-        <div class="posted-jobs"></div>
       </div>
     </div>
   </div>

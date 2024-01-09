@@ -53,6 +53,7 @@
   color: rgb(107, 107, 107);
   width: 25%;
 }
+
 .main-content {
   display: flex;
   flex-wrap: nowrap;
@@ -60,8 +61,10 @@
   width: 100%;
   height: auto;
 }
+
 .all-jobs {
   width: 75%;
+  height: auto;
   display: flex;
   background: white;
   border-radius: 15px;
@@ -70,21 +73,25 @@
   margin-right: 10%;
 }
 
+.posted-all-jobs {
+  display: contents;
+}
+
 .no-jobs {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 2%; 
+  margin: 2%;
 }
-.no-jobs img{
-    width: 30%;
-    height: 30%;
+.no-jobs img {
+  width: 30%;
+  height: 30%;
 }
 
 .no-jobs h1,
 .no-jobs p {
-  padding-bottom: 5%; 
+  padding-bottom: 5%;
   text-wrap: nowrap;
   font-size: 1.2vw;
 }
@@ -92,4 +99,46 @@
 .hr-1 {
   width: 60%;
   text-align: left;
+}
+
+.posted-jobs {
+  width: 100%;
+  margin: 2% 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.posted-jobs h1 {
+  font-weight: 500;
+  font-size: 20px;
+  padding-bottom: 2%;
+}
+table {
+  width: 90%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: scroll;
+}
+
+thead {
+  background-color: #acd8ff;
+}
+
+thead tr {
+  border-bottom: 2px solid #dddddd;
+}
+
+td,
+th {
+  padding: 12px;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr td {
+  border-bottom: 1px solid #dddddd;
 }
