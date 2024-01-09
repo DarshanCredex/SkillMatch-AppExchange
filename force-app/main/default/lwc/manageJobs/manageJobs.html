@@ -2,7 +2,7 @@
   @description       : Manage Jobs Component for Recruitment Portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-05-2024
+  @last modified on  : 01-09-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -12,7 +12,7 @@
         <h1>Manage Jobs and Responses</h1>
       </div>
       <div class="post-job-button">
-        <lightning-button variant="brand" label="Post a Job" type="button" icon-name="utility:down"
+        <lightning-button variant="brand" label="Post a Job" type="button" onclick={handlePageReference} icon-name="utility:down"
           icon-position="right"></lightning-button>
       </div>
     </div>
@@ -36,7 +36,7 @@
           <img src={noJobs} alt="NA" />
           <h1>No Jobs Posted</h1>
           <p>Once you post jobs you can the list here</p>
-          <lightning-button variant="brand" label="Post a job"></lightning-button>
+          <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
         </div>
         <div class="posted-jobs"></div>
       </div>
