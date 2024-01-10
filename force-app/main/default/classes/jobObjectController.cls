@@ -2,12 +2,12 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-08-2024
+ * @last modified on  : 01-10-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
   @AuraEnabled
-  public static void jobObjectControllerMehtod(
+  public static void postJob(
     string jobTitle,
     string description,
     Decimal salaryRange,
@@ -36,7 +36,7 @@ public with sharing class jobObjectController {
       newJob.Company_Name__c = companyName;
       newJob.Type__c = typeValue;
       newJob.City__c = city;
-      newJob.Status__c = 'Post';
+      newJob.Status__c = 'Completed';
 
       jobRecordsList.add(newJob);
 

@@ -140,5 +140,12 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr td {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #f9f9f9;
+}
+.job-filters p{
+  width: fit-content;
+  height: fit-content;
+  padding: 2%;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }

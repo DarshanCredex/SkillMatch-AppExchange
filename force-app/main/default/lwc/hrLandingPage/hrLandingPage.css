@@ -1,0 +1,110 @@
+.main {
+    background-color: white;
+    width: 100%;
+    height: 130vh;
+}
+
+.tasks {
+    width: 100%;
+    height: 60%;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.draft-jobs {
+    width: 100%;
+    background-color: #f0f0f0;
+    margin-top: 3%;
+    height: auto;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 80%;
+}
+
+.left-box {
+    display: block;
+    width: 75%;
+}
+
+.right-box {
+    width: 20%;
+    height: auto;
+    background-color: #f0f0f0;
+    text-align: justify;
+    border-radius: 15px;
+}
+
+.current-user-name {
+    font-size: 2vw;
+    font-weight: 500;
+    margin-bottom: 2%;
+}
+
+.tasks img {
+    width: 27%;
+    height: auto;
+}
+
+.tasks h1 {
+    font-size: 1.2vw;
+    font-weight: 500;
+}
+
+.tasks lightning-button {
+    margin-top: 1%;
+}
+
+.text-content {
+    display: inline-block;
+    text-align: wrap;
+    padding: 2%;
+}
+.text-content p{
+    padding: 5%;
+    font-size: 15px;
+}
+.right-box h1{
+    font-weight: 600;
+    font-size: large;
+    text-align: center;
+    padding: 1%;
+}
+.right-box img{
+    width: 100%;
+    height: auto;
+    padding: 5%;
+}
+.draft-image{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    align-items: center;
+}
+.draft-image img{
+    width: 20%;
+    height: auto;
+}
+.draft-jobs h1,
+.draft-jobs p{
+    font-size: 1.5vw;
+    padding: 1%;
+}
+.draft-image h1{
+    font-size: 15px;
+    padding: 1%;
+}

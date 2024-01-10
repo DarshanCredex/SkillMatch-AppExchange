@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-08-2024
+  @last modified on  : 01-10-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -35,7 +35,7 @@
       <div class="requirements">
         <h1>Job Requirements</h1>
         <div class="picklist">
-          <label for="experience">Select Experience</label>
+          <label for="experience">Experience</label>
           <select id="experience" onchange={handleExperienceChange}>
             <option value="" disabled selected>Select Experience</option>
             <template for:each={experienceValues} for:item="experience">
@@ -43,7 +43,7 @@
             </template>
           </select>
 
-          <label for="type">Select Type</label>
+          <label for="type">Type</label>
           <select id="type" onchange={handleTypeChange}>
             <option value="" disabled selected>Select Type</option>
             <template for:each={typeValues} for:item="type">
@@ -51,7 +51,7 @@
             </template>
           </select>
 
-          <label for="industry">Select Industry</label>
+          <label for="industry">Industry</label>
           <select id="industry" onchange={handleIndustryChange}>
             <option value="" disabled selected>Select Industry</option>
             <template for:each={industryValues} for:item="industry">

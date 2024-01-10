@@ -1,0 +1,47 @@
+<!--
+  @description       : the main landing page of HR portal
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 01-10-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <div class="main">
+    <div class="current-user-name">
+      <h1>Welcome Back {currentUserName}</h1>
+    </div>
+    <div class="box">
+      <div class="left-box">
+        <div class="tasks">
+          <img src={image} alt="NA" />
+          <h1>You have no pending Tasks</h1>
+          <lightning-button variant="brand" label="Add Task"></lightning-button>
+        </div>
+        <div class="draft-jobs">
+          <h1>Your Drafts</h1>
+          <p>Here is a list of your Drafts</p>
+
+          <div class="draft-image">
+            <img src={no_drafts} alt="NA">
+            <h1>You Have No drafts</h1>
+          </div>
+        </div>
+      </div>
+      <div class="right-box">
+        <h1>Welcome To SkillMatch</h1>
+        <div class="text-content">
+          <p>Our mission is creating great career opportunities!</p>
+          <p>
+            SkillMatch, the ultimate Applicant Tracking System (ATS), redefines
+            hiring efficiency. With its intuitive interface and advanced
+            features, SkillMatch streamlines recruitment processes, helping
+            businesses find the perfect candidates effortlessly. Simplify your
+            hiring journey with SkillMatch for a smarter and more effective
+            approach to talent acquisition
+          </p>
+        </div>
+        <img src={Skillmatch_logo} alt="NA" />
+      </div>
+    </div>
+  </div>
+</template>
