@@ -2,7 +2,7 @@
   @description       : Manage Jobs Component for Recruitment Portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-09-2024
+  @last modified on  : 01-10-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -12,26 +12,15 @@
         <h1>Manage Jobs and Responses</h1>
       </div>
       <div class="post-job-button">
-        <lightning-button
-          variant="brand"
-          label="Post a Job"
-          type="button"
-          onclick={handlePageReference}
-          icon-name="utility:down"
-          icon-position="right"
-        ></lightning-button>
+        <lightning-button variant="brand" label="Post a Job" type="button" onclick={handlePageReference}
+          icon-name="utility:down" icon-position="right"></lightning-button>
       </div>
     </div>
 
     <div class="main-content">
       <div class="filter">
         <div class="filter-text">
-          <lightning-icon
-            icon-name="utility:down"
-            alternative-text="NA"
-            size="small"
-            variant="brand"
-          ></lightning-icon>
+          <lightning-icon icon-name="utility:down" alternative-text="NA" size="small" variant="brand"></lightning-icon>
           <p>Filter Jobs</p>
         </div>
         <hr class="hr-1" />
@@ -53,16 +42,20 @@
                 <td>Experience</td>
                 <td>Organisation</td>
                 <td>City</td>
+                <td>Applicants List</td>
               </tr>
             </thead>
             <tbody>
               <template for:each={postedJobList} for:item="job">
-                <tr key={job.id}>
+                <tr key={job.Id}>
                   <td>{job.Title_of_position__c}</td>
                   <td>{job.Salary__c}</td>
                   <td>{job.Experience__c}</td>
                   <td>{job.Company_Name__c}</td>
                   <td>{job.City__c}</td>
+                  <td>
+                    <lightning-button variant="brand" label="View" value={job.Id} onclick={handleApplicantListView}></lightning-button>
+                  </td>
                 </tr>
               </template>
             </tbody>
@@ -72,11 +65,7 @@
           <img src={noJobs} alt="NA" />
           <h1>No Jobs Posted</h1>
           <p>Once you post jobs you can the list here</p>
-          <lightning-button
-            variant="brand"
-            label="Post a job"
-            onclick={handlePageReference}
-          ></lightning-button>
+          <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
         </div>
       </div>
     </div>

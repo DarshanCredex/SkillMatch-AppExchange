@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningMessageChannel>
+    <masterLabel>MessageChannel</masterLabel>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <fieldName>id</fieldName>
+        <description>job id</description>
+    </lightningMessageFields>
+    
+    
+</LightningMessageChannel>

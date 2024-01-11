@@ -2,11 +2,16 @@ import { LightningElement, wire } from "lwc";
 import no_jobs from "@salesforce/resourceUrl/no_jobs";
 import { NavigationMixin } from "lightning/navigation";
 import getPostedJobList from "@salesforce/apex/GetPostedJobList.getPostedJobList";
-
+import { publish, MessageContext } from "lightning/messageService";
+import MessageChannel from "@salesforce/messageChannel/messageChannels__c";
 export default class ManageJobs extends NavigationMixin(LightningElement) {
   noJobs = no_jobs;
   postedJobList = [];
   IsEmptyJobList = false;
+  jobId;
+
+  @wire(MessageContext)
+  messageContext;
 
   handlePageReference() {
     const pageReference = {
@@ -29,5 +34,21 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     } else if (error) {
       console.log("error---->", error);
     }
+  }
+  handleApplicantListView(event) {
+    this.jobId = event.target.value;
+    console.log("this.jobId publish----------->", this.jobId);
+    const payload = {
+      id: this.jobId
+    };
+    publish(this.messageContext, MessageChannel, payload);
+
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/applicant-list-page"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }
