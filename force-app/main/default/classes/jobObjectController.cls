@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-10-2024
+ * @last modified on  : 01-11-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -93,5 +93,33 @@ public with sharing class jobObjectController {
         'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
       );
     }
+  }
+  @AuraEnabled(cacheable=true)
+  public static list<job__c> getDraftJobList() {
+    System.debug('start');
+
+    list<job__c> draftJobList = new List<job__c>();
+
+    for (job__c job : [
+      SELECT
+        Title_of_position__c,
+        Description__c,
+        Summary__c,
+        Salary__c,
+        Industry__c,
+        Experience__c,
+        Country__c,
+        Company_Name__c,
+        Type__c,
+        City__c,
+        Status__c,
+        Id
+      FROM Job__c
+      WHERE Status__c = 'Draft'
+    ]) {
+      draftJobList.add(job);
+    }
+    System.debug('draftJobList-------->' + draftJobList);
+    return draftJobList;
   }
 }

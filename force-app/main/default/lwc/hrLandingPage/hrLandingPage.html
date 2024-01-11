@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-10-2024
+  @last modified on  : 01-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -13,17 +13,80 @@
     <div class="box">
       <div class="left-box">
         <div class="tasks">
-          <img src={image} alt="NA" />
-          <h1>You have no pending Tasks</h1>
-          <lightning-button variant="brand" label="Add Task"></lightning-button>
+          <template lwc:if={showPendingTasks}>
+            <div class="pending-tasks">
+              <h1>Your Pending Tasks</h1>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Subject</td>
+                    <td>Sub Task</td>
+                    <td>Type</td>
+                    <td>Priority</td>
+                    <td>Due Date</td>
+                    <td>Status</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template for:each={taskList} for:item="task">
+                    <tr key={task.Id}>
+                      <td>{task.Subject}</td>
+                      <td>{task.TaskSubtype}</td>
+                      <td>{task.Type}</td>
+                      <td>{task.Priority}</td>
+                      <td>{task.ActivityDate}</td>
+                      <td>{task.Status}</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </template>
+
+          <template lwc:elseif={showPendingTasks}>
+            <img src={image} alt="NA" />
+            <h1>You have no pending Tasks</h1>
+            <lightning-button
+              variant="brand"
+              label="Add Task"
+            ></lightning-button>
+          </template>
         </div>
         <div class="draft-jobs">
           <h1>Your Drafts</h1>
           <p>Here is a list of your Drafts</p>
 
           <div class="draft-image">
-            <img src={no_drafts} alt="NA">
-            <h1>You Have No drafts</h1>
+            <template lwc:if={showDrafts}>
+              <div class="drafts">
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Title</td>
+                      <td>Experience</td>
+                      <td>Industry</td>
+                      <td>Type</td>
+                      <td>Company</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template for:each={draftJobList} for:item="job">
+                      <tr key={job.Id}>
+                        <td>{job.Title_of_position__c}</td>
+                        <td>{job.Experience__c}</td>
+                        <td>{job.Industry__c}</td>
+                        <td>{job.Type__c}</td>
+                        <td>{job.Company_Name__c}</td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </template>
+            <template lwc:elseif={showDrafts}>
+              <img src={no_drafts} alt="NA" />
+              <h1>You Have No drafts</h1>
+            </template>
           </div>
         </div>
       </div>

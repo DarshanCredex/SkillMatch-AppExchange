@@ -111,3 +111,52 @@
 .right-box h1{
     text-align: center;
 }
+
+
+.drafts,
+.pending-tasks {
+  width: 100%;
+  overflow: auto;
+  padding-top: 2%;
+  margin: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+table {
+  width: 90%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: scroll;
+}
+
+thead {
+  background-color: #acd8ff;
+}
+
+thead tr {
+  border-bottom: 2px solid #dddddd;
+}
+
+td,
+th {
+  padding: 2%;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #c9c9c9;
+}
+
+tbody tr td {
+  border-bottom: 1px solid #c9c9c9;
+}
+.pending-tasks h1{
+    font-size: 20px;
+    font-weight: 500;
+    padding: 2%;
+}
+
