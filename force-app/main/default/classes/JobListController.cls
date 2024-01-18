@@ -39,7 +39,8 @@ public with sharing class JobListController {
         String query = 'SELECT Id, Experience__c, Industry__c, CreatedDate, City__c, Country__c, Location__c, Salary__c, Title_of_position__c, Type__c, Company_Name__c, Summary__c FROM Job__c';
 
         List<String> dynamicConditions = new List<String>();
-
+        searchTitle = '%' +searchTitle+ '%';
+        searchLocation = '%' +searchLocation+ '%';
         if (!selectedTypeValues.isEmpty()) {
             dynamicConditions.add('Type__c IN :selectedTypeValues');
         }
@@ -53,11 +54,11 @@ public with sharing class JobListController {
         }
 
         if (String.isNotBlank(searchTitle)) {
-            dynamicConditions.add('Title_of_position__c LIKE :'+'%searchTitle%');
+            dynamicConditions.add('Title_of_position__c LIKE :searchTitle');
         }
 
         if (String.isNotBlank(searchLocation)) {
-            dynamicConditions.add('City__c LIKE :'+'%searchLocation%');
+            dynamicConditions.add('City__c LIKE :searchLocation');
         }
 
         if (!dynamicConditions.isEmpty()) {

@@ -17,9 +17,9 @@
         width: auto;
     }
 
-    .job-search-button {
+    /* .job-search-button {
         line-height: 2.4375rem;
-    }
+    } */
 
     .job-sort-text {
         font-size: 0.875rem;
@@ -104,7 +104,7 @@
                             font-weight: 600;
                             color: #131313;
                         }
-                        
+
                         .job-info {
                             font-size: 0.9rem;
                             color: #777;
@@ -118,14 +118,29 @@
                 }
             }
 
-            .job-details {
+            .job-card-bottom {
+                display: flex;
+                justify-content: space-between;
+                min-height: 1rem;
                 margin-top: 1rem;
+                color: #737373;
 
-                .job-summary {
-                    font-size: 0.9rem;
-                    line-height: 1.5;
-                    color: #737373;
-                    height: 80%;
+                .job-details {
+                    .job-summary {
+                        font-size: 0.9rem;
+                        line-height: 1.5;
+                        height: 80%;
+                        max-width: 40.625rem;
+                    }
+                }
+
+                .job-posted-date {
+                    text-align: right;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 0.75rem;
+                    line-height: 0.9375rem;
+                    height: fit-content;
                 }
             }
         }
@@ -159,6 +174,7 @@
         display: none !important;
     }
 }
+
 @media screen and (min-width: 480px) and (max-width: 768px) {
 
     /* Adjust styles for smaller screens here */

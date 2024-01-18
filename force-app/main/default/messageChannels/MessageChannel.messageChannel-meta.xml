@@ -3,9 +3,7 @@
     <masterLabel>MessageChannel</masterLabel>
     <isExposed>true</isExposed>
     <lightningMessageFields>
-        <fieldName>id</fieldName>
+        <fieldName>jobId</fieldName>
         <description>job id</description>
     </lightningMessageFields>
-    
-    
 </LightningMessageChannel>

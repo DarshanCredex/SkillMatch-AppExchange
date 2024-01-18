@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import getJobs from '@salesforce/apex/JobListController.getJobList';
 import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo';
 import getTypePicklistValues from '@salesforce/apex/JobListController.getTypeValues';
@@ -8,15 +7,18 @@ import getIndustryPicklistValues from '@salesforce/apex/JobListController.getInd
 
 export default class JobList extends LightningElement {
     companyLogo = alternateCompanyLogo;
-    sortValue = 'date';
+    @track sortValue = 'date';
     typeValues = [];
     experienceValues = [];
     industryValues = [];
-    showJobInfo = true;
-    separateJobList = [];
+    @track selectedTypeValues = [];
+    @track selectedExperienceValues = [];
+    @track selectedIndustryValues = [];
+    @track searchLocation = '';
+    @track searchTitle = '';
+    @track isLoading = false;
 
     connectedCallback() {
-        
         getTypePicklistValues()
             .then(result => {
                 this.typeValues = result;
@@ -38,16 +40,11 @@ export default class JobList extends LightningElement {
             .catch(error => {
                 console.error('Error fetching industry picklist values:', error);
             });
-
-           
     }
 
-    @wire(getJobs)
-    jobsList;
-
+    @wire(getJobs, { searchTitle: '$searchTitle', searchLocation: '$searchLocation', selectedTypeValues: '$selectedTypeValues', selectedExperienceValues: '$selectedExperienceValues', selectedIndustryValues: '$selectedIndustryValues' })
+    jobList;
     
-
-    //console.log('type option ---> ', this.propertyOrFunction);
     get sortOptions() {
         return [
             { label: 'Date', value: 'date' },
@@ -55,30 +52,74 @@ export default class JobList extends LightningElement {
         ];
     }
 
-    getDaysAgo() {
-        
-        const createdDate = new Date(this.record.CreatedDate);
-        const currentDate = new Date();
-        const timeDifference = currentDate - createdDate;
-        const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-        return daysAgo;
-    }
-
     handleTypeChange(event) {
-        const selectedTypeValues = event.target.checked ? [event.target.value] : [];
+        const selectedType = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
+        } else {
+            this.selectedTypeValues = this.selectedTypeValues.filter((item) => item !== selectedType);
+        }
     }
 
     handleExperienceChange(event) {
-        const selectedExperienceValues = event.target.checked ? [event.target.value] : [];
-        
+        const selectedExperience = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            this.selectedExperienceValues = [...this.selectedExperienceValues, selectedExperience];
+        } else {
+            this.selectedExperienceValues = this.selectedExperienceValues.filter((item) => item !== selectedExperience);
+        }
     }
 
     handleIndustryChange(event) {
-        const selectedIndustryValues = event.target.checked ? [event.target.value] : [];
+        const selectedIndustry = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            this.selectedIndustryValues = [...this.selectedIndustryValues, selectedIndustry];
+        } else {
+            this.selectedIndustryValues = this.selectedIndustryValues.filter((item) => item !== selectedIndustry);
+        }
     }
 
     handleChange(event) {
         this.sortValue = event.detail.value;
     }
+
+    handleSearchTitleChange(event) {
+        this.searchTitle = event.target.value;
+    }
+
+    handleSearchLocationChange(event) {
+        this.searchLocation = event.target.value;
+    }
+
+    handleClearFilters() {
+        this.selectedTypeValues = [];
+        this.selectedExperienceValues = [];
+        this.selectedIndustryValues = [];
+
+        const checkboxList = this.template.querySelectorAll('[data-id="checkbox"]');
+        for (const checkboxElement of checkboxList) {
+            checkboxElement.checked = false;
+        }
+    }
+    // handleSearch() {
+    //     // Check if searchTerm is not null before making the search
+    //     if (this.searchTerm) {
+    //         this.isLoading = true;
+    //         getJobs({ searchTerm: this.searchTerm })
+    //             .then(result => {
+    //                 this.jobList = result;
+    //                 this.isLoading = false;
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching job list:', error);
+    //                 this.isLoading = false;
+    //             });
+    //     }
+    // }
 }

@@ -1,0 +1,228 @@
+<apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
+    
+    <!--apex:form id="loginForm" forceSSL="true">
+<apex:outputPanel layout="block">
+<apex:pageMessages id="error"/>
+
+<apex:outputLabel value="{!$Label.site.username}" for="username"/>
+<apex:inputText id="username" value="{!username}"/>
+<apex:outputLabel value="{!$Label.site.password}" for="password"/>
+<apex:inputSecret id="password" value="{!password}"/>
+<apex:outputText value=""/>
+<apex:commandButton action="{!login}" value="{!$Label.site.login_button}" id="loginButton"/>
+
+
+</apex:outputPanel>
+</apex:form>
+
+If you're an employee, you can go here:
+<a href="https://login.salesforce.com//servlet/networks/session/create?portal=060D00000000XYT&amp;site=0DMD0000000054I&amp;inst=D">Log in here</a-->
+    
+    <html>
+        <head>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+            <style>
+                body {
+                background: radial-gradient(circle at center, #17eedf , #325757) no-repeat center center fixed;
+                background-size: cover;
+                height: 100vh;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                }
+                
+                .login-container {
+                width: 30vw;
+                height: 100%;
+                text-align: center;
+                padding: 20px;
+                }
+                
+                .logo-container {
+                height: 20%;
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                }
+                
+                .logo {
+                max-width: 180px;
+                max-height: 113px;
+                }
+                
+                .detail-container {
+                height: 70%;
+                width:100%
+                }
+                
+                .detail-container-sub {
+                width:100%
+                }
+                
+                .separator {
+                width: 100%;
+                border-top: 1px groove rgba(255, 255, 255, 0.2);
+                margin: 20px 0;
+                }
+                
+                .input-group {
+                margin-bottom: 15px;
+                width: 100%;
+                display: flex;
+                background: #2171733b;
+                }
+                
+                .input-group input {
+                width: 100%;
+                padding: 10px;
+                height: 50px;
+                box-sizing: border-box;
+                border: none;
+                border-bottom: 2px solid transparent;
+                background-color: #2171733b;
+                color: white;
+                transition: border-bottom 0.3s, box-shadow 0.3s;
+                }
+                
+                ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                ::-moz-placeholder { /* Mozilla Firefox 19+ */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                :-ms-input-placeholder { /* Internet Explorer 10-11 */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                ::-ms-input-placeholder { /* Microsoft Edge */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                
+                ::placeholder { /* Most modern browsers support this now. */
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                .input-group input:focus {
+                /*border-bottom: 2px solid white;*/
+                box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.8);
+                }
+                
+                .input-group input:focus-visible {
+                outline: thick;
+                }
+                
+                .forgot-password {
+                text-align: left;
+                padding-bottom: 30px;
+                padding-top: 15px;
+                }
+                
+                .forgot-password a {
+                color: white;
+                text-decoration: none;
+                }
+                
+                .forgot-password-link:hover {
+                color: grey;
+                }
+                
+                .buttons-container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+                
+                .btn-login,
+                .btn-signup {
+                width: 38%;
+                box-shadow: 2px 3px 15px 1px cadetblue;
+                
+                border: 2px solid white;
+                color: black;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                border: aliceblue;
+                
+                background-color: white;
+                
+                }
+                
+                .btn-login:hover,
+                .btn-signup:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                }
+                
+                .hr-portal-link {
+                color: white;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                }
+                
+                .hr-portal-link:hover {
+                color: grey;
+                }
+                
+                .copyright {
+                text-align:center;
+                height: 10%;
+                opacity: 0.8;
+                }
+            </style>
+        </head>
+        <body>
+            <apex:form id="loginForm" forceSSL="true">
+            <div class="login-container">
+                <div class="logo-container">
+                    <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
+                </div>
+                <div class="detail-container">
+                    <div class="detail-container-sub">
+                        <div class="separator"></div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
+                            <apex:inputText html-placeholder="Username" id="username" value="{!username}"/>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                            <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
+                        </div>
+                        
+                        <div class="forgot-password">
+                            <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                        </div>
+                        
+                        <div class="buttons-container">
+                            <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
+                            <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <div class="hr-portal">
+                            <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/s/Login">Login/Register as Recruiter</a>
+                        </div>
+                        
+                        <div class="separator"></div>
+                    </div>
+                </div>
+                <div class="copyright">
+                    &copy; Copyright 2024, Credex Technology, All rights reserved
+                </div>
+            </div>
+            </apex:form>
+        </body>
+    </html>
+</apex:page>
