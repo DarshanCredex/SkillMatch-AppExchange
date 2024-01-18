@@ -1,0 +1,197 @@
+    <!--
+    @description       : hr community login page
+    @author            : Rudransh SHukla
+    @group             : 
+    @last modified on  : 01-18-2024
+    @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+    -->
+    <apex:page  id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
+        <html>
+            <head>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+                <style>
+        body {
+            background: radial-gradient(circle at center, #001F3F, #0D4D6B) no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .login-container {
+            width: 30vw;
+            height: 100%;
+            text-align: center;
+        }
+
+        .login-inner-container {
+            padding: 3% 5% 3% 5%;
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px #002633, -20px -20px 60px #0D4D6B;
+            background-color: rgba(0, 92, 123, 0.7);
+        }
+
+        .logo {
+            max-width: 180px;
+            max-height: 113px;
+        }
+
+        .detail-container {
+            height: 70%;
+            width: 100%;
+        }
+
+        .detail-container-sub {
+            width: 100%;
+        }
+
+        .separator {
+            width: 100%;
+            border-top: 1px groove rgba(255, 255, 255, 0.2);
+            margin: 2% 0;
+        }
+
+        .input-group {
+            margin-bottom: 2%;
+            width: 100%;
+            display: flex;
+            background: #002633;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1.5%;
+            height: 4%;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background-color: #ffffff;
+            color: #FFFFFF;
+            transition: border-bottom 0.3s, box-shadow 0.3s;
+        }
+
+        ::placeholder {
+            color: #80A0A7;
+            opacity: 0.8;
+        }
+
+        .input-group input:focus {
+            box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.8);
+        }
+
+        .input-group input:focus-visible {
+            outline: thick;
+        }
+
+        .forgot-password {
+            text-align: left;
+            padding-bottom: 2%;
+        }
+
+        .forgot-password a {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .forgot-password-link:hover {
+            color: #80A0A7;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .btn-login,
+        .btn-signup {
+            width: 30%;
+            box-shadow: 2% 3% 15% 1% #FFD700;
+            border: 2px solid #FFD700;
+            color: #002633;
+            padding: 1.5%;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #FFD700;
+        }
+
+        .btn-login:hover,
+        .btn-signup:hover {
+            background-color: #DAA520;
+        }
+
+        .hr-portal-link {
+            color: #FFFFFF;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .hr-portal-link:hover {
+            color: #80A0A7;
+        }
+
+        .copyright {
+            align-items: end;
+            display: flex;
+            justify-content: center;
+            height: 10%;
+            opacity: 0.8;
+            color: #FFFFFF;
+        }
+    </style>
+
+            </head>
+            <body>
+                <apex:form id="loginForm" forceSSL="true">
+                    <div class="login-container">
+                        <div class="login-inner-container">
+                            <div class="logo-container">
+                                <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
+                            </div>
+                            <div class="detail-container">
+                                <div class="detail-container-sub">
+                                    <div class="separator"></div>
+                                    
+                                    <div class="input-group">
+                                        <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputText html-placeholder="Username"/>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputSecret html-placeholder="Password"/>
+                                    </div>
+                                    
+                                    <div class="forgot-password">
+                                        <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                                    </div>
+                                    
+                                    <div class="buttons-container">
+                                        <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
+                                        <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                                    </div>
+                                    
+                                    <div class="separator"></div>
+                                    
+                                    <div class="hr-portal">
+                                        <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/CandidateLoginSetup">Login/Register as a Candidate</a>
+                                    </div>
+                                    
+                                    <div class="separator"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="copyright">
+                            &copy; Copyright 2024, Credex Technology, All rights reserved
+                        </div>
+                    </div>
+                </apex:form>
+            </body>
+        </html>
+    </apex:page>

@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-18-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
     
     <!--apex:form id="loginForm" forceSSL="true">
@@ -38,14 +45,13 @@ If you're an employee, you can go here:
                 width: 30vw;
                 height: 100%;
                 text-align: center;
-                padding: 20px;
                 }
                 
-                .logo-container {
-                height: 20%;
-                align-items: center;
-                display: flex;
-                justify-content: center;
+                .login-inner-container {
+                padding: 20px 50px 10px 50px;
+                border-radius: 30px;
+                box-shadow:  20px 20px 60px #4dbec0,
+                -20px -20px 60px #68ffff;
                 }
                 
                 .logo {
@@ -78,7 +84,7 @@ If you're an employee, you can go here:
                 .input-group input {
                 width: 100%;
                 padding: 10px;
-                height: 50px;
+                height: 40px;
                 box-sizing: border-box;
                 border: none;
                 border-bottom: 2px solid transparent;
@@ -87,28 +93,28 @@ If you're an employee, you can go here:
                 transition: border-bottom 0.3s, box-shadow 0.3s;
                 }
                 
-                ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+                ::-webkit-input-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+                :-moz-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-moz-placeholder { /* Mozilla Firefox 19+ */
+                ::-moz-placeholder {
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-ms-input-placeholder { /* Internet Explorer 10-11 */
+                :-ms-input-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-ms-input-placeholder { /* Microsoft Edge */
+                ::-ms-input-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
                 
-                ::placeholder { /* Most modern browsers support this now. */
+                ::placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
@@ -123,8 +129,7 @@ If you're an employee, you can go here:
                 
                 .forgot-password {
                 text-align: left;
-                padding-bottom: 30px;
-                padding-top: 15px;
+                padding-bottom: 20px;
                 }
                 
                 .forgot-password a {
@@ -144,12 +149,12 @@ If you're an employee, you can go here:
                 
                 .btn-login,
                 .btn-signup {
-                width: 38%;
+                width: 30%;
                 box-shadow: 2px 3px 15px 1px cadetblue;
                 
                 border: 2px solid white;
                 color: black;
-                padding: 10px;
+                padding: 7px;
                 border-radius: 5px;
                 cursor: pointer;
                 border: aliceblue;
@@ -174,7 +179,9 @@ If you're an employee, you can go here:
                 }
                 
                 .copyright {
-                text-align:center;
+                align-items: end;
+                display: flex;
+                justify-content: center;
                 height: 10%;
                 opacity: 0.8;
                 }
@@ -182,46 +189,48 @@ If you're an employee, you can go here:
         </head>
         <body>
             <apex:form id="loginForm" forceSSL="true">
-            <div class="login-container">
-                <div class="logo-container">
-                    <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
-                </div>
-                <div class="detail-container">
-                    <div class="detail-container-sub">
-                        <div class="separator"></div>
-                        
-                        <div class="input-group">
-                            <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputText html-placeholder="Username" id="username" value="{!username}"/>
+                <div class="login-container">
+                    <div class="login-inner-container">
+                        <div class="logo-container">
+                            <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
                         </div>
-                        
-                        <div class="input-group">
-                            <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
+                        <div class="detail-container">
+                            <div class="detail-container-sub">
+                                <div class="separator"></div>
+                                
+                                <div class="input-group">
+                                    <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
+                                    <apex:inputText html-placeholder="Username" id="username" value="{!username}"/>
+                                </div>
+                                
+                                <div class="input-group">
+                                    <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                                    <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
+                                </div>
+                                
+                                <div class="forgot-password">
+                                    <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                                </div>
+                                
+                                <div class="buttons-container">
+                                    <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
+                                    <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                                </div>
+                                
+                                <div class="separator"></div>
+                                
+                                <div class="hr-portal">
+                                    <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage">Login/Register as Recruiter</a>
+                                </div>
+                                
+                                <div class="separator"></div>
+                            </div>
                         </div>
-                        
-                        <div class="forgot-password">
-                            <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
-                        </div>
-                        
-                        <div class="buttons-container">
-                            <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
-                            <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
-                        </div>
-                        
-                        <div class="separator"></div>
-                        
-                        <div class="hr-portal">
-                            <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/s/Login">Login/Register as Recruiter</a>
-                        </div>
-                        
-                        <div class="separator"></div>
+                    </div>
+                    <div class="copyright">
+                        &copy; Copyright 2024, Credex Technology, All rights reserved
                     </div>
                 </div>
-                <div class="copyright">
-                    &copy; Copyright 2024, Credex Technology, All rights reserved
-                </div>
-            </div>
             </apex:form>
         </body>
     </html>
