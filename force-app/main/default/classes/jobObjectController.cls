@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-11-2024
+ * @last modified on  : 01-22-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -115,7 +115,7 @@ public with sharing class jobObjectController {
         Status__c,
         Id
       FROM Job__c
-      WHERE Status__c = 'Draft'
+      WHERE Status__c = 'Draft' limit 3
     ]) {
       draftJobList.add(job);
     }
