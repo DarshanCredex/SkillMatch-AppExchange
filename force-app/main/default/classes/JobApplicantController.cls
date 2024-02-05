@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-30-2024
+ * @last modified on  : 02-05-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -25,21 +25,37 @@ public with sharing class JobApplicantController {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<Candidate_Details__c> candidateRecords = new List<Candidate_Details__c>();
 
-    try {
-      for (Job_Applicants__c applicant : [
-        SELECT CandidateId__c
-        FROM Job_Applicants__c
-        WHERE Job_Id__c = :jobId
-      ]) {
-        candidateIdList.add(applicant);
-      }
-      system.debug('candidateIdList-------->' + candidateIdList);
-      String query = 'select About__c, Candidate_Email__c, City__c, Country__c, CreatedById, Experience__c, LastModifiedById, Name, OwnerId, Phone_Number__c, Skills__c from Candidate_Details__c where id in :candidateIdList';
-      candidateRecords = Database.query(query);
-    } catch (Exception e) {
-      system.debug(
-        'Error: ' + e.getMessage() + ' at line ' + e.getLineNumber()
-      );
+    for (Job_Applicants__c applicant : [
+      SELECT CandidateId__c
+      FROM Job_Applicants__c
+      WHERE Job_Id__c = :jobId
+    ]) {
+      candidateIdList.add(applicant);
+    }
+    system.debug('candidateIdList-------->' + candidateIdList);
+
+    List<Id> candidateIds = new List<Id>();
+    for (Job_Applicants__c applicant : candidateIdList) {
+      candidateIds.add(applicant.CandidateId__c);
+    }
+
+    for (Candidate_Details__c candidate : [
+      SELECT
+        About__c,
+        Candidate_Email__c,
+        City__c,
+        Country__c,
+        CreatedById,
+        Experience__c,
+        LastModifiedById,
+        Name,
+        OwnerId,
+        Phone_Number__c,
+        Skills__c
+      FROM Candidate_Details__c
+      WHERE Id IN :candidateIds
+    ]) {
+      candidateRecords.add(candidate);
     }
     system.debug('candidateRecords--------->' + candidateRecords);
     return candidateRecords;
@@ -129,5 +145,42 @@ public with sharing class JobApplicantController {
   @AuraEnabled(cacheable=true)
   public static integer getNumberOfApplicants() {
     return [SELECT COUNT() FROM Job_Applicants__c];
+  }
+  @AuraEnabled(cacheable=true)
+  public static list<job__c> fetchJobDetails(string jobId) {
+    system.debug('jobId---->' + jobId);
+    list<Job__c> jobList = new List<Job__c>();
+    try {
+      for (Job__c job : [
+        SELECT
+          City__c,
+          Company_Name__c,
+          Country__c,
+          CreatedById,
+          Description__c,
+          Experience__c,
+          External_Application_Link__c,
+          Industry__c,
+          Name,
+          LastModifiedById,
+          Location__c,
+          OwnerId,
+          Publish_end_date__c,
+          Publish_start_date__c,
+          Salary__c,
+          Status__c,
+          Summary__c,
+          Title_of_position__c,
+          Type__c
+        FROM Job__c
+        WHERE id = :jobId
+      ]) {
+        jobList.add(job);
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+    system.debug('jobList------->' + jobList);
+    return jobList;
   }
 }

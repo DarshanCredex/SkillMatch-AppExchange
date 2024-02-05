@@ -43,6 +43,21 @@
   display: flex;
   align-items: center;
   flex-direction: row;
+  position: relative; /* Add this line to make positioning children easier */
+  overflow: hidden; /* Add this line to hide any overflow content */
+}
+
+/* Add the following styles for decoration */
+.white-box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  z-index: -1;
+  border-radius: 8px;
 }
 
 .main-content {
@@ -93,10 +108,11 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   margin-bottom: 2%;
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 2%;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
 }
 

@@ -2,7 +2,7 @@
  * @description       : to retrive the list of all the jobs posted by HR
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-09-2024
+ * @last modified on  : 02-05-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 
@@ -20,6 +20,7 @@ public with sharing class GetPostedJobList {
         Experience__c,
         Company_Name__c,
         City__c,
+        Country__c,
         Publish_end_date__c,
         Publish_start_date__c,
         id

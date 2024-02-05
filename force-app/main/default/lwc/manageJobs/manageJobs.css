@@ -104,10 +104,9 @@
   width: 100%;
   margin: 2% 0;
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  overflow: auto;
-  
+  overflow: auto; 
+  max-height:400px;
 }
 .posted-jobs h1 {
   font-weight: 500;
@@ -115,12 +114,13 @@
   padding-bottom: 2%;
 
 }
-table {
+.posted-jobs table {
   width: 90%;
   border-collapse: collapse;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow: scroll;
+  
 }
 
 thead {

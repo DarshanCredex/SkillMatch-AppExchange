@@ -2,7 +2,7 @@
   @description       : Manage Jobs Component for Recruitment Portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-10-2024
+  @last modified on  : 02-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -41,7 +41,7 @@
                 <td>Salary</td>
                 <td>Experience</td>
                 <td>Organisation</td>
-                <td>City</td>
+                <td>Location</td>
                 <td>Applicants List</td>
               </tr>
             </thead>
@@ -52,7 +52,7 @@
                   <td>{job.Salary__c}</td>
                   <td>{job.Experience__c}</td>
                   <td>{job.Company_Name__c}</td>
-                  <td>{job.City__c}</td>
+                  <td>{job.City__c}, {job.Country__c}</td>
                   <td>
                     <lightning-button variant="brand" label="View" value={job.Id} onclick={handleApplicantListView}></lightning-button>
                   </td>

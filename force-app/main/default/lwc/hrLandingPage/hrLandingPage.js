@@ -2,7 +2,7 @@ import { LightningElement, wire, track } from "lwc";
 import Id from "@salesforce/user/Id";
 import { getRecord } from "lightning/uiRecordApi";
 import getDraftJobList from "@salesforce/apex/jobObjectController.getDraftJobList";
-import chartjs from "@salesforce/resourceUrl/ChartJs";
+import chartjs from "@salesforce/resourceUrl/chartjs";
 import { loadScript } from "lightning/platformResourceLoader";
 import getApplicantDataset from "@salesforce/apex/JobApplicantController.getApplicantDataset";
 import getApplicantsList from "@salesforce/apex/JobApplicantController.getApplicantsList";
@@ -17,8 +17,6 @@ export default class HrLandingPage extends LightningElement {
 
   numberOfApplicants;
   numberOfJobsPosted;
-
-  linechart;
   chart;
   chartjsInitialized = false;
 
@@ -113,7 +111,6 @@ export default class HrLandingPage extends LightningElement {
   wiredGetNumebrOfApplicants({ error, data }) {
     if (data) {
       this.numberOfApplicants = data;
-      this.updateBarChart();
     } else {
       console.log("error--------->", error);
     }

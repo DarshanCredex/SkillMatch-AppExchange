@@ -1,3 +1,66 @@
 .main {
   background-color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.job-description {
+  padding: 2%; 
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  margin: 2%;
+
+}
+
+.job-description h1 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+.applicant-list {
+  margin: 2%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 2%;
+  text-align: left;
+}
+
+th {
+  color: #fff;
+}
+
+tbody tr:hover {
+  background-color: #c6baff;
+}
+
+thead tr {
+  border-bottom: 2px solid #4CAF50;
+}
+
+.no-applicants div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-applicants div h1 {
+  font-size: 30px;
+}
+
+.no-applicants div img {
+  width: 70%;
+  height: auto;
+  border: 0;
 }

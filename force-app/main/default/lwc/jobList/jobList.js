@@ -4,8 +4,10 @@ import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo
 import getTypePicklistValues from '@salesforce/apex/JobListController.getTypeValues';
 import getExperiencePicklistValues from '@salesforce/apex/JobListController.getExperienceValues';
 import getIndustryPicklistValues from '@salesforce/apex/JobListController.getIndustryValues';
+	
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class JobList extends LightningElement {
+export default class JobList extends NavigationMixin(LightningElement) {
     companyLogo = alternateCompanyLogo;
     @track sortValue = 'date';
     typeValues = [];
@@ -107,19 +109,17 @@ export default class JobList extends LightningElement {
             checkboxElement.checked = false;
         }
     }
-    // handleSearch() {
-    //     // Check if searchTerm is not null before making the search
-    //     if (this.searchTerm) {
-    //         this.isLoading = true;
-    //         getJobs({ searchTerm: this.searchTerm })
-    //             .then(result => {
-    //                 this.jobList = result;
-    //                 this.isLoading = false;
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching job list:', error);
-    //                 this.isLoading = false;
-    //             });
-    //     }
-    // }
+
+    handleJobDetail(event) {
+        let jobId = event.currentTarget.id;
+        jobId = jobId.split("-");
+            this[NavigationMixin.GenerateUrl]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: '/s/job-detail?id=' + jobId[0]
+                }
+            }).then(generatedUrl => {
+                window.open(generatedUrl);
+            });
+    }
 }

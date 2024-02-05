@@ -2,13 +2,57 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-17-2024
+  @last modified on  : 02-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
   <div class="main">
-    <div>
-      <h1>jobid-{jobId}</h1>
-    </div>
+    <template if:true={candiateListIsEmpty}>
+
+      <div class="job-description">
+        <template for:each={jobDetails} for:item="job">
+          <div key={job.id}>
+            <h1> 💼 - {job.Title_of_position__c} </h1>
+            <p>{job.Summary__c}</p>
+          </div>
+        </template>
+      </div>
+
+      <div class="applicant-list">
+        <table>
+          <thead>
+            <tr>
+              <td><b>Name</b></td>
+              <td><b>Email</b></td>
+              <td><b>Experience</b></td>
+              <td><b>Match Percentage</b> </td>
+              <td><b>Location</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={candidateDetails} for:item="candidate">
+              <tr key={candidate.id}>
+                <td>{candidate.Name}</td>
+                <td>{candidate.Candidate_Email__c}</td>
+                <td>{candidate.Experience__c} years</td>
+                <td>56%</td>
+                <td>{candidate.City__c}, {candidate.Country__c}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+    <template if:false={candiateListIsEmpty}>
+      <div class="no-applicants">
+        <div>
+          <h1> No applicants so far 😞 !!!! </h1>
+          <div class="emptyBox">
+            <img src={emptyBox} alt="na">
+          </div>
+        </div>
+      </div>
+    </template>
+
   </div>
 </template>

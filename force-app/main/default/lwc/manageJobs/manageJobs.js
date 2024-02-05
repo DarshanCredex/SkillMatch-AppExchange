@@ -37,8 +37,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       attributes: {
         url: "/applicant-list-page"
       }
-    };
-    console.log("page reference------>", JSON.stringify(pageReference));
+    }; 
     this[NavigationMixin.Navigate](pageReference);
     sessionStorage.setItem("id", this.jobId);
   }

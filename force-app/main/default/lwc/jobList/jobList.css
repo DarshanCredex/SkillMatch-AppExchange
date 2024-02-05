@@ -67,6 +67,15 @@
         width: 75%;
         border-radius: 5px;
 
+        .job-card:hover {
+            cursor: pointer;
+            background: aliceblue;
+
+            .job-header {
+                text-decoration-line: underline;
+            }
+        }
+
         .job-card {
             background-color: #fff;
             border-radius: 5px;

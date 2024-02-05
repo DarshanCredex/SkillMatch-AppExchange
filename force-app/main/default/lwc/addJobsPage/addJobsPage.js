@@ -11,16 +11,16 @@ export default class AddJobsPage extends LightningElement {
   industryValues = [];
   typeValues = [];
 
-  jobTitle;
-  summary;
-  description;
-  salaryRange;
-  companyName;
-  country;
-  city;
-  experienceValue;
-  typeValue;
-  industryValue;
+  jobTitle = "";
+  summary = "";
+  description = "";
+  salaryRange = "";
+  companyName = "";
+  country = "";
+  city = "";
+  experienceValue = "";
+  typeValue = "";
+  industryValue = "";
 
   connectedCallback() {
     experienceFieldValues().then((result) => {
@@ -95,6 +95,7 @@ export default class AddJobsPage extends LightningElement {
       .then(() => {
         console.log("true");
         this.showToast("Success", "Job posted successfully", "success");
+        this.clearFields();
       })
       .catch((error) => {
         console.error("Error posting job:", error);
@@ -122,6 +123,8 @@ export default class AddJobsPage extends LightningElement {
       .then(() => {
         console.log("true");
         this.showToast("Success", "Draft saved successfully", "success");
+        this.jobTitle = "";
+        this.clearFields();
       })
       .catch((error) => {
         console.error("Error saving draft:", error);
