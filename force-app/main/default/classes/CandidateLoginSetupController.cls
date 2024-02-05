@@ -1,18 +1,21 @@
 public class CandidateLoginSetupController {
     
-    public String username { get; set; }
+    public String email { get; set; }
     public String password { get; set; }
+    public Boolean hasError { get; set; }
     
     public CandidateLoginSetupController(){
-        username = '';
+        email = '';
         password = '';
     }
     
     public PageReference doLogin() {
         try {
-            return Site.login(username, password, '/Candidate');
+            return Site.login(email, password, '/Candidate');
         } catch (Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Invalid username or password.'));
+            System.debug('hasError--->'+hasError);
+            hasError = true;
+        	ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Invalid email or password.'));
             return null;
         }
     }

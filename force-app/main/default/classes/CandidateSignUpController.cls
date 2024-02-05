@@ -1,8 +1,8 @@
 /**
- * An apex page controller that supports self registration of users in communities that allow self registration
- */
+* An apex page controller that supports self registration of users in communities that allow self registration
+*/
 public class CandidateSignUpController {
-
+    
     public String firstName {get; set;}
     public String lastName {get; set;}
     public String email {get; set;}
@@ -19,9 +19,9 @@ public class CandidateSignUpController {
     private boolean isValidPassword() {
         return password == confirmPassword;
     }
-
+    
     public PageReference registerUser() {
-           // it's okay if password is null - we'll send the user a random password in that case
+        // it's okay if password is null - we'll send the user a random password in that case
         if (!isValidPassword()) {
             ApexPages.Message msg = new ApexPages.Message(ApexPages.Severity.ERROR, Label.site.passwords_dont_match);
             ApexPages.addMessage(msg);
@@ -35,18 +35,19 @@ public class CandidateSignUpController {
         String accountId = '0015h00001ZN5iuAAD';
         
         String userName = email;
-
+        
         User u = new User();
         u.Username = userName;
         u.Email = email;
         u.FirstName = firstName;
         u.LastName = lastName;
         u.CommunityNickname = firstName;
-		u.ProfileId = profileId;
+        u.ProfileId = profileId;
         String userId;
-
+        
         try {
             userId = Site.createExternalUser(u, accountId, password);
+            
         } catch(Site.ExternalUserCreateException ex) {
             List<String> errors = ex.getDisplayMessages();
             for (String error : errors)  {
@@ -60,6 +61,15 @@ public class CandidateSignUpController {
         
         if (userId != null) { 
             if (password != null && password.length() > 1) {
+                Candidate_Details__c newCandidate = new Candidate_Details__c();
+                newCandidate.Name = firstName + ' ' + lastName;
+                newCandidate.Candidate_Email__c = Email;
+                newCandidate.OwnerId = u.Id;
+                try{
+                    insert newCandidate;
+                }catch(Exception ex) {
+                    throw new AuraHandledException(ex.getMessage());
+                }
                 return Site.login(userName, password, ApexPages.currentPage().getParameters().get('startURL'));
             }
             else {

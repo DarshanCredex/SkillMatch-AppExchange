@@ -1,0 +1,24 @@
+<template>
+    <div class="job-detail-container">
+        <div class="job-detail-header">
+                <div class="company-logo">
+                  Test Logo
+                  <!--img src={getJobDetail.Company.LogoUrl} alt={getJobDetail.Company.Name} /-->
+                </div>
+        </div>
+        <div class="experience-detail-section">
+            <p class="slds-text-bold">Minimum Experience: {getJobDetail.MinExperience}</p>
+            <p>Required Skills:</p>
+            <ul>
+              <!--template for:each={getJobDetail.Skills} for:item={skill}>
+                <li>{skill}</li>
+              </template-->
+            </ul>
+          </div>
+      
+          <div class="job-description-section">
+            <p>{getJobDetail.Description}</p>
+          </div>
+        </div>
+    </div>
+</template>

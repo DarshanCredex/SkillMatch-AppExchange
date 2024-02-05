@@ -2,12 +2,12 @@
 * An apex page controller that exposes the site forgot password functionality
 */
 public with sharing class ForgotPasswordController {
-    public String username {get; set;}   
+    public String email {get; set;}   
     
     public ForgotPasswordController() {}
     
     public PageReference forgotPassword() {
-        boolean success = Site.forgotPassword(username);
+        boolean success = Site.forgotPassword(email);
         PageReference pr = Page.ForgotPasswordConfirm;
         pr.setRedirect(true);
         
@@ -16,4 +16,10 @@ public with sharing class ForgotPasswordController {
         }
         return null;
     }
+    
+    /*public PageReference onCancel() {
+        PageReference page = Page.CandidateLoginSetup;
+        page.setRedirect(true);
+        return page;
+    }*/
 }

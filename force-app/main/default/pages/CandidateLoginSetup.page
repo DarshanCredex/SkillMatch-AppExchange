@@ -1,10 +1,3 @@
-<!--
-  @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
-  @group             : 
-  @last modified on  : 01-18-2024
-  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
--->
 <apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
     
     <!--apex:form id="loginForm" forceSSL="true">
@@ -93,28 +86,28 @@ If you're an employee, you can go here:
                 transition: border-bottom 0.3s, box-shadow 0.3s;
                 }
                 
-                ::-webkit-input-placeholder { 
+                ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-moz-placeholder { 
+                :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-moz-placeholder {
+                ::-moz-placeholder { /* Mozilla Firefox 19+ */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-ms-input-placeholder { 
+                :-ms-input-placeholder { /* Internet Explorer 10-11 */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-ms-input-placeholder { 
+                ::-ms-input-placeholder { /* Microsoft Edge */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
                 
-                ::placeholder { 
+                ::placeholder { /* Most modern browsers support this now. */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
@@ -179,6 +172,7 @@ If you're an employee, you can go here:
                 }
                 
                 .copyright {
+                padding-top: 50px;
                 align-items: end;
                 display: flex;
                 justify-content: center;
@@ -189,6 +183,7 @@ If you're an employee, you can go here:
         </head>
         <body>
             <apex:form id="loginForm" forceSSL="true">
+                <apex:pageblock >
                 <div class="login-container">
                     <div class="login-inner-container">
                         <div class="logo-container">
@@ -197,10 +192,12 @@ If you're an employee, you can go here:
                         <div class="detail-container">
                             <div class="detail-container-sub">
                                 <div class="separator"></div>
-                                
+                                <div class="error-container">
+                                    <apex:pageMessages />
+                                </div>
                                 <div class="input-group">
-                                    <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                                    <apex:inputText html-placeholder="Username" id="username" value="{!username}"/>
+                                    <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
+                                    <apex:inputText html-placeholder="Email" id="email" value="{!email}"/>
                                 </div>
                                 
                                 <div class="input-group">
@@ -213,8 +210,8 @@ If you're an employee, you can go here:
                                 </div>
                                 
                                 <div class="buttons-container">
-                                    <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
                                     <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                                    <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
                                 </div>
                                 
                                 <div class="separator"></div>
@@ -231,6 +228,7 @@ If you're an employee, you can go here:
                         &copy; Copyright 2024, Credex Technology, All rights reserved
                     </div>
                 </div>
+                </apex:pageblock>
             </apex:form>
         </body>
     </html>
