@@ -4,7 +4,7 @@ import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo
 import getTypePicklistValues from '@salesforce/apex/JobListController.getTypeValues';
 import getExperiencePicklistValues from '@salesforce/apex/JobListController.getExperienceValues';
 import getIndustryPicklistValues from '@salesforce/apex/JobListController.getIndustryValues';
-	
+
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class JobList extends NavigationMixin(LightningElement) {
@@ -46,7 +46,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
 
     @wire(getJobs, { searchTitle: '$searchTitle', searchLocation: '$searchLocation', selectedTypeValues: '$selectedTypeValues', selectedExperienceValues: '$selectedExperienceValues', selectedIndustryValues: '$selectedIndustryValues' })
     jobList;
-    
+
     get sortOptions() {
         return [
             { label: 'Date', value: 'date' },
@@ -113,13 +113,13 @@ export default class JobList extends NavigationMixin(LightningElement) {
     handleJobDetail(event) {
         let jobId = event.currentTarget.id;
         jobId = jobId.split("-");
-            this[NavigationMixin.GenerateUrl]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: '/s/job-detail?id=' + jobId[0]
-                }
-            }).then(generatedUrl => {
-                window.open(generatedUrl);
-            });
+        this[NavigationMixin.GenerateUrl]({
+            type: 'standard__webPage',
+            attributes: {
+                url: '/s/job-detail?id=' + jobId[0]
+            }
+        }).then(generatedUrl => {
+            window.open(generatedUrl);
+        });
     }
 }

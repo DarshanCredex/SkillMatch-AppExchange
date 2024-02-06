@@ -2,6 +2,7 @@ import { LightningElement, track } from "lwc";
 import fetchCandidateNames from "@salesforce/apex/JobApplicantController.fetchCandidateNames";
 import fetchJobDetails from "@salesforce/apex/JobApplicantController.fetchJobDetails";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
+import { NavigationMixin } from "lightning/navigation";
 export default class ApplicantListPage extends LightningElement {
   @track candidateDetails = [];
   @track jobDetails = [];
@@ -41,5 +42,18 @@ export default class ApplicantListPage extends LightningElement {
       this.jobDetails = data;
       console.log("this.jobDetails------->", this.jobDetails);
     });
+  }
+  navigateToDetailsPage(event) {
+    const candidateId = event.currentTarget.dataset.candidateid;
+    console.log("candidateId----->", candidateId);
+    // const pageReference = {
+    //   type: "standard__webPage",
+    //   attributes: {
+    //     url: "/applicant-details"
+    //   }
+    // };
+    // this[NavigationMixin.Navigate](pageReference);
+    window.location.href = "/applicant-details";
+    sessionStorage.setItem("candidateid", candidateId);
   }
 }

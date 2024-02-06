@@ -100,20 +100,23 @@
   text-align: left;
 }
 
+.drafted-jobs,
 .posted-jobs {
   width: 100%;
   margin: 2% 0;
   display: flex;
   flex-direction: column;
   overflow: auto; 
-  max-height:400px;
+  max-height: 25rem;
 }
+.drafted-jobs h1,
 .posted-jobs h1 {
   font-weight: 500;
   font-size: 20px;
   padding-bottom: 2%;
 
 }
+.drafted-jobs table,
 .posted-jobs table {
   width: 90%;
   border-collapse: collapse;
@@ -125,6 +128,8 @@
 
 thead {
   background-color: #acd8ff;
+  position: sticky;
+
 }
 
 thead tr {
@@ -150,4 +155,9 @@ tbody tr td {
   padding: 2%;
   cursor: pointer;
   transition: color 0.3s ease;
+}
+
+tbody tr:hover{
+  background-color: #c6baff;
+  cursor: pointer;
 }
