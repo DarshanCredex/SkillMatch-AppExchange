@@ -82,6 +82,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   showBoth() {
     this.showPostedJobs = true;
     this.showDrafts = true;
+    this.showExpiredJobList = false;
   }
   showExpiredJobs() {
     this.showExpiredJobList = true;

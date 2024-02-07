@@ -17,8 +17,9 @@ export default class HrLandingPage extends LightningElement {
 
   numberOfApplicants;
   numberOfJobsPosted;
-  chart;
-  chartjsInitialized = false;
+  doughnutChart;
+  doughnutChartjsInitialized = false;
+
 
   config = {
     type: "doughnut",
@@ -91,15 +92,15 @@ export default class HrLandingPage extends LightningElement {
     if (data) {
       this.applicantChartDataset = data;
 
-      this.updateChart();
+      this.updateDoughnutChart();
 
-      if (!this.chartjsInitialized) {
-        this.chartjsInitialized = true;
+      if (!this.doughnutChartjsInitialized) {
+        this.doughnutChartjsInitialized = true;
         loadScript(this, chartjs).then(() => {
           const ctx = this.template
             .querySelector("canvas.donut")
             .getContext("2d");
-          this.chart = new window.Chart(ctx, this.config);
+          this.doughnutChart = new window.Chart(ctx, this.config);
         });
       }
     } else {
@@ -125,15 +126,15 @@ export default class HrLandingPage extends LightningElement {
     }
   }
 
-  updateChart() {
+  updateDoughnutChart() {
     this.config.data.labels = [];
     this.config.data.datasets[0].data = [];
     this.applicantChartDataset.forEach((applicant) => {
       this.config.data.labels.push(applicant.label);
       this.config.data.datasets[0].data.push(applicant.count);
     });
-    if (this.chart) {
-      this.chart.update();
+    if (this.doughnutChart) {
+      this.doughnutChart.update();
     }
   }
 }

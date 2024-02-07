@@ -9,6 +9,7 @@ export default class Analytics extends LightningElement {
   @track applicantGenderDataset = [];
   chart;
   chartjsInitialized = false;
+  genderChartJsInitialized = false;
   piechart;
 
   @wire(AgeWithNumberOfApplicants)
@@ -60,14 +61,14 @@ export default class Analytics extends LightningElement {
 
       this.updateGenderChart();
 
-      if (!this.chartjsInitialized) {
-        this.chartjsInitialized = true;
+      if (!this.genderChartJsInitialized) {
+        this.genderChartJsInitialized = true;
         loadScript(this, chartjs).then(() => {
-          const ctx = this.template
+          const ctx_1 = this.template
             .querySelector("canvas.pie")
             .getContext("2d");
           this.piechart = new window.Chart(
-            ctx,
+            ctx_1,
             JSON.parse(JSON.stringify(this.newConfig))
           );
           this.piechart.canvas.parentNode.style.height = "auto";
@@ -129,16 +130,16 @@ export default class Analytics extends LightningElement {
         {
           data: [],
           backgroundColor: [
-            "rgb(255,99,132)",
-            "rgb(255,159,64)",
-            "rgb(255,205,86)",
+            "rgb(388,152,126)",
+            "rgb(523,104,238)",
+            "rgb(179,221,119)",
+            "rgb(149,221,80)",
+            "rgb(245,99,132)",
+            "rgb(455,159,64)",
+            "rgb(265,205,86)",
             "rgb(75,192,192)",
             "rgb(153,102,204)",
-            "rgb(200,158,181)",
-            "rgb(188,152,126)",
-            "rgb(123,104,238)",
-            "rgb(119,221,119)",
-            "rgb(119,221,80)"
+            "rgb(240,158,181)"
           ],
           label: "Number of Applicants"
         }

@@ -1,6 +1,6 @@
 .main{
     width: 100%;
-    height: 90vh;
+    height: auto;
 }
 
 .barchart{
@@ -9,6 +9,7 @@
     padding: 2%;
     border: 1px solid #e9e9e9;
     border-radius: 10px;
+    margin: 2%;
 }
 .main div h1{
     font-size: 25px;
@@ -21,4 +22,9 @@
     padding: 2%;
     border: 1px solid #e9e9e9;
     border-radius: 10px;
+    margin: 2%;
+}
+.top-charts{
+    display: flex;
+    flex-direction: row;
 }
