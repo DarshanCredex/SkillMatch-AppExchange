@@ -76,6 +76,7 @@
   display: contents;
 }
 
+.no-drafts,
 .no-jobs {
   display: flex;
   align-items: center;
@@ -83,11 +84,14 @@
   flex-direction: column;
   margin: 2%;
 }
+.no-drafts img,
 .no-jobs img {
   width: 30%;
   height: 30%;
 }
 
+.no-drafts h1,
+.no-drafts p,
 .no-jobs h1,
 .no-jobs p {
   padding-bottom: 5%;

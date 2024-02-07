@@ -59,14 +59,17 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     this[NavigationMixin.Navigate](pageReference);
     sessionStorage.setItem("id", this.jobId);
   }
+  
   showDraftsTable() {
     this.showDrafts = true;
     this.showPostedJobs = false;
   }
+
   showPostedJobsTable() {
     this.showPostedJobs = true;
     this.showDrafts = false;
   }
+
   showBoth() {
     this.showPostedJobs = true;
     this.showDrafts = true;
