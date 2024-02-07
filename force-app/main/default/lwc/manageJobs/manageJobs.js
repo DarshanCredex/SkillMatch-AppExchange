@@ -3,13 +3,18 @@ import no_jobs from "@salesforce/resourceUrl/no_jobs";
 import { NavigationMixin } from "lightning/navigation";
 import getPostedJobList from "@salesforce/apex/GetPostedJobList.getPostedJobList";
 import getDraftedJobList from "@salesforce/apex/GetPostedJobList.getDraftedJobList";
+
 export default class ManageJobs extends NavigationMixin(LightningElement) {
   @track postedJobList = [];
   @track draftedJobList = [];
+  @track expiredJobList = [];
   @track showDrafts = false;
   @track showPostedJobs = true;
-  @track IsEmptyJobList = false;
-  @track IsEmptyDraftList = false;
+  @track IsEmptyJobList = true;
+  @track IsEmptyDraftList = true;
+  @track showExpiredJobList = false;
+  @track IsEmptyExpiredJobList = true;
+
   jobId;
   noJobs = no_jobs;
 
@@ -27,7 +32,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     if (data) {
       this.postedJobList = data;
       if (this.postedJobList) {
-        this.IsEmptyJobList = true;
+        this.IsEmptyJobList = false;
       }
       console.log("this.postedJobList-------->", this.postedJobList);
     } else if (error) {
@@ -40,7 +45,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       this.draftedJobList = data;
       console.log("this.draftedJobList------->", this.draftedJobList);
       if (this.draftedJobList) {
-        this.IsEmptyDraftList = true;
+        this.IsEmptyDraftList = false;
       }
     } else {
       console.log("error", error);
@@ -59,19 +64,33 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     this[NavigationMixin.Navigate](pageReference);
     sessionStorage.setItem("id", this.jobId);
   }
-  
+
   showDraftsTable() {
     this.showDrafts = true;
     this.showPostedJobs = false;
+    this.showExpiredJobList = false;
   }
 
   showPostedJobsTable() {
-    this.showPostedJobs = true;
     this.showDrafts = false;
+    this.showPostedJobs = true;
+    this.showExpiredJobList = false;
   }
 
   showBoth() {
     this.showPostedJobs = true;
     this.showDrafts = true;
+  }
+  showExpiredJobs() {
+    this.showExpiredJobList = true;
+    this.showPostedJobs = false;
+    this.showDrafts = false;
+    this.expiredJobList = this.postedJobList.filter(
+      (item) => item.Publish_end_date__c > Date.now()
+    );
+
+    if (this.expiredJobList.length > 0) {
+      this.IsEmptyExpiredJobList = false;
+    }
   }
 }

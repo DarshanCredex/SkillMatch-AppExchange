@@ -24,7 +24,7 @@ public with sharing class analyticsDatasets {
 
     try {
       List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c]) {
+      for (Job__c job : [SELECT Id FROM Job__c WHERE status__c = 'Completed']) {
         jobIdList.add(job.Id);
       }
 
@@ -69,6 +69,43 @@ public with sharing class analyticsDatasets {
       );
     }
     System.debug('DataSet-------> ' + dataset);
+    return dataset;
+  }
+  @AuraEnabled(cacheable = true)
+  public static List<DataSet> applicantGender() {
+    List<DataSet> dataset = new List<DataSet>();
+    try {
+      List<Id> jobIdList = new List<Id>();
+      for (Job__c job : [SELECT Id FROM Job__c WHERE status__c = 'Completed']) {
+        jobIdList.add(job.Id);
+      }
+      List<Id> jobApplicantIdList = new List<Id>();
+      for (Job_Applicants__c jobApplicant : [
+        SELECT CandidateId__c
+        FROM Job_Applicants__c
+        WHERE Job_Id__c IN :jobIdList
+      ]) {
+        jobApplicantIdList.add(jobApplicant.CandidateId__c);
+      }
+
+      list<AggregateResult> listOfGender = [
+        SELECT count(id) cnt, Gender__c
+        FROM Candidate_Details__c
+        WHERE id IN :jobApplicantIdList
+        GROUP BY Gender__c
+      ];
+
+      for (AggregateResult result : listOfGender) {
+        String gender = (string) result.get('Gender__c');
+        Integer count = (integer) result.get('cnt');
+        dataset.add(new dataset(gender, count));
+      }
+    } catch (Exception e) {
+      System.debug(
+        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
+      );
+    }
+    system.debug('dataset------>' + dataset);
     return dataset;
   }
 }
