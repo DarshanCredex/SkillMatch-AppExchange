@@ -3,7 +3,7 @@ import no_jobs from "@salesforce/resourceUrl/no_jobs";
 import { NavigationMixin } from "lightning/navigation";
 import getPostedJobList from "@salesforce/apex/GetPostedJobList.getPostedJobList";
 import getDraftedJobList from "@salesforce/apex/GetPostedJobList.getDraftedJobList";
-
+import { refreshApex } from "@salesforce/apex";
 export default class ManageJobs extends NavigationMixin(LightningElement) {
   @track postedJobList = [];
   @track draftedJobList = [];
@@ -35,15 +35,17 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
         this.IsEmptyJobList = false;
       }
       console.log("this.postedJobList-------->", this.postedJobList);
+      this.refreshData();
     } else if (error) {
       console.log("error---->", error);
     }
   }
   @wire(getDraftedJobList)
-  wiredDraftedJObList({ error, data }) {
+  wiredDraftedJobList({ error, data }) {
     if (data) {
       this.draftedJobList = data;
       console.log("this.draftedJobList------->", this.draftedJobList);
+      this.refreshData();
       if (this.draftedJobList) {
         this.IsEmptyDraftList = false;
       }
@@ -92,5 +94,10 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     if (this.expiredJobList.length > 0) {
       this.IsEmptyExpiredJobList = false;
     }
+  }
+
+  refreshData() {
+    refreshApex(this.wiredDraftedJobList);
+    refreshApex(this.wiredPostedJobList);
   }
 }

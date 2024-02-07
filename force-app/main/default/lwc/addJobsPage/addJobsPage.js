@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import { LightningElement } from "lwc";
 import experienceFieldValues from "@salesforce/apex/JobPicklistController.experienceFieldValues";
 import typePickListValues from "@salesforce/apex/JobPicklistController.typePickListValues";
@@ -5,8 +6,9 @@ import IndustryPickListValues from "@salesforce/apex/JobPicklistController.Indus
 import postJob from "@salesforce/apex/jobObjectController.postJob";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
+import { NavigationMixin } from "lightning/navigation";
 
-export default class AddJobsPage extends LightningElement {
+export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValues = [];
   industryValues = [];
   typeValues = [];
@@ -95,7 +97,13 @@ export default class AddJobsPage extends LightningElement {
       .then(() => {
         console.log("true");
         this.showToast("Success", "Job posted successfully", "success");
-        this.clearFields();
+        const pageReference = {
+          type: "standard__webPage",
+          attributes: {
+            url: "/manage-jobs"
+          }
+        };
+        this[NavigationMixin.Navigate](pageReference);
       })
       .catch((error) => {
         console.error("Error posting job:", error);
@@ -123,8 +131,13 @@ export default class AddJobsPage extends LightningElement {
       .then(() => {
         console.log("true");
         this.showToast("Success", "Draft saved successfully", "success");
-        this.jobTitle = "";
-        this.clearFields();
+        const pageReference = {
+          type: "standard__webPage",
+          attributes: {
+            url: "/manage-jobs"
+          }
+        };
+        this[NavigationMixin.Navigate](pageReference);
       })
       .catch((error) => {
         console.error("Error saving draft:", error);
