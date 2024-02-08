@@ -14,8 +14,9 @@ export default class ApplicantListPage extends NavigationMixin(
   emptyBox = emptyBox;
 
   connectedCallback() {
-    if (sessionStorage.getItem("id")) {
-      this.jobId = sessionStorage.getItem("id");
+    if (sessionStorage.getItem("uniquejobId")) {
+      this.jobId = sessionStorage.getItem("uniquejobId");
+      console.log(" this.jobId(recivever)", this.jobId);
     }
     this.fetchCandidateNames();
     this.fetchJobDetails();

@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-22-2024
+ * @last modified on  : 02-08-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -115,11 +115,54 @@ public with sharing class jobObjectController {
         Status__c,
         Id
       FROM Job__c
-      WHERE Status__c = 'Draft' limit 3
+      WHERE Status__c = 'Draft'
+      LIMIT 3
     ]) {
       draftJobList.add(job);
     }
     System.debug('draftJobList-------->' + draftJobList);
     return draftJobList;
   }
+
+  @AuraEnabled(cacheable=true)
+  public static list<job__c> getPostedJobListBasedOnId(string jobId) {
+    system.debug('job------->' + jobId);
+    list<job__c> jobDetails = new List<job__c>();
+
+    try {
+      jobDetails = [
+        SELECT
+          City__c,
+          Company_Name__c,
+          Country__c,
+          CreatedById,
+          Description__c,
+          Experience__c,
+          External_Application_Link__c,
+          Industry__c,
+          Name,
+          LastModifiedById,
+          Location__c,
+          OwnerId,
+          Publish_end_date__c,
+          Publish_start_date__c,
+          Salary__c,
+          Status__c,
+          Summary__c,
+          Title_of_position__c,
+          Type__c
+        FROM Job__c
+        WHERE id = :jobId
+        LIMIT 1
+      ];
+    } catch (Exception e) {
+      system.debug(
+        'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
+      );
+    }
+
+    system.debug('jobDetails------->' + jobDetails);
+    return jobDetails;
+  }
+ 
 }

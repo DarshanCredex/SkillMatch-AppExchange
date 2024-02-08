@@ -53,18 +53,19 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       console.log("error", error);
     }
   }
-  handleApplicantListView(event) {
+  handlejobDescriptionPageView(event) {
     this.jobId = event.currentTarget.dataset.jobid;
     console.log("jobid------>", this.jobId);
+    sessionStorage.setItem("postedJobId", this.jobId);
+    console.log("sessionStorage");
     const pageReference = {
       type: "standard__webPage",
       attributes: {
-        url: "/applicant-list-page"
+        url: "/job-description-page"
       }
     };
 
     this[NavigationMixin.Navigate](pageReference);
-    sessionStorage.setItem("id", this.jobId);
   }
 
   showDraftsTable() {

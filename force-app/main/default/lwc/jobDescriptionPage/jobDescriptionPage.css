@@ -1,0 +1,53 @@
+.main {
+    width: 100%;
+    height: auto;
+    background-color: #f4f4f4;
+    padding: 2%;
+}
+
+.title-of-job h1 {
+    font-size: 2rem;
+}
+
+.title-of-job {
+    display: flex;
+    justify-content: space-between;
+}
+
+.type,
+.experience,
+.location {
+    font-size: 1rem;
+}
+
+.type,
+.experience {
+    padding-left: 2%;
+}
+
+.about-job {
+    display: flex;
+    flex-direction: row;
+}
+
+.salary-range h1,
+.summary h1,
+.about-this-role h1 {
+    padding-top: 3%;
+    font-size: 22px;
+}
+
+.salary-range p,
+.summary p,
+.about-this-role p {
+    font-size: 15px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.buttons lightning-button {
+    padding: 3%;
+}

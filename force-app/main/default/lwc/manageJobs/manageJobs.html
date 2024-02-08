@@ -2,7 +2,7 @@
   @description       : Manage Jobs Component for Recruitment Portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-07-2024
+  @last modified on  : 02-08-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -48,7 +48,7 @@
               </thead>
               <tbody>
                 <template for:each={postedJobList} for:item="job">
-                  <tr key={job.Id} data-jobid={job.Id} onclick={handleApplicantListView}>
+                  <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
                     <td>{job.Title_of_position__c}</td>
                     <td>{job.Salary__c}</td>
                     <td>{job.Experience__c}</td>
