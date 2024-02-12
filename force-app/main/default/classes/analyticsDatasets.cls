@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-07-2024
+ * @last modified on  : 02-08-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -71,7 +71,7 @@ public with sharing class analyticsDatasets {
     System.debug('DataSet-------> ' + dataset);
     return dataset;
   }
-  @AuraEnabled(cacheable = true)
+  @AuraEnabled(cacheable=true)
   public static List<DataSet> applicantGender() {
     List<DataSet> dataset = new List<DataSet>();
     try {
@@ -106,6 +106,30 @@ public with sharing class analyticsDatasets {
       );
     }
     system.debug('dataset------>' + dataset);
+    return dataset;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static list<dataset> industryJobsDataset() {
+    List<DataSet> dataset = new List<DataSet>();
+    try {
+      list<AggregateResult> results = [
+        SELECT count(id) cnt, Industry__c
+        FROM Job__c
+        WHERE status__c = 'Completed'
+        GROUP BY Industry__c
+      ];
+      for (AggregateResult result : results) {
+        string Industry = (string) result.get('Industry__c');
+        integer count = (integer) result.get('cnt');
+        dataset.add(new dataset(Industry, count));
+      }
+    } catch (Exception e) {
+      System.debug(
+        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
+      );
+    }
+    system.debug('dataset----->' + dataset);
     return dataset;
   }
 }

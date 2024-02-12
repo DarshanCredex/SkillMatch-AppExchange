@@ -3,14 +3,53 @@ import AgeWithNumberOfApplicants from "@salesforce/apex/analyticsDatasets.AgeWit
 import chartjs from "@salesforce/resourceUrl/chartjs";
 import { loadScript } from "lightning/platformResourceLoader";
 import applicantGender from "@salesforce/apex/analyticsDatasets.applicantGender";
+import industryJobsDataset from "@salesforce/apex/analyticsDatasets.industryJobsDataset";
+import skillMatch_logo from "@salesforce/resourceUrl/skillMatch_logo";
 
 export default class Analytics extends LightningElement {
   @track ageWithNumberDataset = [];
   @track applicantGenderDataset = [];
-  chart;
+  @track industryAndJobsDataset = [];
+
   chartjsInitialized = false;
   genderChartJsInitialized = false;
+  industryChartjsIntialized = false;
+
   piechart;
+  industryChart;
+  chart;
+
+  skillMatch_logo = skillMatch_logo;
+
+  @wire(industryJobsDataset)
+  wiredindustryJobsDataset({ error, data }) {
+    if (error) {
+      console.error("error----->", error);
+    } else if (data) {
+      this.industryAndJobsDataset = data;
+      console.log(
+        "this.industryAndJobsDataset---------->",
+        this.industryAndJobsDataset
+      );
+
+      this.updateIndustryChart();
+
+      if (!this.industryChartjsIntialized) {
+        this.industryChartjsIntialized = true;
+        loadScript(this, chartjs).then(() => {
+          const ctx_2 = this.template
+            .querySelector("canvas.industryDoughnut")
+            .getContext("2d");
+          this.industryChart = new window.Chart(
+            ctx_2,
+            JSON.parse(JSON.stringify(this.industryConfig))
+          );
+          this.industryChart.canvas.parentNode.style.height = "auto";
+          this.industryChart.canvas.parentNode.style.width = "100%";
+        });
+      }
+    }
+  }
 
   @wire(AgeWithNumberOfApplicants)
   wiredAgeWithNumberOfApplicants({ error, data }) {
@@ -109,7 +148,47 @@ export default class Analytics extends LightningElement {
       responsive: true,
       title: {
         display: true,
-        text: "Applicants - Age Group"
+        text: "Applicants vs Age Group"
+      },
+      maintainAspectRatio: false,
+      legend: {
+        position: "left"
+      },
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      }
+    }
+  };
+
+  industryConfig = {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: [
+            "rgb(153,102,204)",
+            "rgb(388,152,126)",
+            "rgb(199,421,80)",
+            "rgb(545,99,132)",
+            "rgb(555,159,64)",
+            "rgb(388,152,126)",
+            "rgb(924,104,238)",
+            "rgb(265,205,86)",
+            "rgb(753,192,192)",
+            "rgb(240,158,181)"
+          ],
+          label: "Number of Jobs"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      title: {
+        display: true,
+        text: "Industry vs Number of Jobs posted"
       },
       maintainAspectRatio: false,
       legend: {
@@ -149,7 +228,7 @@ export default class Analytics extends LightningElement {
       responsive: true,
       title: {
         display: true,
-        text: "Applicants - Gender"
+        text: "Applicants vs Gender"
       },
       maintainAspectRatio: false,
       legend: {
@@ -185,6 +264,18 @@ export default class Analytics extends LightningElement {
     });
     if (this.piechart) {
       this.piechart.update();
+    }
+  }
+  updateIndustryChart() {
+    console.log("inside industry chart update method");
+    this.industryConfig.data.labels = [];
+    this.industryConfig.data.datasets[0].data = [];
+    this.industryAndJobsDataset.forEach((jobs) => {
+      this.industryConfig.data.labels.push(jobs.label);
+      this.industryConfig.data.datasets[0].data.push(jobs.count);
+    });
+    if (this.industryChart) {
+      this.industryChart.update();
     }
   }
 }
