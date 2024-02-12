@@ -2,7 +2,7 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-08-2024
+  @last modified on  : 02-12-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -31,7 +31,7 @@
           </thead>
           <tbody>
             <template for:each={candidateDetails} for:item="candidate">
-              <tr key={candidate.id} data-candidateid={candidate.id}  onclick={navigateToDetailsPage}>
+              <tr key={candidate.Id} data-candidateid={candidate.Id}  onclick={navigateToDetailsPage}>
                 <td>{candidate.Name}</td>
                 <td>{candidate.Candidate_Email__c}</td>
                 <td>{candidate.Experience__c} years</td>

@@ -138,7 +138,6 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   }
 
   navigateToJobDescPage(event) {
-
     const jobId = event.currentTarget.dataset.jobid;
     console.log("jobid(sender)----->", jobId);
 
@@ -147,6 +146,19 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
       type: "standard__webPage",
       attributes: {
         url: "/job-description-page"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
+  }
+
+  navigateToApplicantPage(event) {
+    const candidateId = event.currentTarget.dataset.candidateid;
+    console.log("candidateId(sender)----->", candidateId);
+    sessionStorage.setItem("candidateid", candidateId);
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/applicant-details"
       }
     };
     this[NavigationMixin.Navigate](pageReference);

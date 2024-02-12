@@ -17,7 +17,8 @@ public with sharing class jobObjectController {
     string experienceValue,
     string typeValue,
     string industryValue,
-    string summary
+    string summary,
+    string skills
   ) {
     system.debug('start');
     system.debug('jobTitle' + jobTitle);
@@ -37,6 +38,7 @@ public with sharing class jobObjectController {
       newJob.Type__c = typeValue;
       newJob.City__c = city;
       newJob.Status__c = 'Completed';
+      newJob.Skills_Required__c = skills;
 
       jobRecordsList.add(newJob);
 
@@ -62,7 +64,8 @@ public with sharing class jobObjectController {
     string experienceValue,
     string typeValue,
     string industryValue,
-    string summary
+    string summary,
+    string skills
   ) {
     System.debug('start');
     try {
@@ -80,6 +83,7 @@ public with sharing class jobObjectController {
       newJob.Type__c = typeValue;
       newJob.City__c = city;
       newJob.Status__c = 'Draft';
+      newJob.Skills_Required__c = skills;
 
       jobRecordsList.add(newJob);
 
@@ -165,5 +169,4 @@ public with sharing class jobObjectController {
     system.debug('jobDetails------->' + jobDetails);
     return jobDetails;
   }
- 
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-eval */
 import { LightningElement } from "lwc";
 import experienceFieldValues from "@salesforce/apex/JobPicklistController.experienceFieldValues";
 import typePickListValues from "@salesforce/apex/JobPicklistController.typePickListValues";
@@ -23,6 +22,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValue = "";
   typeValue = "";
   industryValue = "";
+  skills = "";
 
   connectedCallback() {
     experienceFieldValues().then((result) => {
@@ -80,6 +80,9 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   handleSummaryChange(event) {
     this.summary = event.target.value;
   }
+  handleSkillsChange(event) {
+    this.skills = event.target.value;
+  }
 
   postJobData() {
     postJob({
@@ -92,7 +95,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       experienceValue: this.experienceValue,
       typeValue: this.typeValue,
       industryValue: this.industryValue,
-      summary: this.summary
+      summary: this.summary,
+      skills: this.skills
     })
       .then(() => {
         console.log("true");
@@ -126,7 +130,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       experienceValue: this.experienceValue,
       typeValue: this.typeValue,
       industryValue: this.industryValue,
-      summary: this.summary
+      summary: this.summary,
+      skills: this.skills
     })
       .then(() => {
         console.log("true");

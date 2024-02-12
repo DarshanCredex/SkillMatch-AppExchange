@@ -48,14 +48,15 @@ export default class ApplicantListPage extends NavigationMixin(
   }
   navigateToDetailsPage(event) {
     const candidateId = event.currentTarget.dataset.candidateid;
-    console.log("candidateId----->", candidateId);
+
     const pageReference = {
       type: "standard__webPage",
       attributes: {
         url: "/applicant-details"
       }
     };
-    this[NavigationMixin.Navigate](pageReference);
     sessionStorage.setItem("candidateid", candidateId);
+    console.log("candidateid(sender)---->", candidateId);
+    this[NavigationMixin.Navigate](pageReference);
   }
 }

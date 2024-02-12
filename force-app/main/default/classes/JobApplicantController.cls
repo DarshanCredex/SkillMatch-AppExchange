@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-05-2024
+ * @last modified on  : 02-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -41,6 +41,7 @@ public with sharing class JobApplicantController {
 
     for (Candidate_Details__c candidate : [
       SELECT
+        Id,
         About__c,
         Candidate_Email__c,
         City__c,
@@ -153,6 +154,7 @@ public with sharing class JobApplicantController {
     try {
       for (Job__c job : [
         SELECT
+          Id,
           City__c,
           Company_Name__c,
           Country__c,

@@ -35,7 +35,7 @@
           <hr>
           <div class="applicants">
             <template for:each={applicantsList} for:item="applicant">
-              <div class="applicant-box" key={applicant.id}>
+              <div class="applicant-box" key={applicant.Id} data-candidateid={applicant.Id} onclick={navigateToApplicantPage}>
                 <h1 class="applicants-name">{applicant.Name}</h1>
                 <div class="applicantDetails">
                   <p> <lightning-icon icon-name="utility:email" alternative-text="Connected" size="xx-small"

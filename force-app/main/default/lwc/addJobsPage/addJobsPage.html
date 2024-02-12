@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-01-2024
+  @last modified on  : 02-12-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -24,6 +24,8 @@
             onchange={handleSalaryChange}></lightning-input>
           <lightning-input type="text" label="Company Name" value={companyName}
             onchange={handleCompanyName}></lightning-input>
+          <lightning-input type="text" label="Skills Required" value={skills}
+            onchange={handleSkillsChange}></lightning-input>
         </div>
         <div class="location">
           <h1>Location</h1>
@@ -64,7 +66,8 @@
     <hr>
     <div class="buttons">
       <div class="draft">
-        <lightning-button variant="neutral" label="Save To Draft" style="text-align: center" onclick={saveToDraft}></lightning-button>
+        <lightning-button variant="neutral" label="Save To Draft" style="text-align: center"
+          onclick={saveToDraft}></lightning-button>
       </div>
       <div class="post">
         <lightning-button variant="brand" label="Post Now" onclick={postJobData}></lightning-button>
