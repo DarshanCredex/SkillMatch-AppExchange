@@ -27,6 +27,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     };
     this[NavigationMixin.Navigate](pageReference);
   }
+
   @wire(getPostedJobList)
   wiredPostedJobList({ error, data }) {
     if (data) {
@@ -37,9 +38,10 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       console.log("this.postedJobList-------->", this.postedJobList);
       this.refreshData();
     } else if (error) {
-      console.log("error---->", error);
+      console.log("error------>", error);
     }
   }
+
   @wire(getDraftedJobList)
   wiredDraftedJobList({ error, data }) {
     if (data) {
@@ -53,6 +55,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       console.log("error", error);
     }
   }
+
   handlejobDescriptionPageView(event) {
     this.jobId = event.currentTarget.dataset.jobid;
     console.log("jobid------>", this.jobId);
@@ -85,6 +88,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     this.showDrafts = true;
     this.showExpiredJobList = false;
   }
+
   showExpiredJobs() {
     this.showExpiredJobList = true;
     this.showPostedJobs = false;
@@ -95,6 +99,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
 
     if (this.expiredJobList.length > 0) {
       this.IsEmptyExpiredJobList = false;
+      this.showApplicantButton = true;
     }
   }
 
@@ -102,4 +107,5 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     refreshApex(this.wiredDraftedJobList);
     refreshApex(this.wiredPostedJobList);
   }
+
 }

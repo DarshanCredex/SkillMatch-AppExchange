@@ -1,18 +1,59 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
 import createExperience from '@salesforce/apex/CandidateProfileController.createWorkExperience';
 import fetchCandidateDetails from '@salesforce/apex/CandidateProfileController.getCandidateDetails';
-import updateCandidateDetails from '@salesforce/apex/CandidateProfileController.updateCandidateDetails';
+//import updateCandidateDetails from '@salesforce/apex/CandidateProfileController.updateCandidateDetails';
 import UserId from '@salesforce/user/Id';
+import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 
 export default class CandidateProfile extends LightningElement {
     @track isExpModalOpen = false;
     @track isEditModalOpen = false;
     @track isResumeModalOpen = false;
     @track isToDateDisabled = false;
+    @track isEditExpModalOpen = false;
     @track userId = UserId;
     @track candidateDetails;
+    @track candidateSkills;
     @api recordId;
+    candidateDetailsWire;
+    @track experienceToUpdate;
+    @track experienceToUpdate;
     @api isLoading = false;
+    @api isLoadingFullScreen = false
+
+    connectedCallback() {
+        console.log('this.userId--->', this.userId);
+        console.log('this.recordId--->', this.recordId);
+        this.isLoadingFullScreen = true;
+        refreshApex(this.candidateDetailsWire);
+    }
+
+    @wire(fetchCandidateDetails, { userId: '$userId' }) list(result) {
+        this.candidateDetailsWire = result;
+        if (result.data) {
+            this.candidateDetails = result.data;
+            console.log("Data received in wire---", result.data);
+            this.candidateSkills = [...this.candidateDetails.Skills__c.split(',')];
+            console.log('this.candidateSkills--->', JSON.stringify(this.candidateSkills));
+        } else if (result.error) {
+            console.log("Error received in wire-----", result.error);
+        }
+        this.isLoadingFullScreen = false;
+    }
+
+    /*fetchCandidate() {
+        fetchCandidateDetails({ userId: this.userId })
+            .then(result => {
+                console.log('result--->', result);
+                this.candidateDetails = result;
+                this.isLoadingFullScreen = false;
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                this.isLoadingFullScreen = false;
+            });
+    }*/
 
     handleCurrentCompanyChange(event) {
         this.isToDateDisabled = event.detail.checked;
@@ -24,13 +65,14 @@ export default class CandidateProfile extends LightningElement {
     }
 
     handleResume() {
+        this.isLoading = true;
         this.isResumeModalOpen = true;
+        this.isLoading = false;
     }
 
     handleEdit() {
         this.isEditModalOpen = true;
-        this.isLoading = true;
-        this.fetchCandidateDetails();
+        //this.fetchCandidateDetails();
     }
 
     closeResumeModal() {
@@ -49,6 +91,12 @@ export default class CandidateProfile extends LightningElement {
         this.isLoading = false;
     }
 
+    closeEditExpModal() {
+        this.isEditExpModalOpen = false;
+        this.isToDateDisabled = false;
+        this.isLoading = false;
+    }
+
     handleCancel() {
         this.isEditModalOpen = false;
         this.isLoading = false;
@@ -56,13 +104,6 @@ export default class CandidateProfile extends LightningElement {
 
     get acceptedFormats() {
         return ['.pdf'];
-    }
-
-    async fetchCandidateDetails() {
-        console.log('userId--->', this.userId);
-        this.candidateDetails = await fetchCandidateDetails({ userId: this.userId });
-        this.isLoading = false;
-        console.log('candidateDetails--->', JSON.stringify(this.candidateDetails));
     }
 
     handleUploadFinished(event) {
@@ -77,53 +118,78 @@ export default class CandidateProfile extends LightningElement {
     }
 
     handleSave() {
-        // Get the form data
-        const formData = this.template.querySelector('lightning-record-edit-form').getValues();
-        
-        // Save the data to Salesforce
-        updateCandidateDetails({ fields: formData })
-          .then(result => {
-            // Show a success message
-            this.dispatchEvent(
-              new ShowToastEvent({
+        this.isLoadingFullScreen = true;
+        this.template.querySelector('lightning-record-edit-form[data-id="updateProfileForm"]').submit();
+        this.isEditModalOpen = false;
+        this.isLoadingFullScreen = false;
+    }
+    handleSuccess() {
+        this.isLoadingFullScreen = true;
+        // Refresh the page to show updated data
+        refreshApex(this.candidateDetailsWire);
+        this.dispatchEvent(
+            new ShowToastEvent({
                 title: 'Success',
-                message: 'Profile saved successfully',
+                message: 'Profile updated successfully',
                 variant: 'success'
-              })
-            );
-      
-            // Reset the form
-            this.template.querySelector('lightning-record-edit-form').reset();
-          })
-          .catch(error => {
-            // Show an error message
-            this.dispatchEvent(
-              new ShowToastEvent({
+            })
+        );
+        this.isLoadingFullScreen = false;
+    }
+    handleError() {
+        this.dispatchEvent(
+            new ShowToastEvent({
                 title: 'Error',
                 message: error.body.message,
                 variant: 'error'
-              })
-            );
-          });
-      }
+            })
+        );
+    }
 
     handleSubmitExperience() {
-        // Access form data and call Apex method to create the record
-        createExperience({
-            organisation: this.template.querySelector('lightning-input-field[field-name="Organisation__c"]').value,
-            isCurrentCompany: this.template.querySelector('lightning-input-field[field-name="Is_Current_Company__c"]').value,
-            fromDate: this.template.querySelector('lightning-input-field[field-name="From_Date__c"]').value,
-            toDate: this.template.querySelector('lightning-input-field[field-name="To_Date__c"]').value,
-            City: this.template.querySelector('lightning-input-field[field-name="City__c"]').value,
-            Country: this.template.querySelector('lightning-input-field[field-name="Country__c"]').value,
-        })
-            .then(() => {
-                // Handle success, e.g., close modal, display success message, refresh list
-                this.closeModal();
-                this.dispatchEvent(new CustomEvent('experiencecreated'));
+        this.closeModal();
+        this.isLoadingFullScreen = true;
+        this.template.querySelector('lightning-record-edit-form[data-id="addExperienceForm"]').submit();        
+        this.isLoadingFullScreen = false;
+    }
+
+    handleAddSuccess() {
+        this.isLoadingFullScreen = true;
+        refreshApex(this.candidateDetailsWire);
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'Experience added successfully',
+                variant: 'success'
             })
-            .catch(error => {
-                // Handle errors, e.g., display error message
-            });
+        );
+        this.isLoadingFullScreen = false;
+    }
+
+    handleEditExperience(event) {
+        this.isLoading = true;
+        this.experienceToUpdate = event.currentTarget.dataset.id;
+        this.isEditExpModalOpen = true;
+        this.isLoading = false; 
+    }
+
+    handleUpdateExperience(){
+        this.isLoading = true;
+        this.template.querySelector('lightning-record-edit-form[data-id="updateExperienceForm"]').submit();
+        this.isLoading = false;
+    }
+
+    handleUpdateExpSuccess() {
+        this.isLoadingFullScreen = true;
+        refreshApex(this.candidateDetailsWire);
+        this.closeEditExpModal();
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'Experience updated successfully',
+                variant: 'success'
+            })
+        );
+        this.isLoadingFullScreen = false;
     }
 }

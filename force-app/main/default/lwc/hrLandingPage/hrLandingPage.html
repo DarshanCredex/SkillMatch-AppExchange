@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-01-2024
+  @last modified on  : 02-12-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -57,7 +57,8 @@
         <hr>
         <div class="drafts">
           <template for:each={draftJobList} for:item="job">
-            <div class="draft-job" key={job.id}>
+            <div class="draft-job" key={job.Id} data-jobid={job.Id} onclick={navigateToJobDescPage}>
+              {job.id}
               <h1 class="job-title">{job.Title_of_position__c}</h1>
               <div class="job-details">
                 <p class="company-name">{job.Company_Name__c}</p>

@@ -19,7 +19,8 @@ public with sharing class CandidateProfileController {
     public static Candidate_Details__c getCandidateDetails(Id userId) {
         System.debug('userId---->'+userId);
         Candidate_Details__c currentCandidate = new Candidate_Details__c();
-        currentCandidate = [SELECT Id, About__c, Phone_Number__c, Skills__c, Experience__c, City__c, Country__c FROM Candidate_Details__c WHERE OwnerId = :userId Limit 1];
+        currentCandidate = [SELECT Id, Name, Candidate_Email__c, CTC__c, Date_of_birth__c, About__c, Phone_Number__c, Skills__c, Experience__c, City__c, Country__c,
+                            (Select Id, Name, Organisation__c, From_Date__c, To_Date__c, City__c, Country__c From Work_Experience__r) FROM Candidate_Details__c WHERE OwnerId = :userId Limit 1];
         return currentCandidate;
     }
 
@@ -28,7 +29,6 @@ public with sharing class CandidateProfileController {
         try {
             update candidate;
         } catch (DmlException e) {
-            // Handle errors gracefully, consider returning error messages
             System.debug('Error updating candidate:' + e.getMessage());
         }
     }

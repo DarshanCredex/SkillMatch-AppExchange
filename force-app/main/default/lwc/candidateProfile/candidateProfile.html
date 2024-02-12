@@ -1,134 +1,106 @@
-<!--
-  @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
-  @group             : 
-  @last modified on  : 02-08-2024
-  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
--->
 <template>
-    <div class="profile-container">
-        <div class="profile-left-container">
-            <div class="profile-image">
-                <span class="slds-avatar slds-avatar_circle" style="height: 100%;width: 100%;">
-                    <span class="slds-icon_container slds-icon-standard-user" title="Profile Image">
-                        <svg class="slds-icon" aria-hidden="true" style="height: 100%;width: 100%;">
-                            <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#user"></use>
-                        </svg>
+    <div class="slds-is-relative slds-p-around_large" if:true={isLoadingFullScreen}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </div>
+    <div if:false={isLoadingFullScreen}>
+        <div class="profile-container">
+            <div class="profile-left-container">
+                <div class="profile-image">
+                    <span class="slds-avatar slds-avatar_circle" style="height: 100%;width: 100%;">
+                        <span class="slds-icon_container slds-icon-standard-user" title="Profile Image">
+                            <svg class="slds-icon" aria-hidden="true" style="height: 100%;width: 100%;">
+                                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
                     </span>
-                </span>
-            </div>
-            <p class="name">Sagar Medatwal</p>
-            <p class="title">Senior Salesforce Developer</p>
-            <p class="about-me">
-                Highly seasoned and accomplished Salesforce Developer with 4+
-                years of experience in Salesforce Ecosystem having an extensive
-                knowledge in implementing, customizing and maintaining
-                Salesforce solutions with a strong record of client satisfaction. Proven multitasker, independent and
-                team player.
-            </p>
-            <div class="skill-container">
-                <p class="heading-text">Skills</p>
-                <div class="skill-list">
-                    <p class="skill-info">Salesforce</p>
-                    <p class="skill-info">Salesforce CPQ</p>
-                    <p class="skill-info">Aura Component</p>
-                    <p class="skill-info">Lightning Web Component</p>
-                    <p class="skill-info">VisualForce Pages</p>
-                    <p class="skill-info">Apex Programming</p>
-                    <p class="skill-info">Salesforce Sales Cloud</p>
-                    <p class="skill-info">Salesforce Experience Cloud</p>
-                    <p class="skill-info">Apex Triggers</p>
-                    <p class="skill-info">SOSL</p>
                 </div>
-            </div>
-        </div>
-        <div class="profile-right-container">
-            <div class="basic-detail">
-                <div class="basic-heading-container">
-                    <p class="heading-text">
-                        Basic Information
-                    </p>
-                    <div style="align-self: center;">
-                        <lightning-button label="Resume" onclick={handleResume} class="edit-button"></lightning-button>
-                        <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
-                    </div>
-                </div>
-                <div class="detail-container">
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Date of Birth</div>
-                            <div class="detail-info">10/10/1996</div>
-                        </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">CTC</div>
-                            <div class="detail-info">123456789</div>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Years of Experience</div>
-                            <div class="detail-info">6 years</div>
-                        </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">Location</div>
-                            <div class="detail-info">Noida, India</div>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Phone</div>
-                            <div class="detail-info">+91 9424012657</div>
-                        </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">Email</div>
-                            <div class="detail-info">sagar.medatwal@credextechnology.com</div>
-                        </div>
+                <p class="name">{candidateDetails.Name}</p>
+                <p class="title">Senior Salesforce Developer</p>
+                <p class="about-me">
+                    {candidateDetails.About__c}
+                </p>
+                <div class="skill-container">
+                    <p class="heading-text">Skills</p>
+                    <div class="skill-list">
+                        <template if:true={candidateSkills}>
+                            <template for:each={candidateSkills} for:item="Skill">
+                                <p key={Skill} class="skill-info">{Skill}</p>
+                            </template>
+                        </template>
                     </div>
                 </div>
             </div>
-            <div class="experience-detail">
-                <div class="basic-heading-container">
-                    <p class="heading-text">
-                        Work Experience
-                    </p>
-                    <div style="align-self: center;">
-                        <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
-                    </div>
-                </div>
-                <div class="exp-detail-container">
-                    <div class="exp-list" onclick={handleEditExperience}>
-                        <div>
-                            <p class="exp-company-name">Credex Technology</p>
-                            <p class="exp-designation">Senior Software Engineer</p>
-                            <p class="exp-year">May 2023 - Present | Noida, India</p>
+            <div class="profile-right-container">
+                <div class="basic-detail">
+                    <div class="basic-heading-container">
+                        <p class="heading-text">
+                            Basic Information
+                        </p>
+                        <div style="align-self: center;">
+                            <lightning-button label="Resume" onclick={handleResume}
+                                class="edit-button"></lightning-button>
+                            <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
                         </div>
                     </div>
-                    <div class="exp-list">
-                        <p class="exp-company-name">Tata Consultancy Services</p>
-                        <p class="exp-designation">System Engineer</p>
-                        <p class="exp-year">Aug 2019 - Mar 2022 | Pune, India</p>
+                    <div class="detail-container">
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Date of Birth</div>
+                                <div class="detail-info">{candidateDetails.Date_of_birth__c}</div>
+                            </div>
+                            <div class="bottom-section">
+                                <div class="detail-heading">CTC</div>
+                                <div class="detail-info">
+                                    <lightning-formatted-number
+                                        value={candidateDetails.CTC__c}></lightning-formatted-number>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Years of Experience</div>
+                                <div class="detail-info">{candidateDetails.Experience__c} years</div>
+                            </div>
+                            <div class="bottom-section">
+                                <div class="detail-heading">Location</div>
+                                <div class="detail-info">{candidateDetails.City__c}, {candidateDetails.Country__c}</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Phone</div>
+                                <div class="detail-info">{candidateDetails.Phone_Number__c}</div>
+                            </div>
+                            <div class="bottom-section">
+                                <div class="detail-heading">Email</div>
+                                <div class="detail-info">{candidateDetails.Candidate_Email__c}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="exp-list">
-                        <p class="exp-company-name">Tata Consultancy Services</p>
-                        <p class="exp-designation">System Engineer</p>
-                        <p class="exp-year">Aug 2019 - Mar 2022 | Pune, India</p>
+                </div>
+                <div class="experience-detail">
+                    <div class="basic-heading-container">
+                        <p class="heading-text">
+                            Work Experience
+                        </p>
+                        <div style="align-self: center;">
+                            <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
+                        </div>
                     </div>
-                    <div class="exp-list">
-                        <p class="exp-company-name">Tata Consultancy Services</p>
-                        <p class="exp-designation">System Engineer</p>
-                        <p class="exp-year">Aug 2019 - Mar 2022 | Pune, India</p>
+                    <div class="exp-detail-container">
+                        <template if:true={candidateDetails.Work_Experience__r}>
+                            <template for:each={candidateDetails.Work_Experience__r} for:item="work">
+                                <div key={work.Id} data-id={work.Id} class="exp-list" onclick={handleEditExperience}>
+                                    <div>
+                                        <p class="exp-company-name">{work.Organisation__c}</p>
+                                        <p class="exp-designation">{work.Name}</p>
+                                        <p class="exp-year">{work.From_Date__c} - {work.To_Date__c} | {work.City__c},
+                                            {work.Country__c}</p>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
                     </div>
-                    <div class="exp-list">
-                        <p class="exp-company-name">Tata Consultancy Services</p>
-                        <p class="exp-designation">System Engineer</p>
-                        <p class="exp-year">Aug 2019 - Mar 2022 | Pune, India</p>
-                    </div>
-                    <div class="exp-list">
-                        <p class="exp-company-name">Tata Consultancy Services</p>
-                        <p class="exp-designation">System Engineer</p>
-                        <p class="exp-year">Aug 2019 - Mar 2022 | Pune, India</p>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -145,7 +117,8 @@
                     <div class="slds-is-relative slds-p-around_large" if:true={isLoading}>
                         <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </div>
-                    <lightning-record-edit-form object-api-name="Work_Experience__c" record-id={}>
+                    <lightning-record-edit-form data-id="updateExperienceForm" object-api-name="Work_Experience__c"
+                        record-id={experienceToUpdate} onsuccess={handleUpdateExpSuccess}>
                         <lightning-input-field field-name="Organisation__c"></lightning-input-field>
                         <lightning-input-field field-name="Is_Current_Company__c"
                             onchange={handleCurrentCompanyChange}></lightning-input-field>
@@ -162,8 +135,8 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <div style="text-align: right;">
-                        <lightning-button variant="brand" type="submit" label="Add"
-                            onclick={handleSubmitExperience}></lightning-button>
+                        <lightning-button variant="brand" type="submit" label="Update"
+                            onclick={handleUpdateExperience}></lightning-button>
                     </div>
                 </footer>
             </div>
@@ -182,7 +155,8 @@
                     <div class="slds-is-relative slds-p-around_large" if:true={isLoading}>
                         <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </div>
-                    <lightning-record-edit-form object-api-name="Work_Experience__c">
+                    <lightning-record-edit-form data-id="addExperienceForm" object-api-name="Work_Experience__c"
+                        onsuccess={handleAddSuccess}>
                         <lightning-input-field field-name="Organisation__c"></lightning-input-field>
                         <lightning-input-field field-name="Is_Current_Company__c"
                             onchange={handleCurrentCompanyChange}></lightning-input-field>
@@ -236,7 +210,8 @@
                     <div class="slds-is-relative slds-p-around_large" if:true={isLoading}>
                         <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </div>
-                    <lightning-record-edit-form object-api-name="Candidate_Details__c" record-id='a055h0000200hIYAAY'>
+                    <lightning-record-edit-form data-id="updateProfileForm" object-api-name="Candidate_Details__c"
+                        record-id={candidateDetails.Id} onsuccess={handleSuccess}>
                         <lightning-input-field field-name="About__c"></lightning-input-field>
                         <div style="display: flex">
                             <lightning-input-field field-name="Candidate_Email__c"

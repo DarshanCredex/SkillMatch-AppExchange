@@ -15,8 +15,11 @@
                             {job.Title_of_position__c}
                         </h1>
                         <div class="buttons">
-                            <lightning-button variant="brand" label="Applicants" onclick={handleApplicantButton}
-                                data-job-id={job.id} style="padding-left: 2%"></lightning-button>
+
+                            <template if:true={showApplicantsButton}>
+                                <lightning-button variant="brand" label="Applicants" onclick={handleApplicantButton}
+                                    data-job-id={job.id} style="padding-left: 2%"></lightning-button>
+                            </template>
                             <lightning-button variant="brand-outline" label="Edit"
                                 onclick={handleEditButton}></lightning-button>
                         </div>
@@ -58,7 +61,7 @@
                             class="slds-modal__close"></lightning-button-icon>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium">
-                        <lightning-record-edit-form record-id={recordId} object-api-name="Job__c">
+                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c">
                             <lightning-input-field field-name="Title_of_position__c"> </lightning-input-field>
                             <lightning-input-field field-name="City__c"> </lightning-input-field>
                             <lightning-input-field field-name="Company_Name__c"> </lightning-input-field>

@@ -63,7 +63,7 @@
                 white-space: normal;
                 width: auto;
                 -webkit-line-clamp: 4;
-                margin: 5% 2% 5% 2%;
+                /*margin: 5% 2% 5% 2%;*/
         }
 
         .skill-container {
@@ -164,10 +164,11 @@
                 height: 48vh;
                 text-align: start;
                 display: grid;
-                grid-template-columns: 50% 50%;
-                grid-template-rows: auto;
+                grid-template-rows: 50% 50%;
+                grid-template-columns: auto;
 
                 .exp-list {
+                    max-width: 50%;
                     align-self: center;
                     padding-left: 4%;
                     background: aliceblue;

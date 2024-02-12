@@ -1,4 +1,5 @@
 import { LightningElement, wire, track } from "lwc";
+import { NavigationMixin } from "lightning/navigation";
 import Id from "@salesforce/user/Id";
 import { getRecord } from "lightning/uiRecordApi";
 import getDraftJobList from "@salesforce/apex/jobObjectController.getDraftJobList";
@@ -8,8 +9,7 @@ import getApplicantDataset from "@salesforce/apex/JobApplicantController.getAppl
 import getApplicantsList from "@salesforce/apex/JobApplicantController.getApplicantsList";
 import getNumberOfApplicants from "@salesforce/apex/JobApplicantController.getNumberOfApplicants";
 import getNumberOfJobsPosted from "@salesforce/apex/JobApplicantController.getNumberOfJobsPosted";
-
-export default class HrLandingPage extends LightningElement {
+export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @track currentUserName;
   @track draftJobList = [];
   @track applicantChartDataset = [];
@@ -19,7 +19,6 @@ export default class HrLandingPage extends LightningElement {
   numberOfJobsPosted;
   doughnutChart;
   doughnutChartjsInitialized = false;
-
 
   config = {
     type: "doughnut",
@@ -136,5 +135,20 @@ export default class HrLandingPage extends LightningElement {
     if (this.doughnutChart) {
       this.doughnutChart.update();
     }
+  }
+
+  navigateToJobDescPage(event) {
+
+    const jobId = event.currentTarget.dataset.jobid;
+    console.log("jobid(sender)----->", jobId);
+
+    sessionStorage.setItem("postedJobId", jobId);
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/job-description-page"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }

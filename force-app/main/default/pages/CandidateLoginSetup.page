@@ -184,50 +184,50 @@ If you're an employee, you can go here:
         <body>
             <apex:form id="loginForm" forceSSL="true">
                 <apex:pageblock >
-                <div class="login-container">
-                    <div class="login-inner-container">
-                        <div class="logo-container">
-                            <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
-                        </div>
-                        <div class="detail-container">
-                            <div class="detail-container-sub">
-                                <div class="separator"></div>
-                                <div class="error-container">
-                                    <apex:pageMessages />
+                    <div class="login-container">
+                        <div class="login-inner-container">
+                            <div class="logo-container">
+                                <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
+                            </div>
+                            <div class="detail-container">
+                                <div class="detail-container-sub">
+                                    <div class="separator"></div>
+                                    <div class="error-container">
+                                        <apex:pageMessages />
+                                    </div>
+                                    <div class="input-group">
+                                        <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputText html-placeholder="Email" id="email" value="{!email}"/>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
+                                    </div>
+                                    
+                                    <div class="forgot-password">
+                                        <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                                    </div>
+                                    
+                                    <div class="buttons-container">
+                                        <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                                        <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
+                                    </div>
+                                    
+                                    <div class="separator"></div>
+                                    
+                                    <div class="hr-portal">
+                                        <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage">Login/Register as Recruiter</a>
+                                    </div>
+                                    
+                                    <div class="separator"></div>
                                 </div>
-                                <div class="input-group">
-                                    <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
-                                    <apex:inputText html-placeholder="Email" id="email" value="{!email}"/>
-                                </div>
-                                
-                                <div class="input-group">
-                                    <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                                    <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
-                                </div>
-                                
-                                <div class="forgot-password">
-                                    <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
-                                </div>
-                                
-                                <div class="buttons-container">
-                                    <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
-                                    <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" value="Login"/>
-                                </div>
-                                
-                                <div class="separator"></div>
-                                
-                                <div class="hr-portal">
-                                    <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage">Login/Register as Recruiter</a>
-                                </div>
-                                
-                                <div class="separator"></div>
                             </div>
                         </div>
+                        <div class="copyright">
+                            &copy; Copyright 2024, Credex Technology, All rights reserved
+                        </div>
                     </div>
-                    <div class="copyright">
-                        &copy; Copyright 2024, Credex Technology, All rights reserved
-                    </div>
-                </div>
                 </apex:pageblock>
             </apex:form>
         </body>
