@@ -2,28 +2,77 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-12-2024
+ * @last modified on  : 02-14-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
-  public class DataSet {
+  public class CandidateWrapper {
     @AuraEnabled
-    public String label { get; set; }
+    public Integer matchPercentage { get; set; }
     @AuraEnabled
-    public Integer count { get; set; }
+    public String About { get; set; }
+    @AuraEnabled
+    public String Candidate_Email { get; set; }
+    @AuraEnabled
+    public String City { get; set; }
+    @AuraEnabled
+    public String Country { get; set; }
+    @AuraEnabled
+    public Id CreatedById { get; set; }
+    @AuraEnabled
+    public Decimal Experience { get; set; }
+    @AuraEnabled
+    public Id LastModifiedById { get; set; }
+    @AuraEnabled
+    public String Name { get; set; }
+    @AuraEnabled
+    public Id OwnerId { get; set; }
+    @AuraEnabled
+    public String Phone_Number { get; set; }
+    @AuraEnabled
+    public String Skills { get; set; }
+    @AuraEnabled
+    public String Id { get; set; }
+    @AuraEnabled
+    public boolean isAccepted { get; set; }
 
-    public DataSet(String label, Integer count) {
-      this.label = label;
-      this.count = count;
+    public CandidateWrapper(
+      Candidate_Details__c candidate,
+      Integer matchPercentage
+    ) {
+      this.matchPercentage = matchPercentage;
+      this.About = candidate.About__c;
+      this.Candidate_Email = candidate.Candidate_Email__c;
+      this.City = candidate.City__c;
+      this.Country = candidate.Country__c;
+      this.CreatedById = candidate.CreatedById;
+      this.Experience = candidate.Experience__c;
+      this.LastModifiedById = candidate.LastModifiedById;
+      this.Name = candidate.Name;
+      this.OwnerId = candidate.OwnerId;
+      this.Phone_Number = candidate.Phone_Number__c;
+      this.Skills = candidate.Skills__c;
+      this.Id = candidate.Id;
+      this.isAccepted = false;
     }
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<Candidate_Details__c> fetchCandidateNames(string jobId) {
-    system.debug('jobId----->' + jobId);
-
+  public static List<CandidateWrapper> fetchCandidateNames(string jobId) {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
-    List<Candidate_Details__c> candidateRecords = new List<Candidate_Details__c>();
+    List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
+
+    // Required Skills of job
+    List<Job__c> jobs = [
+      SELECT Skills_Required__c
+      FROM Job__c
+      WHERE Id = :jobId
+    ];
+    List<String> requiredSkills = new List<String>();
+
+    for (Job__c job : jobs) {
+      requiredSkills.add(job.Skills_Required__c);
+    }
 
     for (Job_Applicants__c applicant : [
       SELECT CandidateId__c
@@ -32,7 +81,6 @@ public with sharing class JobApplicantController {
     ]) {
       candidateIdList.add(applicant);
     }
-    system.debug('candidateIdList-------->' + candidateIdList);
 
     List<Id> candidateIds = new List<Id>();
     for (Job_Applicants__c applicant : candidateIdList) {
@@ -56,53 +104,16 @@ public with sharing class JobApplicantController {
       FROM Candidate_Details__c
       WHERE Id IN :candidateIds
     ]) {
-      candidateRecords.add(candidate);
-    }
-    system.debug('candidateRecords--------->' + candidateRecords);
-    return candidateRecords;
-  }
-
-  @AuraEnabled(cacheable=true)
-  public static List<DataSet> getApplicantDataset() {
-    List<DataSet> dataSet = new List<DataSet>();
-
-    try {
-      List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c]) {
-        jobIdList.add(job.Id);
-      }
-
-      List<Id> jobApplicantIdList = new List<Id>();
-      for (Job_Applicants__c jobApplicant : [
-        SELECT CandidateId__c
-        FROM Job_Applicants__c
-        WHERE Job_Id__c IN :jobIdList
-      ]) {
-        jobApplicantIdList.add(jobApplicant.CandidateId__c);
-      }
-      system.debug('jobApplicantIdList------------->' + jobApplicantIdList);
-      List<AggregateResult> results = [
-        SELECT COUNT(Id) cnt, City__c
-        FROM Candidate_Details__c
-        WHERE Id IN :jobApplicantIdList
-        GROUP BY City__c
-      ];
-
-      system.debug('results--------->' + results);
-
-      for (AggregateResult ar : results) {
-        String City = (String) ar.get('City__c');
-        Integer total = (Integer) ar.get('cnt');
-        dataSet.add(new DataSet(City, total));
-      }
-    } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' at line ' + e.getLineNumber()
+      Integer matchPercentage = calculateMatchPercentage(
+        requiredSkills,
+        candidate.Skills__c.split(';')
       );
+
+      candidateRecords.add(new CandidateWrapper(candidate, matchPercentage));
     }
 
-    System.debug('DataSet: ' + dataSet);
-    return dataSet;
+    system.debug('candidateRecords---------->' + candidateRecords);
+    return candidateRecords;
   }
 
   @AuraEnabled(cacheable=true)
@@ -113,7 +124,7 @@ public with sharing class JobApplicantController {
       List<Job_Applicants__c> applicantList = [
         SELECT CandidateId__c
         FROM Job_Applicants__c
-        ORDER BY CreatedDate
+        ORDER BY CreatedDate DESC
         LIMIT 3
       ];
 
@@ -184,5 +195,59 @@ public with sharing class JobApplicantController {
     }
     system.debug('jobList------->' + jobList);
     return jobList;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<string> getStatusPicklistValues() {
+    system.debug('start');
+    try {
+      string fieldname = 'Application_Status__c';
+      String objectApiName = 'Job_Applicants__c';
+      JobPicklistController controller = new JobPicklistController();
+
+      list<string> picklistValues = controller.getPicklistValues(
+        objectApiName,
+        fieldName
+      );
+
+      system.debug('picklistValues------->' + picklistValues);
+      return picklistValues;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  // Method to calculate match percentage
+  private static Integer calculateMatchPercentage(
+    List<String> requiredSkills,
+    List<String> candidateSkills
+  ) {
+    List<String> candidateSkillsLower = new List<String>();
+    for (String skill : candidateSkills) {
+      candidateSkillsLower.add(skill.normalizeSpace().toLowerCase());
+    }
+
+    List<String> requiredSkillsLower = new List<String>();
+    for (String skill : requiredSkills) {
+      requiredSkillsLower.add(skill.normalizeSpace().toLowerCase());
+    }
+
+    System.debug('candidateSkillsLower-------->' + candidateSkillsLower);
+    System.debug('requiredSkillsLower-------->' + requiredSkillsLower);
+
+    Integer commonSkillsCount = 0;
+    for (String skill : requiredSkillsLower) {
+      if (candidateSkillsLower.contains(skill)) {
+        commonSkillsCount++;
+      }
+    }
+    if (requiredSkillsLower.size() > 0) {
+      Integer matchPercentage =
+        (commonSkillsCount * 100) / requiredSkillsLower.size();
+      System.debug('matchPercentage------>' + matchPercentage);
+      return matchPercentage;
+    } else {
+      return 0;
+    }
   }
 }

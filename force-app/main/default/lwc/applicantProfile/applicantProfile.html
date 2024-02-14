@@ -2,115 +2,53 @@
   @description       : applicant details page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-12-2024
+  @last modified on  : 02-14-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
     <template for:each={applicantDetails} for:item="applicant">
-        <div key={applicant.Id}>
-            <div class="profile-container">
-                <div class="profile-left-container">
-                    <div class="profile-image">
-                        <span class="slds-avatar slds-avatar_circle" style="height: 100%;width: 100%;">
-                            <span class="slds-icon_container slds-icon-standard-user" title="Profile Image">
-                                <svg class="slds-icon" aria-hidden="true" style="height: 100%;width: 100%;">
-                                    <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#user"></use>
-                                </svg>
-                            </span>
-                        </span>
-                    </div>
-                    <p class="name">{applicant.Name}</p>
-                    <p class="title">{applicant.Job_Title__c}</p>
-                    <p class="about-me">
-                        {applicant.About__c}
-                    </p>
-                    <div class="skill-container">
-                        <p class="heading-text">Skills</p>
-                        <div class="skill-list">
-                            <template for:each={skills} for:item="skill">
-                                <p class="skill-info" key={skill}>
-                                    {skill}
-                                </p>
-                            </template>
-                        </div>
-                    </div>
+        <div key={applicant.Id} class="main">
+        <div class="profile-details">
+            <div class="upper">
+                <div class="profile-image">
+                    <lightning-formatted-rich-text
+                      value={applicant.Profile_Picture__c}
+                    ></lightning-formatted-rich-text>
                 </div>
-                <div class="profile-right-container">
-                    <div class="basic-detail">
-                        <div class="basic-heading-container">
-                            <p class="heading-text">
-                                Basic Information
-                            </p>
-                            <div style="align-self: center;">
-                                <lightning-button label="View Resume" onclick={handleResume}
-                                    class="edit-button"></lightning-button>
-                            </div>
-                        </div>
-                        <div class="detail-container">
-                            <div class="section">
-                                <div class="top-section">
-                                    <div class="detail-heading">Date of Birth</div>
-                                    <div class="detail-info">{applicant.Date_of_birth__c}</div>
-                                </div>
-                                <div class="bottom-section">
-                                    <div class="detail-heading">Last Drawn Salary</div>
-                                    <div class="detail-info">{applicant.CTC__c}</div>
-                                </div>
-                            </div>
-                            <div class="section">
-                                <div class="top-section">
-                                    <div class="detail-heading">Years of Experience</div>
-                                    <div class="detail-info">{applicant.Experience__c}</div>
-                                </div>
-                                <div class="bottom-section">
-                                    <div class="detail-heading">Location</div>
-                                    <div class="detail-info">{applicant.City__c}, {applicant.Country__c}</div>
-                                </div>
-                            </div>
-                            <div class="section">
-                                <div class="top-section">
-                                    <div class="detail-heading">Phone</div>
-                                    <div class="detail-info">{applicant.Phone_Number__c}</div>
-                                </div>
-                                <div class="bottom-section">
-                                    <div class="detail-heading">Email</div>
-                                    <div class="detail-info">{applicant.Candidate_Email__c}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="profile-info">
+                    <h1>{applicant.Name}</h1>
+                    <p>{applicant.Job_Title__c}</p>
 
-
-                    <div>
-                        <div class="experience-detail">
-                            <div class="basic-heading-container">
-                                <p class="heading-text">
-                                    Work Experience
-                                </p>
-                            </div>
-                            
-                                <div  class="exp-detail-container">
-
-                                    <template for:each={workExpDetails} for:item="work">
-                                    <div key={work.Id} class="exp-list">
-                                        <div>
-                                            <p class="exp-company-name">{work.Organisation__c}</p>
-                                            <p class="exp-designation">{work.Name}</p>
-                                            <p class="exp-year">
-                                                {work.From_Date__c} - {work.To_Date__c} |
-                                                {work.City__c},{work.Country__c}
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                    </template>
-                                </div>
-                            
-                        </div>
-                    </div>
-
+                    <lightning-button 
+                      variant="Neutral"
+                      label="View CV" 
+                    ></lightning-button>
                 </div>
             </div>
+            <hr class="hr">
+            <div class="lower">
+                <div class="workExp">
+                    <h1>Experience</h1>
+                </div>
+                <template for:each={workExpDetails} for:item="exp">
+                    <div key={exp.Id}>
+                        <div class="exp">
+                            <h1>{exp.Organisation__c}</h1>
+                            <h2>{exp.Name}</h2>
+                            <p>{exp.To_Date__c} - {exp.From_Date__c}</p>
+                            <p>{exp.City__c}, {exp.Country__c}</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
+        <div class="about">
+            <h1>About</h1>
+            <p class="applicant-p-tag">{applicant.About__c}</p>
+            <hr class="hr">
+            <h1>Skills</h1>
+            <p>{applicant.Skills__c}</p>
+        </div>
+    </div>
     </template>
 </template>

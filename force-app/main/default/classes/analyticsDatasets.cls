@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-08-2024
+ * @last modified on  : 02-13-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -16,6 +16,49 @@ public with sharing class analyticsDatasets {
       this.label = label;
       this.count = count;
     }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<DataSet> getApplicantDataset() {
+    List<DataSet> dataSet = new List<DataSet>();
+
+    try {
+      List<Id> jobIdList = new List<Id>();
+      for (Job__c job : [SELECT Id FROM Job__c]) {
+        jobIdList.add(job.Id);
+      }
+
+      List<Id> jobApplicantIdList = new List<Id>();
+      for (Job_Applicants__c jobApplicant : [
+        SELECT CandidateId__c
+        FROM Job_Applicants__c
+        WHERE Job_Id__c IN :jobIdList
+      ]) {
+        jobApplicantIdList.add(jobApplicant.CandidateId__c);
+      }
+      system.debug('jobApplicantIdList------------->' + jobApplicantIdList);
+      List<AggregateResult> results = [
+        SELECT COUNT(Id) cnt, City__c
+        FROM Candidate_Details__c
+        WHERE Id IN :jobApplicantIdList
+        GROUP BY City__c
+      ];
+
+      system.debug('results--------->' + results);
+
+      for (AggregateResult ar : results) {
+        String City = (String) ar.get('City__c');
+        Integer total = (Integer) ar.get('cnt');
+        dataSet.add(new DataSet(City, total));
+      }
+    } catch (Exception e) {
+      System.debug(
+        'Error--------> ' + e.getMessage() + ' at line ' + e.getLineNumber()
+      );
+    }
+
+    System.debug('DataSet: ' + dataSet);
+    return dataSet;
   }
 
   @AuraEnabled(cacheable=true)

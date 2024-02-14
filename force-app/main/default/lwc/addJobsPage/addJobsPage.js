@@ -7,6 +7,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
 import { NavigationMixin } from "lightning/navigation";
 
+
 export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValues = [];
   industryValues = [];

@@ -5,7 +5,7 @@ import { getRecord } from "lightning/uiRecordApi";
 import getDraftJobList from "@salesforce/apex/jobObjectController.getDraftJobList";
 import chartjs from "@salesforce/resourceUrl/chartjs";
 import { loadScript } from "lightning/platformResourceLoader";
-import getApplicantDataset from "@salesforce/apex/JobApplicantController.getApplicantDataset";
+import getApplicantDataset from "@salesforce/apex/analyticsDatasets.getApplicantDataset";
 import getApplicantsList from "@salesforce/apex/JobApplicantController.getApplicantsList";
 import getNumberOfApplicants from "@salesforce/apex/JobApplicantController.getNumberOfApplicants";
 import getNumberOfJobsPosted from "@salesforce/apex/JobApplicantController.getNumberOfJobsPosted";

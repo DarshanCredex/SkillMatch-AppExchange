@@ -15,7 +15,8 @@ export default class ApplicantProfile extends LightningElement {
     }
     if (data) {
       this.applicantDetails = data;
-      
+      console.log("this.applicantDetails", this.applicantDetails);
+
       if (this.applicantDetails && this.applicantDetails.Skills__c) {
         this.skills = [...this.applicantDetails.Skills__c.split(",")];
         console.log("this.skills", this.skills);

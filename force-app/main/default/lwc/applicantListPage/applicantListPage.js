@@ -3,15 +3,22 @@ import fetchCandidateNames from "@salesforce/apex/JobApplicantController.fetchCa
 import fetchJobDetails from "@salesforce/apex/JobApplicantController.fetchJobDetails";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { NavigationMixin } from "lightning/navigation";
+
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
   @track candidateDetails = [];
   @track jobDetails = [];
+  @track statusValues = [];
+  isAccepted = false;
+  candidateId;
   jobId;
   subscription = null;
   candiateListIsEmpty = false;
   emptyBox = emptyBox;
+  requiredSkills = "";
+  applicantSkills = "";
+  matchPercentage;
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
@@ -23,40 +30,45 @@ export default class ApplicantListPage extends NavigationMixin(
   }
 
   fetchCandidateNames() {
-    console.log("job id inside fucntion------>", this.jobId);
     fetchCandidateNames({ jobId: this.jobId }).then((data) => {
       this.candidateDetails = data;
-      console.log("this.candidateDetails------->", this.candidateDetails);
-      if (this.candidateDetails.length > 0) {
-        this.candiateListIsEmpty = true;
-        console.log(
-          "this.candiateListIsEmpty------>",
-          this.candiateListIsEmpty
-        );
-      }
       console.log(
-        "this.candidateDetails--------->",
+        "this.candidateDetails------->",
         JSON.stringify(this.candidateDetails)
       );
+      if (this.candidateDetails.length > 0) {
+        this.candiateListIsEmpty = true;
+      }
     });
   }
+
   fetchJobDetails() {
     fetchJobDetails({ jobId: this.jobId }).then((data) => {
       this.jobDetails = data;
-      console.log("this.jobDetails------->", this.jobDetails);
     });
   }
   navigateToDetailsPage(event) {
-    const candidateId = event.currentTarget.dataset.candidateid;
-
+    this.candidateId = event.currentTarget.dataset.candidateid;
+    console.log("this.candidateId", this.candidateId);
     const pageReference = {
       type: "standard__webPage",
       attributes: {
         url: "/applicant-details"
       }
     };
-    sessionStorage.setItem("candidateid", candidateId);
-    console.log("candidateid(sender)---->", candidateId);
+
+    sessionStorage.setItem("candidateid", this.candidateId);
+    console.log("candidateid(sender)---->", this.candidateId);
     this[NavigationMixin.Navigate](pageReference);
+  }
+  handleAcceptButton(event) {
+    console.log("inside handleacceptbutton");
+    const candidateId = event.target.value;
+    console.log("candidateId", candidateId);
+    this.candidateDetails = this.candidateDetails.forEach((candidate) => {
+      if (candidate.Id === candidateId) {
+        candidate.isAccepted = true;
+      }
+    });
   }
 }

@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-12-2024
+ * @last modified on  : 02-13-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -25,7 +25,8 @@ public with sharing class GetApplicantData {
         Phone_Number__c,
         Skills__c,
         Experience__c,
-        Job_Title__c
+        Job_Title__c,
+        Profile_Picture__c
       FROM Candidate_Details__c
       WHERE id = :applicantId
     ];

@@ -2,7 +2,7 @@
  * @description       : To extract the picklist field values in job custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 01-05-2024
+ * @last modified on  : 02-13-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobPicklistController {
@@ -22,9 +22,9 @@ public with sharing class JobPicklistController {
       for (Schema.PicklistEntry entry : fieldDescribe.getPicklistValues()) {
         picklistValues.add(entry.getLabel());
       }
-      System.debug('picklistValues: ' + picklistValues);
+      System.debug('picklistValues------->' + picklistValues);
     } catch (Exception e) {
-      System.debug('Error: ' + e.getMessage());
+      System.debug('Error---->' + e.getMessage()+'--------->'+e.getLineNumber());
     }
 
     return picklistValues;

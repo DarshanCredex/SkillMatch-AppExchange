@@ -2,7 +2,7 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-12-2024
+  @last modified on  : 02-13-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -27,16 +27,33 @@
               <td><b>Experience</b></td>
               <td><b>Match Percentage</b> </td>
               <td><b>Location</b></td>
+              <td><b>Status</b></td>
             </tr>
           </thead>
           <tbody>
             <template for:each={candidateDetails} for:item="candidate">
-              <tr key={candidate.Id} data-candidateid={candidate.Id}  onclick={navigateToDetailsPage}>
-                <td>{candidate.Name}</td>
-                <td>{candidate.Candidate_Email__c}</td>
-                <td>{candidate.Experience__c} years</td>
-                <td>56%</td>
-                <td>{candidate.City__c}, {candidate.Country__c}</td>
+              <tr key={candidate.Id}>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Name}</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Candidate_Email}</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Experience} years</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
+                  <div data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
+                    <p>{candidate.matchPercentage}%</p>
+                    <!-- <p><lightning-progress-bar value={candidate.matchPercentage} size="small"
+                        variant="circular"></lightning-progress-bar></p> -->
+                  </div>
+                </td>
+                <td onclick={navigateToDetailsPage}>{candidate.City},
+                  {candidate.Country}</td>
+                <td>
+                  <template if:true={candidate.isAccepted}>
+                    <h1>Shortlisted</h1>
+                  </template>
+                  <template if:false={candidate.isAccepted}>
+                    <lightning-button variant="brand" value={candidate.Id} label="Shortlist"
+                    onclick={handleAcceptButton}></lightning-button>
+                  </template>
+                </td>
               </tr>
             </template>
           </tbody>
