@@ -1,53 +1,63 @@
 .main {
     width: 100%;
+    max-height: auto;
     height: auto;
-    background-color: #f4f4f4;
     padding: 2%;
+    background-color: #f5f5f5;
+    box-shadow: 10px rgba(0, 0, 0, 0.1);
 }
-
-.title-of-job h1 {
-    font-size: 2rem;
-}
-
-.title-of-job {
+.buttons{
     display: flex;
+    flex-direction: row;
+}
+
+.title {
+    display: flex;
+    flex: row;
     justify-content: space-between;
-}
-
-.type,
-.experience,
-.location {
-    font-size: 1rem;
-}
-
-.type,
-.experience {
-    padding-left: 2%;
-}
-
-.about-job {
-    display: flex;
-    flex-direction: row;
-}
-
-.salary-range h1,
-.summary h1,
-.about-this-role h1 {
-    padding-top: 3%;
-    font-size: 22px;
-}
-
-.salary-range p,
-.summary p,
-.about-this-role p {
-    font-size: 15px;
-}
-
-.buttons {
-    display: flex;
-    flex-direction: row;
 }
 
 .buttons lightning-button {
     padding: 3%;
+}
+
+
+.job-description div h1 {
+    font-size: 30px;
+    padding: 1%;
+}
+
+.skills h1,
+.job-description h2 {
+    font-size: 20px;
+    padding: 1%;
+}
+
+.skills p {
+    font-size: 18px;
+    text-wrap: nowrap;
+    padding-left: 2%;
+}
+
+.job-description p {
+    font-size: 15px;
+    padding: 1%;
+    width: 60%;
+    height: auto;
+    text-wrap: wrap;
+}
+
+.requirements {
+    display: flex;
+    flex-direction: column;
+}
+
+.requirements h1 {
+    font-size: 20px;
+    padding: 1%;
+}
+
+.requirements p {
+    font-size: 18px;
+    padding-left: 2%;
 }

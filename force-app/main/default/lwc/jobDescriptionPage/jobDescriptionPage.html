@@ -2,55 +2,44 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-13-2024
+  @last modified on  : 02-14-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
     <div class="main">
-        <div>
-            <template for:each={jobDetails} for:item="job">
-                <div key={job.id}>
-                    <div class="title-of-job">
-                        <h1>
-                            {job.Title_of_position__c}
-                        </h1>
+        <template for:each={jobDetails} for:item="job">
+            <div key={job.Id}>
+                <div class="job-description">
+                    <div class="title">
+                        <h1>{job.Title_of_position__c}</h1>
+
                         <div class="buttons">
-
-                            <template if:true={showApplicantsButton}>
-                                <lightning-button variant="brand" label="Applicants" onclick={handleApplicantButton}
-                                    data-job-id={job.id} style="padding-left: 2%"></lightning-button>
-                            </template>
-                            <lightning-button variant="brand-outline" label="Edit"
-                                onclick={handleEditButton}></lightning-button>
+                            <lightning-button variant="brand" label="Applicants" data-job-id={job.id} lwc:if={showApplicantsButton}
+                                onclick={handleApplicantButton}></lightning-button>
+                            <lightning-button variant="Neutral" label="Edit" onclick={handleEditButton}></lightning-button>
                         </div>
                     </div>
-                    <div class="about-job">
-                        <div class="location">
-                            <p>📍{job.City__c}, {job.Country__c}</p>
-                        </div>
-                        <div class="type">
-                            <p>{job.Type__c},</p>
-                        </div>
-                        <div class="experience">
-                            <p>{job.Experience__c}</p>
-                        </div>
-                    </div>
-                    <div class="about-this-role">
-                        <h1>About this role</h1>
-                        <lightning-formatted-rich-text value={job.Description__c}></lightning-formatted-rich-text>
-                    </div>
-                    <div class="salary-range">
-                        <h1>Salary</h1>
-                        <p>Rs. {job.Salary__c}</p>
-                    </div>
-                    <div class="summary">
-                        <h1>Company Overview</h1>
-                        <p>{job.Summary__c}</p>
-                    </div>
-
+                    <h2>📍{job.City__c}, {job.Country__c}</h2>
+                    <hr>
+                    <h2>Job Description</h2>
+                    <p><lightning-formatted-rich-text value={job.Description__c}></lightning-formatted-rich-text></p>
                 </div>
-            </template>
-        </div>
+                <hr>
+                <div class="skills">
+                    <h1>Skills</h1>
+                    <p>{job.Skills_Required__c}</p>
+                </div>
+                <hr>
+                <div class="requirements">
+                    <h1>Requirements</h1>
+                    <p>Experience- {job.Experience__c}</p>
+                    <p>Type- {job.Type__c}</p>
+                    <p>Salary - Rs {job.Salary__c}</p>
+                    <p>Industry - {job.Industry__c}</p>
+                </div>
+            </div>
+
+        </template>
 
         <template lwc:if={isEditModalOpen}>
             <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">

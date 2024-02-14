@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-13-2024
+ * @last modified on  : 02-14-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -154,6 +154,7 @@ public with sharing class jobObjectController {
           Status__c,
           Summary__c,
           Title_of_position__c,
+          Skills_Required__c,
           Type__c,
           Id
         FROM Job__c

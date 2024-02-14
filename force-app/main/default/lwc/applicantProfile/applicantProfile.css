@@ -1,6 +1,6 @@
 .main {
-    display: flex; /* Make the container a flexbox */
-    justify-content: space-evenly; /* Space the items evenly */
+    display: flex; 
+    justify-content: space-evenly;
     width: 100%;
     min-height: 100vh;
     background-color: #efefef;
