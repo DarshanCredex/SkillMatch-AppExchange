@@ -2,7 +2,7 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-13-2024
+  @last modified on  : 02-15-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -12,8 +12,7 @@
       <div class="job-description">
         <template for:each={jobDetails} for:item="job">
           <div key={job.id}>
-            <h1>{job.Title_of_position__c} </h1>
-            <p>{job.Summary__c}</p>
+            <h1>{job.Title_of_position__c}</h1>
           </div>
         </template>
       </div>
@@ -39,20 +38,12 @@
                 <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
                   <div data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
                     <p>{candidate.matchPercentage}%</p>
-                    <!-- <p><lightning-progress-bar value={candidate.matchPercentage} size="small"
-                        variant="circular"></lightning-progress-bar></p> -->
                   </div>
                 </td>
                 <td onclick={navigateToDetailsPage}>{candidate.City},
                   {candidate.Country}</td>
                 <td>
-                  <template if:true={candidate.isAccepted}>
-                    <h1>Shortlisted</h1>
-                  </template>
-                  <template if:false={candidate.isAccepted}>
-                    <lightning-button variant="brand" value={candidate.Id} label="Shortlist"
-                    onclick={handleAcceptButton}></lightning-button>
-                  </template>
+                    <p>{candidate.Status}</p>
                 </td>
               </tr>
             </template>

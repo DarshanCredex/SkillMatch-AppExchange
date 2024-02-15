@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-13-2024
+ * @last modified on  : 02-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -54,6 +54,7 @@ public with sharing class GetApplicantData {
         Id
       FROM Work_Experience__c
       WHERE CandidateId__c = :applicantId
+      Order by To_Date__c desc
     ];
 
     system.debug('workExpList'+workExpList);

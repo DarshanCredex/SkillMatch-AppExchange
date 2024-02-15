@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-14-2024
+ * @last modified on  : 02-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -35,10 +35,13 @@ public with sharing class JobApplicantController {
     public String Id { get; set; }
     @AuraEnabled
     public boolean isAccepted { get; set; }
+    @AuraEnabled
+    public string Status { get; set; }
 
     public CandidateWrapper(
       Candidate_Details__c candidate,
-      Integer matchPercentage
+      Integer matchPercentage,
+      String Status
     ) {
       this.matchPercentage = matchPercentage;
       this.About = candidate.About__c;
@@ -54,6 +57,7 @@ public with sharing class JobApplicantController {
       this.Skills = candidate.Skills__c;
       this.Id = candidate.Id;
       this.isAccepted = false;
+      this.Status = Status;
     }
   }
 
@@ -108,8 +112,10 @@ public with sharing class JobApplicantController {
         requiredSkills,
         candidate.Skills__c.split(';')
       );
-
-      candidateRecords.add(new CandidateWrapper(candidate, matchPercentage));
+      string Status = getApplicantStatus(candidate.Id);
+      candidateRecords.add(
+        new CandidateWrapper(candidate, matchPercentage, status)
+      );
     }
 
     system.debug('candidateRecords---------->' + candidateRecords);
@@ -197,24 +203,43 @@ public with sharing class JobApplicantController {
     return jobList;
   }
 
-  @AuraEnabled(cacheable=true)
-  public static List<string> getStatusPicklistValues() {
-    system.debug('start');
+  @AuraEnabled
+  public static void changeStatus(string value, string applicantId) {
+    system.debug('applicantId---->' + applicantId);
+    system.debug('value---->' + value);
+
+    list<Job_Applicants__c> applicantList = new List<Job_Applicants__c>();
     try {
-      string fieldname = 'Application_Status__c';
-      String objectApiName = 'Job_Applicants__c';
-      JobPicklistController controller = new JobPicklistController();
-
-      list<string> picklistValues = controller.getPicklistValues(
-        objectApiName,
-        fieldName
-      );
-
-      system.debug('picklistValues------->' + picklistValues);
-      return picklistValues;
+      for (Job_Applicants__c applicant : [
+        SELECT Application_Status__c
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :applicantId
+      ]) {
+        applicant.Application_Status__c = value;
+        System.debug(
+          'applicant.Application_Status__c' + applicant.Application_Status__c
+        );
+        applicantList.add(applicant);
+      }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
+
+    if (!applicantList.IsEmpty()) {
+      update applicantList;
+    }
+  }
+  @AuraEnabled(cacheable=true)
+  public static string getApplicantStatus(string applicantId) {
+    string status;
+    for (Job_Applicants__c applicant : [
+      SELECT Application_Status__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantId
+    ]) {
+      status = applicant.Application_Status__c;
+    }
+    return status;
   }
 
   // Method to calculate match percentage

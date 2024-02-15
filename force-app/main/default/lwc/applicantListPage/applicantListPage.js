@@ -10,7 +10,6 @@ export default class ApplicantListPage extends NavigationMixin(
   @track candidateDetails = [];
   @track jobDetails = [];
   @track statusValues = [];
-  isAccepted = false;
   candidateId;
   jobId;
   subscription = null;
@@ -19,6 +18,9 @@ export default class ApplicantListPage extends NavigationMixin(
   requiredSkills = "";
   applicantSkills = "";
   matchPercentage;
+  IsPending = false;
+  IsAccepted = false;
+  IsRejected = false;
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {

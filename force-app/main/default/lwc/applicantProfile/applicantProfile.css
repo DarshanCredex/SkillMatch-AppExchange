@@ -116,3 +116,10 @@
     padding: 2%;
     margin: 0 auto; 
 }
+.buttons{
+    display: flex;
+    flex-direction: row;
+}
+.buttons lightning-button{
+    padding-left: 2%;
+}
