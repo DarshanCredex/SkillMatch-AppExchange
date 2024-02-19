@@ -2,7 +2,7 @@
     @description       : hr community login page
     @author            : Rudransh SHukla
     @group             : 
-    @last modified on  : 01-19-2024
+    @last modified on  : 02-19-2024
     @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
     -->
     <apex:page controller="recruiterLoginController"  id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
@@ -156,19 +156,21 @@
                             <div class="detail-container">
                                 <div class="detail-container-sub">
                                     <div class="separator"></div>
-                                    
+                                    <div class="error-container">
+                                        <apex:pageMessages />
+                                    </div>
                                     <div class="input-group">
                                         <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                                        <apex:inputText html-placeholder="Username"/>
+                                        <apex:inputText html-placeholder="Email" id="email" value="{!email}" />
                                     </div>
                                     
                                     <div class="input-group">
                                         <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                                        <apex:inputSecret html-placeholder="Password"/>
+                                        <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
                                     </div>
                                     
                                     <div class="forgot-password">
-                                        <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                                        <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterForgotPassword">Forgot your password?</a>
                                     </div>
                                     
                                     <div class="buttons-container">

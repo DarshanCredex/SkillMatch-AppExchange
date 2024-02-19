@@ -13,7 +13,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @track currentUserName;
   @track draftJobList = [];
   @track applicantChartDataset = [];
-  @track applicantsList = [];
+  @track applicantsList;
 
   numberOfApplicants;
   numberOfJobsPosted;
@@ -72,6 +72,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   wiredGetApplicantsList({ error, data }) {
     if (data) {
       this.applicantsList = data;
+      console.log("this.applicantsList--------->", JSON.stringify(this.applicantsList));
     } else {
       console.log("error------->", error);
     }

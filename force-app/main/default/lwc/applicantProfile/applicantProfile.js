@@ -4,8 +4,12 @@ import GetWorkExperienceData from "@salesforce/apex/GetApplicantData.GetWorkExpe
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
+import getResume from "@salesforce/apex/GetApplicantData.getResume";
+import { NavigationMixin } from "lightning/navigation";
 
-export default class ApplicantProfile extends LightningElement {
+export default class ApplicantProfile extends NavigationMixin(
+  LightningElement
+) {
   applicantId = sessionStorage.getItem("candidateid");
   applicantDetails = [];
   workExpDetails = [];
@@ -14,6 +18,7 @@ export default class ApplicantProfile extends LightningElement {
   IsAccepted = false;
   IsRejected = false;
   value;
+  contentDocumentId;
 
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
   wiredGetApplicantDataMethod({ error, data }) {
@@ -22,6 +27,7 @@ export default class ApplicantProfile extends LightningElement {
     }
     if (data) {
       this.applicantDetails = data;
+      console.log("applicantId------>", this.applicantId);
       console.log("this.applicantDetails", this.applicantDetails);
 
       if (this.applicantDetails && this.applicantDetails.Skills__c) {
@@ -52,6 +58,7 @@ export default class ApplicantProfile extends LightningElement {
       }
     );
     this.IsAccepted = true;
+    this.IsRejected = false;
   }
   handleRejectedButton(event) {
     this.value = event.target.value;
@@ -79,9 +86,38 @@ export default class ApplicantProfile extends LightningElement {
       this.status = data;
       if (this.status === "Accepted") {
         this.IsAccepted = true;
+        this.IsRejected = false;
       } else if (this.status === "Rejected") {
         this.IsRejected = true;
+        this.IsAccepted = true;
       }
     });
+  }
+  handleResumePreview() {
+    getResume({ applicantId: this.applicantId })
+      .then((data) => {
+        if (data && data.length > 0) {
+          this.contentDocumentId = data[0].ContentDocumentId;
+          console.log("contentDocumentId------->", this.contentDocumentId);
+          this.showPdf();
+        } else {
+          console.error("No content document found.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching resume:", error);
+      });
+  }
+
+  showPdf(){
+     this[NavigationMixin.Navigate]({
+       type: "standard__namedPage",
+       attributes: {
+         pageName: "filePreview"
+       },
+       state: {
+         selectedRecordId: this.contentDocumentId
+       }
+     });
   }
 }

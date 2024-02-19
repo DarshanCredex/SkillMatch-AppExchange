@@ -3,24 +3,28 @@ import fetchCandidateNames from "@salesforce/apex/JobApplicantController.fetchCa
 import fetchJobDetails from "@salesforce/apex/JobApplicantController.fetchJobDetails";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { NavigationMixin } from "lightning/navigation";
-
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
   @track candidateDetails = [];
   @track jobDetails = [];
   @track statusValues = [];
+  @track pendingCandidates = [];
+  @track acceptedCandidates = [];
+  @track rejectedCandidates = [];
+
   candidateId;
   jobId;
-  subscription = null;
-  candiateListIsEmpty = false;
   emptyBox = emptyBox;
-  requiredSkills = "";
-  applicantSkills = "";
-  matchPercentage;
-  IsPending = false;
+
+  candiateListIsEmpty = false;
+
   IsAccepted = false;
   IsRejected = false;
+  showAllCandidates = true;
+  showAccepted = false;
+  showPending = false;
+  showRejected = false;
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
@@ -63,14 +67,40 @@ export default class ApplicantListPage extends NavigationMixin(
     console.log("candidateid(sender)---->", this.candidateId);
     this[NavigationMixin.Navigate](pageReference);
   }
-  handleAcceptButton(event) {
-    console.log("inside handleacceptbutton");
-    const candidateId = event.target.value;
-    console.log("candidateId", candidateId);
-    this.candidateDetails = this.candidateDetails.forEach((candidate) => {
-      if (candidate.Id === candidateId) {
-        candidate.isAccepted = true;
-      }
+
+  filterPending() {
+    this.pendingCandidates = this.candidateDetails.filter((item) => {
+      return item.Status === "Pending";
     });
+    this.showAllCandidates = false;
+    this.showAccepted = false;
+    this.showPending = true;
+    this.showRejected = false;
+  }
+
+  filterAccepted() {
+    this.acceptedCandidates = this.candidateDetails.filter((item) => {
+      return item.Status === "Accepted";
+    });
+    this.showAllCandidates = false;
+    this.showAccepted = true;
+    this.showPending = false;
+    this.showRejected = false;
+  }
+
+  filterRejected() {
+    this.rejectedCandidates = this.candidateDetails.filter((item) => {
+      return item.Status === "Rejected";
+    });
+    this.showAllCandidates = false;
+    this.showAccepted = false;
+    this.showPending = false;
+    this.showRejected = true;
+  }
+  filterAll() {
+    this.showAllCandidates = true;
+    this.showAccepted = false;
+    this.showPending = false;
+    this.showRejected = false;
   }
 }

@@ -42,9 +42,9 @@
 .job-description p {
     font-size: 15px;
     padding: 1%;
-    width: 60%;
+    width: 100%;
     height: auto;
-    text-wrap: wrap;
+    
 }
 
 .requirements {

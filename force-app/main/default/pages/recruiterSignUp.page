@@ -2,10 +2,10 @@
   @description       : hr sign up page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 01-19-2024
+  @last modified on  : 02-19-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
-<apex:page showHeader="false" standardStylesheets="false">
+<apex:page showHeader="false" standardStylesheets="false" controller="recruiterSignUpController" title="Sign Up">
     <html>
         <head>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -92,9 +92,12 @@
                 }
 
                 .buttons-container {
-                    width: 100%;
+                    display: flex;
+            justify-content: center;
+            width: 100%;
                 }
 
+                .btn-Login,
                 .btn-signup {
                     width: 30% !important;
                     box-shadow: 2% 3% 15% 1% #FFD700;

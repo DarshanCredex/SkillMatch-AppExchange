@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-15-2024
+ * @last modified on  : 02-19-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -130,7 +130,7 @@ public with sharing class JobApplicantController {
       List<Job_Applicants__c> applicantList = [
         SELECT CandidateId__c
         FROM Job_Applicants__c
-        ORDER BY CreatedDate DESC
+        WHERE Application_Status__c = 'Pending'
         LIMIT 3
       ];
 
@@ -247,7 +247,10 @@ public with sharing class JobApplicantController {
     List<String> requiredSkills,
     List<String> candidateSkills
   ) {
-    List<String> candidateSkillsLower = new List<String>();
+
+    system.debug('12requiredSkills------->'+requiredSkills);
+    System.debug('12candidateSkills------->'+candidateSkills);
+        List<String> candidateSkillsLower = new List<String>();
     for (String skill : candidateSkills) {
       candidateSkillsLower.add(skill.normalizeSpace().toLowerCase());
     }
@@ -264,6 +267,7 @@ public with sharing class JobApplicantController {
     for (String skill : requiredSkillsLower) {
       if (candidateSkillsLower.contains(skill)) {
         commonSkillsCount++;
+        System.debug('commonSkillsCount---->'+commonSkillsCount);
       }
     }
     if (requiredSkillsLower.size() > 0) {

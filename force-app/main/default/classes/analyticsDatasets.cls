@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-13-2024
+ * @last modified on  : 02-16-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -174,5 +174,14 @@ public with sharing class analyticsDatasets {
     }
     system.debug('dataset----->' + dataset);
     return dataset;
+  }
+  @AuraEnabled(cacheable=true)
+  public static list<dataset> totalApplicantsShortlistedApplicants() {
+    list<dataset> dataset = new List<dataset>();
+    try {
+      
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
   }
 }
