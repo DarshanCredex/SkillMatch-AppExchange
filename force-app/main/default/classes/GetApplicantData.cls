@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-16-2024
+ * @last modified on  : 02-20-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -77,4 +77,35 @@ public with sharing class GetApplicantData {
     system.debug('cdls------->' + cdls);
     return cdls;
   }
+
+  @AuraEnabled(cacheable = true)
+  public static List<Job__c> getAppliedJobById(String candidateId) {
+    List<Job__c> appliedJobs = new List<Job__c>();
+    try {
+      List<Job_Applicants__c> jobApplicants = [
+        SELECT Job_Id__c
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId
+        LIMIT 1
+      ];
+
+      Set<Id> jobIds = new Set<Id>();
+      for (Job_Applicants__c jobApplicant : jobApplicants) {
+        jobIds.add(jobApplicant.Job_Id__c);
+      }
+
+      appliedJobs = [
+        SELECT Title_of_position__c
+        FROM Job__c
+        WHERE Id IN :jobIds
+        LIMIT 1
+      ];
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+
+    System.debug('Applied Jobs------>' + appliedJobs);
+    return appliedJobs;
+  }
+
 }

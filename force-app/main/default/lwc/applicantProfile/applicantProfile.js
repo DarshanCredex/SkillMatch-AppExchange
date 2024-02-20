@@ -5,6 +5,7 @@ import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
 import getResume from "@salesforce/apex/GetApplicantData.getResume";
+import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobById";
 import { NavigationMixin } from "lightning/navigation";
 
 export default class ApplicantProfile extends NavigationMixin(
@@ -17,6 +18,7 @@ export default class ApplicantProfile extends NavigationMixin(
   skills;
   IsAccepted = false;
   IsRejected = false;
+  appliedJob;
   value;
   contentDocumentId;
 
@@ -38,6 +40,15 @@ export default class ApplicantProfile extends NavigationMixin(
     this.applicantStatus();
   }
 
+  @wire(getAppliedJobById, { candidateId: "$applicantId" })
+  wiredGetAppliedJobById({ error, data }) {
+    if (data) {
+      this.appliedJob = data;
+      console.log("this.appliedJob", this.appliedJob);
+    } else {
+      console.log("error------->", error);
+    }
+  }
   @wire(GetWorkExperienceData, { applicantId: "$applicantId" })
   wiredGetWorkExperienceData({ error, data }) {
     if (error) {
@@ -109,15 +120,15 @@ export default class ApplicantProfile extends NavigationMixin(
       });
   }
 
-  showPdf(){
-     this[NavigationMixin.Navigate]({
-       type: "standard__namedPage",
-       attributes: {
-         pageName: "filePreview"
-       },
-       state: {
-         selectedRecordId: this.contentDocumentId
-       }
-     });
+  showPdf() {
+    this[NavigationMixin.Navigate]({
+      type: "standard__namedPage",
+      attributes: {
+        pageName: "filePreview"
+      },
+      state: {
+        selectedRecordId: this.contentDocumentId
+      }
+    });
   }
 }

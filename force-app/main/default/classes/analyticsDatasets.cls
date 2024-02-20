@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-16-2024
+ * @last modified on  : 02-20-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -176,12 +176,48 @@ public with sharing class analyticsDatasets {
     return dataset;
   }
   @AuraEnabled(cacheable=true)
-  public static list<dataset> totalApplicantsShortlistedApplicants() {
-    list<dataset> dataset = new List<dataset>();
+  public static List<Dataset> numberOfApplicantsVsJobs() {
+    List<Dataset> dataset = new List<Dataset>();
     try {
-      
+      List<Id> jobIdList = new List<Id>();
+      for (Job__c job : [SELECT Id FROM Job__c WHERE Status__c = 'Completed']) {
+        jobIdList.add(job.Id);
+      }
+
+      List<Job__c> jobNames = [
+        SELECT Title_of_position__c, Id
+        FROM Job__c
+        WHERE Id IN :jobIdList
+      ];
+
+      Map<Id, Integer> jobApplicantsCountMap = new Map<Id, Integer>();
+      for (AggregateResult aggResult : [
+        SELECT Job_Id__c, COUNT(Id) applicantsCount
+        FROM Job_Applicants__c
+        WHERE Job_Id__c IN :jobIdList
+        GROUP BY Job_Id__c
+      ]) {
+        jobApplicantsCountMap.put(
+          (Id) aggResult.get('Job_Id__c'),
+          (Integer) aggResult.get('applicantsCount')
+        );
+      }
+
+      // Populate Dataset list with job details and count of child records
+      for (Job__c job : jobNames) {
+        Integer applicantsCount = jobApplicantsCountMap.containsKey(job.Id)
+          ? jobApplicantsCountMap.get(job.Id)
+          : 0;
+        if (applicantsCount > 0) {
+          dataset.add(new Dataset(job.Title_of_position__c, applicantsCount));
+        }
+      }
     } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
+      System.debug(
+        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
+      );
     }
+    system.debug('dataset----->' + dataset);
+    return dataset;
   }
 }

@@ -2,7 +2,7 @@
   @description       : applicant details page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-16-2024
+  @last modified on  : 02-20-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -16,11 +16,12 @@
                     </div>
                     <div class="profile-info">
                         <h1>{applicant.Name}</h1>
-                        <p>{applicant.Job_Title__c}</p>
+                        <div style="display:flex; flex-direction: row;">
+                            <p>{applicant.Job_Title__c}</p>
+                        </div>
                         <div class="buttons">
-                            <lightning-button variant="Neutral" label="View CV"
-                                onclick={handleResumePreview}></lightning-button>
-
+                            <!-- <lightning-button variant="Neutral" label="View CV"
+                                onclick={handleResumePreview}></lightning-button> -->
                             <lightning-button value="Accepted" variant="brand" label="Shortlist" disabled={IsAccepted}
                                 onclick={handleShortlistButton}></lightning-button>
 
@@ -52,6 +53,11 @@
                 <hr class="hr">
                 <h1>Skills</h1>
                 <p>{applicant.Skills__c}</p>
+                <hr class="hr">
+                <h1>Applied For</h1>
+                <template for:each={appliedJob} for:item="job">
+                    <p key={job.Id}>{job.Title_of_position__c}</p>
+                </template>
             </div>
         </div>
     </template>

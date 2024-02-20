@@ -4,22 +4,23 @@ import chartjs from "@salesforce/resourceUrl/chartjs";
 import { loadScript } from "lightning/platformResourceLoader";
 import applicantGender from "@salesforce/apex/analyticsDatasets.applicantGender";
 import industryJobsDataset from "@salesforce/apex/analyticsDatasets.industryJobsDataset";
-import skillMatch_logo from "@salesforce/resourceUrl/skillMatch_logo";
+import numberOfApplicantsVsJobs from "@salesforce/apex/analyticsDatasets.numberOfApplicantsVsJobs";
 
 export default class Analytics extends LightningElement {
   @track ageWithNumberDataset = [];
   @track applicantGenderDataset = [];
   @track industryAndJobsDataset = [];
+  @track applicantsVsJobs = [];
 
   chartjsInitialized = false;
   genderChartJsInitialized = false;
   industryChartjsIntialized = false;
+  numberfApplicantsVsJobsChartjsInitialized = false;
 
   piechart;
   industryChart;
   chart;
-
-  skillMatch_logo = skillMatch_logo;
+  numberfApplicantsVsJobsChart;
 
   @wire(industryJobsDataset)
   wiredindustryJobsDataset({ error, data }) {
@@ -118,6 +119,39 @@ export default class Analytics extends LightningElement {
         "this.applicantGenderDataset---------->",
         JSON.stringify(this.applicantGenderDataset)
       );
+    }
+  }
+
+  @wire(numberOfApplicantsVsJobs)
+  wiredNumberOfApplicantsVsJobs({ error, data }) {
+    if (error) {
+      console.error("Error------>", error);
+    } else if (data) {
+      this.applicantsVsJobs = data;
+      console.log(
+        "this.applicantsVsJobs",
+        JSON.stringify(this.applicantsVsJobs)
+      );
+
+      this.updateApplicantsVsJobsChart();
+
+      if (!this.numberfApplicantsVsJobsChartjsInitialized) {
+        this.numberfApplicantsVsJobsChartjsInitialized = true;
+        loadScript(this, chartjs).then(() => {
+          const ctx = this.template
+            .querySelector("canvas.barchart_1")
+            .getContext("2d");
+          this.numberfApplicantsVsJobsChart = new window.Chart(
+            ctx,
+            JSON.parse(JSON.stringify(this.barConfig))
+          );
+          // Update the variable name from 'barchart' to 'numberfApplicantsVsJobsChart'
+          this.numberfApplicantsVsJobsChart.canvas.parentNode.style.height =
+            "auto";
+          this.numberfApplicantsVsJobsChart.canvas.parentNode.style.width =
+            "100%";
+        });
+      }
     }
   }
 
@@ -241,6 +275,46 @@ export default class Analytics extends LightningElement {
     }
   };
 
+  barConfig = {
+    type: "bar",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: [
+            "rgb(233,102,204)",
+            "rgb(768,177,426)",
+            "rgb(265,205,86)",
+            "rgb(545,349,132)",
+            "rgb(555,459,64)",
+            "rgb(388,152,126)",
+            "rgb(924,104,238)",
+            "rgb(265,205,86)",
+            "rgb(753,192,192)",
+            "rgb(240,158,181)"
+          ],
+          label: "Title of Position"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      title: {
+        display: true,
+        text: "Jobs posted vs Number of Applicants"
+      },
+      maintainAspectRatio: false,
+      legend: {
+        position: "left"
+      },
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      }
+    }
+  };
+
   updateAgeChart() {
     this.config.data.labels = [];
     this.config.data.datasets[0].data = [];
@@ -276,6 +350,19 @@ export default class Analytics extends LightningElement {
     });
     if (this.industryChart) {
       this.industryChart.update();
+    }
+  }
+
+  updateApplicantsVsJobsChart() {
+    console.log("inside applicants vs jobs charts");
+    this.barConfig.data.labels = [];
+    this.barConfig.data.datasets[0].data = [];
+    this.applicantsVsJobs.forEach((jobs) => {
+      this.barConfig.data.labels.push(jobs.label);
+      this.barConfig.data.datasets[0].data.push(jobs.count);
+    });
+    if (this.numberfApplicantsVsJobsChart) {
+      this.numberfApplicantsVsJobsChart.update();
     }
   }
 }

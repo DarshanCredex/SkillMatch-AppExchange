@@ -53,7 +53,7 @@
 .profile-info h1{
     font-size: 40px;
 }
-.profile-info p{
+.profile-info div p{
     font-size: 25px;
 }
 .profile-info lightning-button{
@@ -123,3 +123,4 @@
 .buttons lightning-button{
     padding-left: 2%;
 }
+

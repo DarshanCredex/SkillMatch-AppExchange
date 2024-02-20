@@ -1,8 +1,7 @@
 .footer {
     background: #333333;
     width: 100%;
-    height: 20vh;
-    padding: 5% 0;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,14 +11,14 @@
 .main-content {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
-    width: 80%;
+    width: 90%;
 }
 
 .logo {
-    width: 25%;
-    height: 25%;
+    width: 18%;
+    height: 18%;
 }
 
 .information {
