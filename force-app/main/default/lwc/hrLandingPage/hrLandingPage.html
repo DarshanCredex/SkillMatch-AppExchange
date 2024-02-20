@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-12-2024
+  @last modified on  : 02-20-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -24,6 +24,9 @@
       <div class="no-of-applicants">
         <h1>Number of applicants</h1>
         <p>{numberOfApplicants}</p>
+      </div>
+      <div class="slds-m-around_medium">
+        <canvas class="pie" lwc:dom="manual"></canvas>
       </div>
     </div>
     <div class="main-content">

@@ -145,7 +145,6 @@ export default class Analytics extends LightningElement {
             ctx,
             JSON.parse(JSON.stringify(this.barConfig))
           );
-          // Update the variable name from 'barchart' to 'numberfApplicantsVsJobsChart'
           this.numberfApplicantsVsJobsChart.canvas.parentNode.style.height =
             "auto";
           this.numberfApplicantsVsJobsChart.canvas.parentNode.style.width =

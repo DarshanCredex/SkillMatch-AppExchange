@@ -220,4 +220,31 @@ public with sharing class analyticsDatasets {
     system.debug('dataset----->' + dataset);
     return dataset;
   }
+
+  @AuraEnabled(cacheable=true)
+  public static list<dataset> numberOfApplicantsShortlistedAndRejected() {
+    List<Dataset> dataset = new List<Dataset>();
+    try {
+      list<AggregateResult> results = [
+        SELECT count(id) cnt, Application_Status__c
+        FROM Job_Applicants__c
+        WHERE
+          Application_Status__c = 'Accepted'
+          OR Application_Status__c = 'Rejected'
+        GROUP BY Application_Status__c
+      ];
+
+      for (AggregateResult result : results) {
+        string status = (string) result.get('Application_Status__c');
+        integer count = (integer) result.get('cnt');
+        dataset.add(new dataset(status, count));
+      }
+    } catch (Exception e) {
+      System.debug(
+        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
+      );
+    }
+    system.debug('dataset----->' + dataset);
+    return dataset;
+  }
 }

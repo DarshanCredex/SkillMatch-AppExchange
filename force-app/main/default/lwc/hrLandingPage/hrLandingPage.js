@@ -9,16 +9,20 @@ import getApplicantDataset from "@salesforce/apex/analyticsDatasets.getApplicant
 import getApplicantsList from "@salesforce/apex/JobApplicantController.getApplicantsList";
 import getNumberOfApplicants from "@salesforce/apex/JobApplicantController.getNumberOfApplicants";
 import getNumberOfJobsPosted from "@salesforce/apex/JobApplicantController.getNumberOfJobsPosted";
+import numberOfApplicantsShortlistedAndRejected from "@salesforce/apex/analyticsDatasets.numberOfApplicantsShortlistedAndRejected";
 export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @track currentUserName;
   @track draftJobList = [];
   @track applicantChartDataset = [];
   @track applicantsList;
+  @track shortlistedRejectedApplicant = [];
 
   numberOfApplicants;
   numberOfJobsPosted;
   doughnutChart;
   doughnutChartjsInitialized = false;
+  pieChart;
+  pieChartjsInitialized = false;
 
   config = {
     type: "doughnut",
@@ -39,12 +43,48 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
           ],
           label: "Applicants Dataset"
         }
-      ],
-      labels: []
+      ]
     },
     options: {
       responsive: true,
       title: "Applicants - Cities",
+
+      maintainAspectRatio: false,
+      legend: {
+        position: "left"
+      },
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      }
+    }
+  };
+
+  pieConfig = {
+    type: "pie",
+    data: {
+      datasets: [
+        {
+          data: [],
+          backgroundColor: [
+            "rgb(119,221,119)",
+            "rgb(188,152,126)",
+            "rgb(255,205,86)",
+            "rgb(255,99,132)",
+            "rgb(123,104,238)",
+            "rgb(153,102,204)",
+            "rgb(255,159,64)",
+            "rgb(255,205,86)",
+            "rgb(75,192,192)",
+            "rgb(179,158,181)"
+          ],
+          label: "Applicants - Status"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      title: "Applicants - Status",
 
       maintainAspectRatio: false,
       legend: {
@@ -72,7 +112,10 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   wiredGetApplicantsList({ error, data }) {
     if (data) {
       this.applicantsList = data;
-      console.log("this.applicantsList--------->", JSON.stringify(this.applicantsList));
+      console.log(
+        "this.applicantsList--------->",
+        JSON.stringify(this.applicantsList)
+      );
     } else {
       console.log("error------->", error);
     }
@@ -84,6 +127,24 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
       this.showDrafts = true;
     } else if (error) {
       console.error("Error fetching draft job list", error);
+    }
+  }
+
+  @wire(getNumberOfApplicants)
+  wiredGetNumebrOfApplicants({ error, data }) {
+    if (data) {
+      this.numberOfApplicants = data;
+    } else {
+      console.log("error--------->", error);
+    }
+  }
+
+  @wire(getNumberOfJobsPosted)
+  wiredJobsPosted({ error, data }) {
+    if (data) {
+      this.numberOfJobsPosted = data;
+    } else {
+      console.log("error-------->", error);
     }
   }
 
@@ -108,24 +169,30 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     }
   }
 
-  @wire(getNumberOfApplicants)
-  wiredGetNumebrOfApplicants({ error, data }) {
+  @wire(numberOfApplicantsShortlistedAndRejected)
+  wiredNumberOfApplicantsShortlistedAndRejected({ error, data }) {
+    if (error) {
+      console.error("error rejected applicant----->", error.message);
+    }
     if (data) {
-      this.numberOfApplicants = data;
-    } else {
-      console.log("error--------->", error);
+      this.shortlistedRejectedApplicant = data;
+      console.log(
+        "this.shortlistedRejectedApplicant--------->",
+        this.shortlistedRejectedApplicant
+      );
+      this.updatePieChart();
+
+      if (!this.pieChartjsInitialized) {
+        this.pieChartjsInitialized = true;
+        loadScript(this, chartjs).then(() => {
+          const ctx = this.template
+            .querySelector("canvas.pie")
+            .getContext("2d");
+          this.pieChart = new window.Chart(ctx, this.pieConfig);
+        });
+      }
     }
   }
-
-  @wire(getNumberOfJobsPosted)
-  wiredJobsPosted({ error, data }) {
-    if (data) {
-      this.numberOfJobsPosted = data;
-    } else {
-      console.log("error-------->", error);
-    }
-  }
-
   updateDoughnutChart() {
     this.config.data.labels = [];
     this.config.data.datasets[0].data = [];
@@ -135,6 +202,18 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     });
     if (this.doughnutChart) {
       this.doughnutChart.update();
+    }
+  }
+
+  updatePieChart() {
+    this.pieConfig.data.labels = [];
+    this.pieConfig.data.datasets[0].data = [];
+    this.shortlistedRejectedApplicant.forEach((applicant) => {
+      this.pieConfig.data.labels.push(applicant.label);
+      this.pieConfig.data.datasets[0].data.push(applicant.count);
+    });
+    if (this.pieChart) {
+      this.pieChart.update();
     }
   }
 

@@ -43,11 +43,12 @@
   display: flex;
   align-items: center;
   flex-direction: row;
-  position: relative; /* Add this line to make positioning children easier */
-  overflow: hidden; /* Add this line to hide any overflow content */
+  justify-content: space-evenly;
+  position: relative; 
+  overflow: hidden; 
 }
 
-/* Add the following styles for decoration */
+
 .white-box:before {
   content: '';
   position: absolute;
