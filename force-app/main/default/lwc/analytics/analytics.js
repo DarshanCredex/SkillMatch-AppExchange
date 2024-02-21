@@ -28,10 +28,6 @@ export default class Analytics extends LightningElement {
       console.error("error----->", error);
     } else if (data) {
       this.industryAndJobsDataset = data;
-      console.log(
-        "this.industryAndJobsDataset---------->",
-        this.industryAndJobsDataset
-      );
 
       this.updateIndustryChart();
 
@@ -60,10 +56,7 @@ export default class Analytics extends LightningElement {
     }
     if (data) {
       this.ageWithNumberDataset = data;
-      console.log(
-        "this.ageWithNumberDataset------->",
-        this.ageWithNumberDataset
-      );
+
       this.updateAgeChart();
 
       if (!this.chartjsInitialized) {
@@ -94,10 +87,6 @@ export default class Analytics extends LightningElement {
     }
     if (data) {
       this.applicantGenderDataset = data;
-      console.log(
-        "this.applicantGenderDataset------->",
-        this.applicantGenderDataset
-      );
 
       this.updateGenderChart();
 
@@ -115,10 +104,6 @@ export default class Analytics extends LightningElement {
           this.piechart.canvas.parentNode.style.width = "100%";
         });
       }
-      console.log(
-        "this.applicantGenderDataset---------->",
-        JSON.stringify(this.applicantGenderDataset)
-      );
     }
   }
 
@@ -128,10 +113,6 @@ export default class Analytics extends LightningElement {
       console.error("Error------>", error);
     } else if (data) {
       this.applicantsVsJobs = data;
-      console.log(
-        "this.applicantsVsJobs",
-        JSON.stringify(this.applicantsVsJobs)
-      );
 
       this.updateApplicantsVsJobsChart();
 
@@ -328,7 +309,6 @@ export default class Analytics extends LightningElement {
   }
 
   updateGenderChart() {
-    console.log("inside gnder chart update method");
     this.newConfig.data.labels = [];
     this.newConfig.data.datasets[0].data = [];
     this.applicantGenderDataset.forEach((applicant) => {
@@ -340,7 +320,6 @@ export default class Analytics extends LightningElement {
     }
   }
   updateIndustryChart() {
-    console.log("inside industry chart update method");
     this.industryConfig.data.labels = [];
     this.industryConfig.data.datasets[0].data = [];
     this.industryAndJobsDataset.forEach((jobs) => {
@@ -353,7 +332,6 @@ export default class Analytics extends LightningElement {
   }
 
   updateApplicantsVsJobsChart() {
-    console.log("inside applicants vs jobs charts");
     this.barConfig.data.labels = [];
     this.barConfig.data.datasets[0].data = [];
     this.applicantsVsJobs.forEach((jobs) => {

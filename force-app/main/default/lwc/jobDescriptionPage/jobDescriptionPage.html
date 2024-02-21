@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-14-2024
+  @last modified on  : 02-21-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -50,7 +50,7 @@
                             class="slds-modal__close"></lightning-button-icon>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium">
-                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c">
+                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c" onsuccess={handleSuccess}>
                             <lightning-input-field field-name="Title_of_position__c"> </lightning-input-field>
                             <lightning-input-field field-name="City__c"> </lightning-input-field>
                             <lightning-input-field field-name="Company_Name__c"> </lightning-input-field>

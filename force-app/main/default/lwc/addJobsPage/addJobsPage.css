@@ -1,7 +1,8 @@
 .main {
   background: white;
-  width: 86vw;
+  width: 100%;
   height: 100%;
+  padding: 2%;
 }
 .job-content {
   display: flex;
@@ -74,6 +75,7 @@ select::-ms-expand {
 .buttons {
   display: flex;
   flex-direction: row;
+  margin: 2%;
 }
 .post {
   padding-left: 2%;

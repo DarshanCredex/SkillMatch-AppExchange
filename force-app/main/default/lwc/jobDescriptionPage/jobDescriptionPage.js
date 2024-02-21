@@ -2,14 +2,18 @@ import { LightningElement, track, api, wire } from "lwc";
 import getPostedJobListBasedOnId from "@salesforce/apex/jobObjectController.getPostedJobListBasedOnId";
 import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { refreshApex } from "@salesforce/apex";
+
 
 export default class JobDescriptionPage extends NavigationMixin(
   LightningElement
 ) {
-  @track jobDetails = [];
+  @track jobDetails;
+  @track error;
   jobId;
   isEditModalOpen = false;
   @api recordId;
+  wiredResult;
 
   @track showApplicantsButton = false;
 
@@ -23,12 +27,15 @@ export default class JobDescriptionPage extends NavigationMixin(
   }
 
   @wire(getPostedJobListBasedOnId, { jobId: "$jobId" })
-  wiredGetPostedJobListBasedOnId({ error, data }) {
-    if (error) {
-      console.error("error----->", error);
-    }
-    if (data) {
-      this.jobDetails = data;
+  wiredGetPostedJobListBasedOnId(result) {
+    this.wiredResult = result;
+    if (result.error) {
+      console.error("error----->", result.error);
+      this.error = result.error;
+      this.jobDetails = undefined;
+    } else if (result.data) {
+      this.error = undefined;
+      this.jobDetails = result.data;
       console.log("this.jobDetails-------->", this.jobDetails);
       this.updateShowApplicantsButton();
     }
@@ -62,14 +69,23 @@ export default class JobDescriptionPage extends NavigationMixin(
   handleSave() {
     console.log("inside save");
     this.template.querySelector("lightning-record-edit-form").submit();
-    this.dispatchEvent(
-      new ShowToastEvent({
-        title: "Success",
-        message: "Updated Successfully",
-        variant: "success"
+  }
+
+  handleSuccess() {
+    return refreshApex(this.wiredResult)
+      .then(() => {
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Success",
+            message: "Updated Successfully",
+            variant: "success"
+          })
+        );
+        this.isEditModalOpen = false;
       })
-    );
-    this.isEditModalOpen = false;
+      .catch((error) => {
+        console.error("Error refreshing Apex:", error);
+        this.error = error;
+      });
   }
 }
-

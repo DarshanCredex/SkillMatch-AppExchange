@@ -112,10 +112,6 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   wiredGetApplicantsList({ error, data }) {
     if (data) {
       this.applicantsList = data;
-      console.log(
-        "this.applicantsList--------->",
-        JSON.stringify(this.applicantsList)
-      );
     } else {
       console.log("error------->", error);
     }
@@ -176,10 +172,6 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     }
     if (data) {
       this.shortlistedRejectedApplicant = data;
-      console.log(
-        "this.shortlistedRejectedApplicant--------->",
-        this.shortlistedRejectedApplicant
-      );
       this.updatePieChart();
 
       if (!this.pieChartjsInitialized) {

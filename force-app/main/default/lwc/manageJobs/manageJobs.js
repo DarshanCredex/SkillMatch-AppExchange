@@ -4,6 +4,7 @@ import { NavigationMixin } from "lightning/navigation";
 import getPostedJobList from "@salesforce/apex/GetPostedJobList.getPostedJobList";
 import getDraftedJobList from "@salesforce/apex/GetPostedJobList.getDraftedJobList";
 import { refreshApex } from "@salesforce/apex";
+
 export default class ManageJobs extends NavigationMixin(LightningElement) {
   @track postedJobList = [];
   @track draftedJobList = [];
@@ -18,6 +19,10 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   jobId;
   noJobs = no_jobs;
 
+  // Store wired result variables
+  wiredPostedJobListResult;
+  wiredDraftedJobListResult;
+
   handlePageReference() {
     const pageReference = {
       type: "standard__webPage",
@@ -29,7 +34,9 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   }
 
   @wire(getPostedJobList)
-  wiredPostedJobList({ error, data }) {
+  wiredPostedJobList(result) {
+    this.wiredPostedJobListResult = result;
+    const { data, error } = result;
     if (data) {
       this.postedJobList = data;
       if (this.postedJobList) {
@@ -43,7 +50,9 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   }
 
   @wire(getDraftedJobList)
-  wiredDraftedJobList({ error, data }) {
+  wiredDraftedJobList(result) {
+    this.wiredDraftedJobListResult = result;
+    const { data, error } = result;
     if (data) {
       this.draftedJobList = data;
       console.log("this.draftedJobList------->", this.draftedJobList);
@@ -54,6 +63,12 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     } else {
       console.log("error", error);
     }
+  }
+
+  // Method to refresh wired data
+  refreshData() {
+    refreshApex(this.wiredPostedJobListResult);
+    refreshApex(this.wiredDraftedJobListResult);
   }
 
   handlejobDescriptionPageView(event) {
@@ -102,10 +117,5 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
       this.showApplicantButton = true;
     }
   }
-
-  refreshData() {
-    refreshApex(this.wiredDraftedJobList);
-    refreshApex(this.wiredPostedJobList);
-  }
-
 }
+
