@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-20-2024
+ * @last modified on  : 02-21-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -36,16 +36,12 @@ public with sharing class analyticsDatasets {
       ]) {
         jobApplicantIdList.add(jobApplicant.CandidateId__c);
       }
-      system.debug('jobApplicantIdList------------->' + jobApplicantIdList);
       List<AggregateResult> results = [
         SELECT COUNT(Id) cnt, City__c
         FROM Candidate_Details__c
         WHERE Id IN :jobApplicantIdList
         GROUP BY City__c
       ];
-
-      system.debug('results--------->' + results);
-
       for (AggregateResult ar : results) {
         String City = (String) ar.get('City__c');
         Integer total = (Integer) ar.get('cnt');
@@ -56,8 +52,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' at line ' + e.getLineNumber()
       );
     }
-
-    System.debug('DataSet: ' + dataSet);
     return dataSet;
   }
 
@@ -88,7 +82,6 @@ public with sharing class analyticsDatasets {
         WHERE Date_of_birth__c != NULL AND Id IN :jobApplicantIdList
       ]) {
         dobList.add(candidate.Date_of_birth__c);
-        system.debug('dobList------->' + dobList);
       }
 
       Map<String, Integer> ageMap = new Map<String, Integer>();
@@ -111,7 +104,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
       );
     }
-    System.debug('DataSet-------> ' + dataset);
     return dataset;
   }
   @AuraEnabled(cacheable=true)
@@ -148,7 +140,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
       );
     }
-    system.debug('dataset------>' + dataset);
     return dataset;
   }
 
@@ -172,7 +163,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
       );
     }
-    system.debug('dataset----->' + dataset);
     return dataset;
   }
   @AuraEnabled(cacheable=true)
@@ -202,8 +192,6 @@ public with sharing class analyticsDatasets {
           (Integer) aggResult.get('applicantsCount')
         );
       }
-
-      // Populate Dataset list with job details and count of child records
       for (Job__c job : jobNames) {
         Integer applicantsCount = jobApplicantsCountMap.containsKey(job.Id)
           ? jobApplicantsCountMap.get(job.Id)
@@ -217,7 +205,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
       );
     }
-    system.debug('dataset----->' + dataset);
     return dataset;
   }
 
@@ -228,9 +215,6 @@ public with sharing class analyticsDatasets {
       list<AggregateResult> results = [
         SELECT count(id) cnt, Application_Status__c
         FROM Job_Applicants__c
-        WHERE
-          Application_Status__c = 'Accepted'
-          OR Application_Status__c = 'Rejected'
         GROUP BY Application_Status__c
       ];
 
@@ -244,7 +228,6 @@ public with sharing class analyticsDatasets {
         'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
       );
     }
-    system.debug('dataset----->' + dataset);
     return dataset;
   }
 }

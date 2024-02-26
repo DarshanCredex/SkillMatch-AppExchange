@@ -33,4 +33,8 @@ public class recruiterLoginController {
   public PageReference onSignup() {
     return Page.recruiterSignUp;
   }
+
+  public PageReference forgotPassword() {
+    return Page.recruiterForgotPassword;
+  }
 }

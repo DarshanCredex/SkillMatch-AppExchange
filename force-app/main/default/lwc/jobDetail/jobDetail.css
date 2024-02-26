@@ -1,9 +1,121 @@
 .job-detail-container {
     display: flex;
     flex-direction: column;
+    min-height: 60vh;
+}
+
+.company-info {
+    display: flex;
+    width: 100%;
+
+    .job-description-container {
+        width: 70%;
+    }
+
+    .company-description-section {
+        width: 30%;
+
+        .company-name {
+            padding: 1rem;
+            text-align: center;
+            font-size: large;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    }
 }
 
 .job-detail-header {
+    display: flex;
+    flex-direction: row;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .position-title {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        .top-left-header {
+            flex-direction: column;
+            display: flex;
+
+            .title-of-job {
+                color: #0956a1;
+                font-size: large;
+                font-weight: bold;
+            }
+
+            .job-information {
+                display: flex;
+                gap: 4rem;
+                margin-top: 0.4rem;
+                font-size: 0.9rem;
+                color: #999;
+
+                .job-company {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #131313;
+                }
+
+                .job-info {
+                    font-size: 0.9rem;
+                    color: #777;
+                }
+            }
+        }
+    }
+
+    .applied-button {
+        gap: 0.3rem;
+        width: 9%;
+        height: 37px;
+        align-self: center;
+        font-size: small;
+        place-content: center;
+        display: flex;
+        color: limegreen;
+        align-items: center;
+        border: 0.5px solid limegreen;
+        border-radius: 15px;
+    }
+}
+
+.inner-header {
+    font-weight: bold;
+}
+
+.inner-section {
+    margin-top: 1rem;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-skill {
+    list-style-type: disc;
+}
+
+.experience-detail-section {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.company-overview-section {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.job-description-section {
     display: flex;
     flex-direction: row;
     border-radius: 5px;

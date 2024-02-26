@@ -103,4 +103,8 @@ public with sharing class recruiterSignUpController {
     }
     return null;
   }
+
+  public PageReference onLogin(){
+    return page.recruiterLoginPage;
+  }
 }

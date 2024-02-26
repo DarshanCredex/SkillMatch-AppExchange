@@ -1,4 +1,5 @@
 <template>
+    <div class="container">
     <div class="job-list-container">
         <div class="job-filter-header">
             <div style="width: 25%;"></div>
@@ -47,8 +48,8 @@
                 <template if:true={isLoading}>
                     <lightning-spinner alternative-text="Loading"></lightning-spinner>
                 </template>
-                <template if:true={jobList.data}>
-                    <template for:each={jobList.data} for:item="job">
+                <template if:true={jobListdata}>
+                    <template for:each={jobListdata} for:item="job">
                         <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
                             <div class="job-card-top">
                                 <div class="job-card-top-left">
@@ -88,10 +89,18 @@
                         </div>
                     </template>
                 </template>
-                <template if:true={jobList.error}>
-                    <div class="error-message">{jobList.error}</div>
+                <template if:true={errorMessage}>
+                        <div class="no-jobs">
+                          <div>
+                            <h1> No available jobs😞!!! Keep searching. </h1>
+                            <div class="emptyBox">
+                              <img src={emptyBox} alt="empty">
+                            </div>
+                          </div>
+                        </div>
                 </template>
             </div>
         </div>
     </div>
+</div>
 </template>

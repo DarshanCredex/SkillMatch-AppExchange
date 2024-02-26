@@ -72,6 +72,7 @@ export default class JobDescriptionPage extends NavigationMixin(
   }
 
   handleSuccess() {
+    // Refresh the wired result to get updated data
     return refreshApex(this.wiredResult)
       .then(() => {
         this.dispatchEvent(

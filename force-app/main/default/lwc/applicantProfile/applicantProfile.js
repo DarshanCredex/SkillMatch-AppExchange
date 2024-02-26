@@ -21,6 +21,7 @@ export default class ApplicantProfile extends NavigationMixin(
   appliedJob;
   value;
   contentDocumentId;
+  pdfUrl;
 
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
   wiredGetApplicantDataMethod({ error, data }) {
@@ -110,7 +111,7 @@ export default class ApplicantProfile extends NavigationMixin(
         if (data && data.length > 0) {
           this.contentDocumentId = data[0].ContentDocumentId;
           console.log("contentDocumentId------->", this.contentDocumentId);
-          this.showPdf();
+          // this.pdfUrl = `/servlet/servlet.FileDownload?file=a055h000021qUbTAAU`;
         } else {
           console.error("No content document found.");
         }
@@ -118,17 +119,5 @@ export default class ApplicantProfile extends NavigationMixin(
       .catch((error) => {
         console.error("Error fetching resume:", error);
       });
-  }
-
-  showPdf() {
-    this[NavigationMixin.Navigate]({
-      type: "standard__namedPage",
-      attributes: {
-        pageName: "filePreview"
-      },
-      state: {
-        selectedRecordId: this.contentDocumentId
-      }
-    });
   }
 }

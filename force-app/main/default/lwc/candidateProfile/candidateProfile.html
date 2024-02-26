@@ -6,13 +6,8 @@
         <div class="profile-container">
             <div class="profile-left-container">
                 <div class="profile-image">
-                    <span class="slds-avatar slds-avatar_circle" style="height: 100%;width: 100%;">
-                        <span class="slds-icon_container slds-icon-standard-user" title="Profile Image">
-                            <svg class="slds-icon" aria-hidden="true" style="height: 100%;width: 100%;">
-                                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#user"></use>
-                            </svg>
-                        </span>
-                    </span>
+                    <lightning-formatted-rich-text
+                            value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
                 </div>
                 <p class="name">{candidateDetails.Name}</p>
                 <p class="title">Senior Salesforce Developer</p>
@@ -157,9 +152,16 @@
                     </div>
                     <lightning-record-edit-form data-id="addExperienceForm" object-api-name="Work_Experience__c"
                         onsuccess={handleAddSuccess}>
-                        <lightning-input-field field-name="Organisation__c"></lightning-input-field>
-                        <lightning-input-field field-name="Is_Current_Company__c"
-                            onchange={handleCurrentCompanyChange}></lightning-input-field>
+                        <lightning-messages> </lightning-messages>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="Organisation__c"></lightning-input-field>
+                            <lightning-input-field field-name="CandidateId__c" value={candidateDetails.Id} disabled="true"></lightning-input-field>
+                        </div>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="Name"></lightning-input-field>
+                            <lightning-input-field field-name="Is_Current_Company__c"
+                                onchange={handleCurrentCompanyChange}></lightning-input-field>
+                        </div>
                         <div style="display: flex;">
                             <lightning-input-field field-name="From_Date__c"></lightning-input-field>
                             <lightning-input-field field-name="To_Date__c"
@@ -169,14 +171,14 @@
                             <lightning-input-field field-name="City__c"></lightning-input-field>
                             <lightning-input-field field-name="Country__c"></lightning-input-field>
                         </div>
+                        <footer class="slds-modal__footer">
+                            <div style="text-align: right;">
+                                <lightning-button variant="brand" type="submit" label="Add"
+                                    onclick={handleSubmitExperience}></lightning-button>
+                            </div>
+                        </footer>
                     </lightning-record-edit-form>
                 </div>
-                <footer class="slds-modal__footer">
-                    <div style="text-align: right;">
-                        <lightning-button variant="brand" type="submit" label="Add"
-                            onclick={handleSubmitExperience}></lightning-button>
-                    </div>
-                </footer>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
@@ -227,6 +229,7 @@
                             <lightning-input-field field-name="City__c"></lightning-input-field>
                             <lightning-input-field field-name="Country__c"></lightning-input-field>
                         </div>
+                        <lightning-input-field field-name="Profile_Picture__c"></lightning-input-field>
                     </lightning-record-edit-form>
                 </div>
                 <footer class="slds-modal__footer">

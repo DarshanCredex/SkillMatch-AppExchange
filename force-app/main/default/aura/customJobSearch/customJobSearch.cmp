@@ -1,0 +1,16 @@
+<aura:component implements="forceCommunity:searchInterface">
+    <aura:attribute name="searchText" type="String" default=""/>
+    <lightning:navigation aura:id="navService"/>
+    <div class="slds-form-element slds-lookup" data-select="single">
+        <div class="slds-form-element__control">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+                <div>
+                    <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.handleClick }" alternativeText="Search" class="slds-input__icon" />
+                </div>
+                <div>
+                    <ui:inputText value="{!v.searchText}" class="slds-lookup__search-input slds-input" placeholder="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -2,7 +2,7 @@
   @description       : applicant details page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-20-2024
+  @last modified on  : 02-21-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -60,5 +60,9 @@
                 </template>
             </div>
         </div>
+    </template>
+
+    <template if:true={contentDocumentId}>
+        <iframe src={pdfUrl} width="100%" height="500px" frameborder="0"></iframe>
     </template>
 </template>

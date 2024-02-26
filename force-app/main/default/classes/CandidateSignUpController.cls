@@ -41,42 +41,32 @@ public class CandidateSignUpController {
         u.Email = email;
         u.FirstName = firstName;
         u.LastName = lastName;
-        u.CommunityNickname = firstName;
+        u.CommunityNickname = firstName+lastName;
         u.ProfileId = profileId;
         String userId;
         
         try {
             userId = Site.createExternalUser(u, accountId, password);
-            
+            System.debug('userId--->'+userId);
         } catch(Site.ExternalUserCreateException ex) {
             List<String> errors = ex.getDisplayMessages();
             for (String error : errors)  {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, error));
             }
-            
-            // This message is used for debugging. Do not display this in the UI to the end user.
-            // It has the information around why the user creation failed.
             System.debug(ex.getMessage());
         }
         
-        if (userId != null) { 
-            if (password != null && password.length() > 1) {
-                Candidate_Details__c newCandidate = new Candidate_Details__c();
-                newCandidate.Name = firstName + ' ' + lastName;
-                newCandidate.Candidate_Email__c = Email;
-                newCandidate.OwnerId = u.Id;
-                try{
-                    insert newCandidate;
-                }catch(Exception ex) {
-                    throw new AuraHandledException(ex.getMessage());
-                }
-                return Site.login(userName, password, ApexPages.currentPage().getParameters().get('startURL'));
+        if (userId != null) {
+            Candidate_Details__c newCandidate = new Candidate_Details__c();
+            newCandidate.Name = firstName + ' ' + lastName;
+            newCandidate.Candidate_Email__c = Email;
+            newCandidate.User__c = (Id)userId;
+            try{
+                insert newCandidate;
+            }catch(DMLException ex) {
+                throw new AuraHandledException(ex.getMessage());
             }
-            else {
-                PageReference page = System.Page.CommunitiesSelfRegConfirm;
-                page.setRedirect(true);
-                return page;
-            }
+            return Site.login(userName, password, ApexPages.currentPage().getParameters().get('startURL'));
         }
         return null;
     }

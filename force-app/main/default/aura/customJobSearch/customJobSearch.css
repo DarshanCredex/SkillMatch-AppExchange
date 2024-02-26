@@ -1,0 +1,16 @@
+/*.THIS .interactive-icon {
+    cursor: pointer; 
+    color: #0070d2; 
+}
+
+.THIS .interactive-input {
+    border: 1px solid #0070d2; 
+    border-radius: 4px; 
+    padding: 0.5rem; 
+}
+
+.THIS .interactive-input:focus {
+    outline: none;
+    border-color: #005fb2; 
+    box-shadow: 0 0 5px rgba(0, 112, 210, 0.5);
+}*/

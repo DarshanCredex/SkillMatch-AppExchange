@@ -15,19 +15,29 @@
 }
 
 .university-logo,
-.discover-jobs-logo {
-    width: 25%;
-    height: 25%;
+.discover-jobs-logo,
+.recruiter-jobs-logo {
+    width: 30%;
+    height: 30%;
 }
 
 .jobs-discover,
-.universities {
+.universities,
+.recruiter-discover {
     display: flex;
     width: 100%;
     height: 100%;
     align-items: center;
     justify-content: center;
-    margin-top: 10%;
+    margin-top: 7%;
+    margin-bottom: 7%;
+}
+
+.recruiter-discover:hover {
+    cursor: pointer;
+    .recruiter-text {
+        text-decoration-line: underline;
+    }
 }
 
 .text-content div h1,
@@ -139,7 +149,8 @@
     }
 
     .jobs-discover,
-    .universities {
+    .universities,
+    .recruiter-discover {
         display: flex;
         flex-direction: column;
         align-items: center;

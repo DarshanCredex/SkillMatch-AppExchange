@@ -4,9 +4,4 @@
     <availableInTouch>true</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>CandidateLoginSetup</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>13</minorNumber>
-        <namespace>JobBoard</namespace>
-    </packageVersions>
 </ApexPage>

@@ -4,9 +4,4 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>CandidateSignUp</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>13</minorNumber>
-        <namespace>JobBoard</namespace>
-    </packageVersions>
 </ApexPage>

@@ -18,7 +18,6 @@ export default class ApplicantListPage extends NavigationMixin(
   emptyBox = emptyBox;
 
   candiateListIsEmpty = false;
-
   IsAccepted = false;
   IsRejected = false;
   showAllCandidates = true;
@@ -38,10 +37,6 @@ export default class ApplicantListPage extends NavigationMixin(
   fetchCandidateNames() {
     fetchCandidateNames({ jobId: this.jobId }).then((data) => {
       this.candidateDetails = data;
-      console.log(
-        "this.candidateDetails------->",
-        JSON.stringify(this.candidateDetails)
-      );
       if (this.candidateDetails.length > 0) {
         this.candiateListIsEmpty = true;
       }
@@ -55,7 +50,6 @@ export default class ApplicantListPage extends NavigationMixin(
   }
   navigateToDetailsPage(event) {
     this.candidateId = event.currentTarget.dataset.candidateid;
-    console.log("this.candidateId", this.candidateId);
     const pageReference = {
       type: "standard__webPage",
       attributes: {
@@ -64,7 +58,6 @@ export default class ApplicantListPage extends NavigationMixin(
     };
 
     sessionStorage.setItem("candidateid", this.candidateId);
-    console.log("candidateid(sender)---->", this.candidateId);
     this[NavigationMixin.Navigate](pageReference);
   }
 

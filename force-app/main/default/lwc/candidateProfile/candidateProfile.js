@@ -1,7 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
-import createExperience from '@salesforce/apex/CandidateProfileController.createWorkExperience';
 import fetchCandidateDetails from '@salesforce/apex/CandidateProfileController.getCandidateDetails';
-//import updateCandidateDetails from '@salesforce/apex/CandidateProfileController.updateCandidateDetails';
+import attachFileToCandidate from '@salesforce/apex/CandidateProfileController.attachFileToCandidate';
 import UserId from '@salesforce/user/Id';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
@@ -107,14 +106,36 @@ export default class CandidateProfile extends LightningElement {
     }
 
     handleUploadFinished(event) {
-        const uploadedFiles = event.detail.files.length;
-        console.log('uploadedFiles--->', uploadedFiles);
-        const evt = new ShowToastEvent({
-            title: 'SUCCESS',
-            message: uploadedFiles + ' File(s) uploaded  successfully',
-            variant: 'success',
-        });
-        this.dispatchEvent(evt);
+        const uploadedFiles = event.detail.files;
+        if (uploadedFiles.length > 0) {
+            const file = uploadedFiles[0];
+            const base64Data = file.content.toString();
+            attachFileToCandidate({ 
+                userId: this.userId, 
+                fileName: file.name, 
+                base64Data: base64Data, 
+                contentType: file.type 
+            })
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'File attached successfully',
+                        variant: 'success'
+                    })
+                );
+            })
+            .catch(error => {
+                console.error('Error attaching file: ', error);
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Error attaching file: ' + error.body.message,
+                        variant: 'error'
+                    })
+                );
+            });
+        }
     }
 
     handleSave() {
@@ -147,9 +168,10 @@ export default class CandidateProfile extends LightningElement {
     }
 
     handleSubmitExperience() {
-        this.closeModal();
+        //this.closeModal();
         this.isLoadingFullScreen = true;
         this.template.querySelector('lightning-record-edit-form[data-id="addExperienceForm"]').submit();        
+        this.isExpModalOpen = false;
         this.isLoadingFullScreen = false;
     }
 

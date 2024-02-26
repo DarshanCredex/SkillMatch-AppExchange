@@ -1,35 +1,38 @@
 public with sharing class CandidateProfileController {
+
     @AuraEnabled
-    public static void createWorkExperience(String organisation, Boolean isCurrentCompany, Date fromDate, Date toDate, String City, String Country) {
-        try {
-            Work_Experience__c experience = new Work_Experience__c(
-                Organisation__c = organisation,
-                Is_Current_Company__c = isCurrentCompany,
-                From_Date__c = fromDate,
-                To_Date__c = toDate,
-                City__c = City,
-                Country__c = Country
-            );
-            insert experience;
+    public static void attachFileToCandidate(Id userId, String fileName, String base64Data, String contentType) {
+    System.debug('userId-->'+userId);
+    System.debug('fileName-->'+fileName);
+    System.debug('base64Data-->'+base64Data);
+    System.debug('contentType-->'+contentType);    
+    try {
+            List<Candidate_Details__c> currentCandidate = [SELECT Id FROM Candidate_Details__c WHERE User__c = :userId];
+            Attachment attachment = new Attachment();
+            attachment.ParentId = currentCandidate[0].Id;
+            attachment.Name = fileName;
+            attachment.Body = EncodingUtil.base64Decode(base64Data);
+            attachment.ContentType = contentType;
+            insert attachment;
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            throw new AuraHandledException('Error attaching file: ' + e.getMessage());
         }
     }
+
     @AuraEnabled(cacheable=true)
     public static Candidate_Details__c getCandidateDetails(Id userId) {
         System.debug('userId---->'+userId);
-        Candidate_Details__c currentCandidate = new Candidate_Details__c();
-        currentCandidate = [SELECT Id, Name, Candidate_Email__c, CTC__c, Date_of_birth__c, About__c, Phone_Number__c, Skills__c, Experience__c, City__c, Country__c,
-                            (Select Id, Name, Organisation__c, From_Date__c, To_Date__c, City__c, Country__c From Work_Experience__r) FROM Candidate_Details__c WHERE OwnerId = :userId Limit 1];
-        return currentCandidate;
-    }
-
-    @AuraEnabled
-    public static void updateCandidateDetails(Candidate_Details__c candidate) {
+        //Candidate_Details__c currentCandidate = new Candidate_Details__c();
         try {
-            update candidate;
-        } catch (DmlException e) {
-            System.debug('Error updating candidate:' + e.getMessage());
+            List<Candidate_Details__c> currentCandidate = [SELECT Id, Profile_Picture__c, Name, Candidate_Email__c, CTC__c, Date_of_birth__c, About__c, Phone_Number__c, Skills__c, Experience__c, City__c, Country__c,
+                                                           (Select Id, Name, Organisation__c, From_Date__c, To_Date__c, City__c, Country__c From Work_Experience__r Order By From_Date__c Desc) FROM Candidate_Details__c WHERE User__c = :userId];
+            if (currentCandidate.size() > 0){
+                return currentCandidate[0];
+            }else{
+                return new Candidate_Details__c();
+            }
+        }catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 }

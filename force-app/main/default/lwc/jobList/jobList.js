@@ -4,13 +4,15 @@ import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo
 import getTypePicklistValues from '@salesforce/apex/JobListController.getTypeValues';
 import getExperiencePicklistValues from '@salesforce/apex/JobListController.getExperienceValues';
 import getIndustryPicklistValues from '@salesforce/apex/JobListController.getIndustryValues';
-
+import emptyBox from "@salesforce/resourceUrl/empty_box";
+	
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class JobList extends NavigationMixin(LightningElement) {
     companyLogo = alternateCompanyLogo;
     @track sortValue = 'date';
     typeValues = [];
+    emptyBox = emptyBox;
     experienceValues = [];
     industryValues = [];
     @track selectedTypeValues = [];
@@ -19,8 +21,17 @@ export default class JobList extends NavigationMixin(LightningElement) {
     @track searchLocation = '';
     @track searchTitle = '';
     @track isLoading = false;
+    @track errorMessage = false;
+    @track jobListdata;
 
     connectedCallback() {
+
+        this.searchTitle = sessionStorage.getItem('searchText') || '';
+        sessionStorage.clear();
+        //this.searchLocation = sessionStorage.getItem('searchText') || '';
+        console.log('searchTitle-->',this.searchLocation);
+        console.log('searchLocation-->',this.searchLocation);
+
         getTypePicklistValues()
             .then(result => {
                 this.typeValues = result;
@@ -45,8 +56,17 @@ export default class JobList extends NavigationMixin(LightningElement) {
     }
 
     @wire(getJobs, { searchTitle: '$searchTitle', searchLocation: '$searchLocation', selectedTypeValues: '$selectedTypeValues', selectedExperienceValues: '$selectedExperienceValues', selectedIndustryValues: '$selectedIndustryValues' })
-    jobList;
-
+    jobList({data, error}){
+        if(data){
+            this.jobListdata = data;
+            if(this.jobListdata.length > 0){
+                this.errorMessage = false;
+            }else{
+                this.errorMessage = true;
+            }
+        }
+    }
+    
     get sortOptions() {
         return [
             { label: 'Date', value: 'date' },
@@ -113,13 +133,13 @@ export default class JobList extends NavigationMixin(LightningElement) {
     handleJobDetail(event) {
         let jobId = event.currentTarget.id;
         jobId = jobId.split("-");
-        this[NavigationMixin.GenerateUrl]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/s/job-detail?id=' + jobId[0]
-            }
-        }).then(generatedUrl => {
-            window.open(generatedUrl);
-        });
+            this[NavigationMixin.GenerateUrl]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: '/s/job-detail?id=' + jobId[0]
+                }
+            }).then(generatedUrl => {
+                window.open(generatedUrl);
+            });
     }
 }

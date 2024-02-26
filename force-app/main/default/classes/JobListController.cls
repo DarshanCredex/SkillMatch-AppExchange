@@ -36,7 +36,7 @@ public with sharing class JobListController {
     @AuraEnabled(cacheable=true)
     public static List<JobWrapper> getJobList(String searchTitle, String searchLocation, List<String> selectedTypeValues, List<String> selectedExperienceValues, List<String> selectedIndustryValues) {
         // Use dynamic SOQL to build a query based on the search term
-        String query = 'SELECT Id, Experience__c, Industry__c, CreatedDate, City__c, Country__c, Location__c, Salary__c, Title_of_position__c, Type__c, Company_Name__c, Summary__c FROM Job__c';
+        String query = 'SELECT Id, Experience__c, Industry__c, CreatedDate, City__c, Country__c, Location__c, Salary__c, Title_of_position__c, Type__c, Company_Name__c, Summary__c FROM Job__c Where Status__c = \'Completed\'';
 
         List<String> dynamicConditions = new List<String>();
         searchTitle = '%' +searchTitle+ '%';
@@ -62,7 +62,7 @@ public with sharing class JobListController {
         }
 
         if (!dynamicConditions.isEmpty()) {
-            query += ' WHERE ' + String.join(dynamicConditions, ' AND ');
+            query += ' AND ' + String.join(dynamicConditions, ' AND ');
         }
 
         List<Job__c> jobs = Database.query(query);
