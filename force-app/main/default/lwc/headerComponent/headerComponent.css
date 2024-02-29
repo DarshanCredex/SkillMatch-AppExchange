@@ -23,14 +23,17 @@
     height: 15%;
     width: 15%;
 }
+
 .home-tab,
 .Jobs-tab,
 .my-jobs{
     padding-top: 2%;
     padding-left: 3%;
     font-size: 15px;
+    cursor: pointer;
 }
 .login-signup{
     padding-right: 3%;
     padding-top: 2%;
+    cursor: pointer;
 }

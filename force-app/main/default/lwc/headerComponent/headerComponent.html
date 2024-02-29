@@ -12,20 +12,23 @@
                 <div class="logo">
                     <img src={skillMatch_logo} alt="na">
                 </div>
-                <div class="home-tab">
+                <div class="home ? home-tab-1 : home-tab" onclick={navigateToHome}>
                     <h1>Home</h1>
                 </div>
-                <div class="Jobs-tab">
+                <div class="Jobs-tab" onclick={navigateToJobs}>
                     <h1>Jobs</h1>
                 </div>
-                <div class="my-jobs">
+                <div class="my-jobs" onclick={navigateToMyJobs}>
                     <h1>My Jobs</h1>
                 </div>
             </div>
             <div class="login-signup">
                 <div class="login-signup-btn">
                     <h1>
-                        <lightning-icon icon-name="utility:profile_alt" size="small" variant="brand"></lightning-icon>
+                        <lightning-button-menu>
+                            <lightning-menu-item value="MenuItemOne" label="Profile"></lightning-menu-item>
+                            <lightning-menu-item value="MenuItemTwo" label="Logout"></lightning-menu-item>
+                        </lightning-button-menu>
                     </h1>
                 </div>
             </div>
