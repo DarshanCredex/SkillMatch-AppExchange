@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 02-26-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <apex:page id="SignUpComponent" showHeader="false" standardStylesheets="false" controller="CandidateSignUpController" title="Sign Up">
     <html>
         <head>
@@ -159,23 +166,23 @@
                                 </div>
                             <div class="input-group">
                                 <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                                <apex:inputText required="true" html-placeholder="First Name" id="firstName" value="{!firstName}" label="First Name"/>
+                                <apex:inputText required="true" html-placeholder="First Name" id="firstName" value="{!firstName}"  label="First Name"/>
                             </div>
                             <div class="input-group">
                                 <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                                <apex:inputText required="true" html-placeholder="Last Name" id="lastName" value="{!lastName}" label="Last Name"/>
+                                <apex:inputText required="true" html-placeholder="Last Name" id="lastName" value="{!lastName}"  label="Last Name"/>
                             </div>
                             <div class="input-group">
                                 <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
-                                <apex:inputText required="true" html-placeholder="Email" id="email" value="{!email}" label="{!$Label.site.email}"/>
+                                <apex:inputText required="true" html-placeholder="Email" id="email" value="{!email}"  label="{!$Label.site.email}"/>
                             </div>
                             <div class="input-group">
                                 <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                                <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
+                                <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"  />
                             </div>
                             <div class="input-group">
                                 <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                                <apex:inputSecret html-placeholder="Confirm Password" id="confirmPassword" value="{!confirmPassword}"/>
+                                <apex:inputSecret html-placeholder="Confirm Password" id="confirmPassword" value="{!confirmPassword}" />
                             </div>
                             <div class="buttons-container">
                                 <apex:commandButton action="{!registerUser}"  styleClass="signup" value="Sign Up"/>

@@ -2,7 +2,7 @@ import { LightningElement, api } from "lwc";
 import universities from "@salesforce/resourceUrl/universities";
 import discoverjobs from "@salesforce/resourceUrl/discoverJobs";
 import hiringCandidate from "@salesforce/resourceUrl/Start_Hiring";
-import { NavigationMixin } from 'lightning/navigation';
+import { NavigationMixin } from "lightning/navigation";
 
 export default class CandidateHome extends NavigationMixin(LightningElement) {
   universities = universities;
@@ -22,12 +22,17 @@ export default class CandidateHome extends NavigationMixin(LightningElement) {
 
   handleRecruiterLogin() {
     this[NavigationMixin.GenerateUrl]({
-      type: 'standard__webPage',
+      type: "standard__webPage",
       attributes: {
-        url: 'https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage'
+        url: "https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage"
       }
-    }).then(generatedUrl => {
+    }).then((generatedUrl) => {
       window.open(generatedUrl);
     });
+  }
+
+  connectedCallback() {
+    var temp = localStorage.getItem("emailId__1");
+    console.log("temp------>", temp);
   }
 }

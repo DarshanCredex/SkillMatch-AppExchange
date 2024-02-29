@@ -1,3 +1,5 @@
+/* eslint-disable no-dupe-class-members */
+/* eslint-disable @lwc/lwc/no-api-reassignments */
 import { LightningElement, track, api, wire } from 'lwc';
 import fetchCandidateDetails from '@salesforce/apex/CandidateProfileController.getCandidateDetails';
 import attachFileToCandidate from '@salesforce/apex/CandidateProfileController.attachFileToCandidate';
@@ -161,7 +163,7 @@ export default class CandidateProfile extends LightningElement {
         this.dispatchEvent(
             new ShowToastEvent({
                 title: 'Error',
-                message: error.body.message,
+                message: 'error',
                 variant: 'error'
             })
         );

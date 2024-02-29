@@ -1,0 +1,36 @@
+.main{
+    width: 100%;
+    background-color: white;
+    height: 20vh;
+    border-bottom: 1px solid black;
+}
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-contents{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.logo{
+    padding-left: 3%;
+    padding-top: 2%;
+    height: 15%;
+    width: 15%;
+}
+.home-tab,
+.Jobs-tab,
+.my-jobs{
+    padding-top: 2%;
+    padding-left: 3%;
+    font-size: 15px;
+}
+.login-signup{
+    padding-right: 3%;
+    padding-top: 2%;
+}
