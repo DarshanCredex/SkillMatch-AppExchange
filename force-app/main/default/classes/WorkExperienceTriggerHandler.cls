@@ -1,3 +1,10 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 02-29-2024
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
 public class WorkExperienceTriggerHandler {
     
     public static void checkIsCurrentCompany (List <Work_Experience__c> workExpList, Map<Id, Work_Experience__c> workExpMap) {
@@ -42,6 +49,7 @@ public class WorkExperienceTriggerHandler {
                     //workExpListToUpdate.add(relatedWorkExp);
                 }
             }
+            
             if(!workExpListToUpdate.isEmpty()){
                 Update workExpListToUpdate;
             }

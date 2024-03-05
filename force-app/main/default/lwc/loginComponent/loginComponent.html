@@ -1,0 +1,49 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-05-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="login-container">
+        <div class="login-inner-container">
+            <div class="logo-container">
+                <img class="logo" src={skillMatchLogo} alt="SkillMatch" />
+            </div>
+            <div class="detail-container">
+                <div class="detail-container-sub">
+                    <div class="separator"></div>
+                    <!-- <div class="error-container">
+                        <template for:each={errorMessages} for:item="error">
+                            <p key={error.key}>{error.message}</p>
+                        </template>
+                    </div> -->
+                    <div class="input-group">
+                        <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
+                        <input type="text" placeholder="Email" value={email} onchange={handleEmailChange}></input>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                        <input type="password" placeholder="Password" value={password} onchange={handlePasswordChange}></input>
+                    </div>
+                    <div class="forgot-password">
+                        <a class="forgot-password-link" href={forgotPasswordUrl}>Forgot your password?</a>
+                    </div>
+                    <div class="buttons-container">
+                        <button class="btn-signup" onclick={handleSignup}>Sign up</button>
+                        <button class="btn-login" onclick={handleLogin}>Login</button>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="hr-portal">
+                        <a class="hr-portal-link" href={hrPortalUrl}>Login/Register as Recruiter</a>
+                    </div>
+                    <div class="separator"></div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &#169; Copyright 2024, Credex Technology, All rights reserved
+        </div>
+    </div>
+</template>

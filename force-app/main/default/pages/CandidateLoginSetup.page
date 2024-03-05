@@ -2,7 +2,7 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 02-28-2024
+  @last modified on  : 03-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
@@ -198,7 +198,8 @@
                                     
                                     <div class="buttons-container">
                                         <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
-                                        <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
+                                         <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
+                                        <!-- <a href="https://skillmatch-dev-ed.develop.my.site.com/Candidate"> Login </a> -->
                                     </div>
                                     
                                     <div class="separator"></div>
@@ -227,12 +228,27 @@
                             const emailValue = emailElement.value;      //------>this works
                             console.log('Email Value:', emailValue);   //------->this works
                             //alert('Email: ' + emailValue);
-                            localStorage.setItem('emailId__1', emailValue);
-                            console.log('item in local storge---->', localStorage.getItem('emailId__1'));  //------->this works
+                            sessionStorage.setItem('emailId__1', emailValue);
+                            console.log('item in session storge---->', sessionStorage.getItem('emailId__1'));  //------->this works
                         } else {
                             console.error('Email element not found.');
                         }
-                    }
+                }
+
+                    // let emailValue = '';
+                    // let messageToLWC;
+                    // let VfOrigin = '';
+                    // const emailElement = document.getElementById('{!$Component.loginComponent.loginForm.pageBlock.email}');
+                    // if (emailElement) {
+                    //     emailValue = emailElement.value;   
+                    // }
+
+                    // VfOrigin = 'https://skillmatch-dev-ed.develop.my.site.com/Candidate';
+                    // messageToLWC = {
+                    //     message: emailValue
+                    // }
+                    // window.parent.postMessage(messgaeToLWC, VfOrigin);
+                    
             </script>
         </body>
     </html>

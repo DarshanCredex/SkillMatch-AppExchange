@@ -1,145 +1,166 @@
-import { LightningElement, wire, track } from 'lwc';
-import getJobs from '@salesforce/apex/JobListController.getJobList';
-import alternateCompanyLogo from '@salesforce/resourceUrl/Alternate_Company_Logo';
-import getTypePicklistValues from '@salesforce/apex/JobListController.getTypeValues';
-import getExperiencePicklistValues from '@salesforce/apex/JobListController.getExperienceValues';
-import getIndustryPicklistValues from '@salesforce/apex/JobListController.getIndustryValues';
+import { LightningElement, wire, track } from "lwc";
+import getJobs from "@salesforce/apex/JobListController.getJobList";
+import alternateCompanyLogo from "@salesforce/resourceUrl/Alternate_Company_Logo";
+import getTypePicklistValues from "@salesforce/apex/JobListController.getTypeValues";
+import getExperiencePicklistValues from "@salesforce/apex/JobListController.getExperienceValues";
+import getIndustryPicklistValues from "@salesforce/apex/JobListController.getIndustryValues";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-	
-import { NavigationMixin } from 'lightning/navigation';
+
+import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
-    companyLogo = alternateCompanyLogo;
-    @track sortValue = 'date';
-    typeValues = [];
-    emptyBox = emptyBox;
-    experienceValues = [];
-    industryValues = [];
-    @track selectedTypeValues = [];
-    @track selectedExperienceValues = [];
-    @track selectedIndustryValues = [];
-    @track searchLocation = '';
-    @track searchTitle = '';
-    @track isLoading = false;
-    @track errorMessage = false;
-    @track jobListdata;
+  companyLogo = alternateCompanyLogo;
+  @track sortValue = "date";
+  typeValues = [];
+  emptyBox = emptyBox;
+  experienceValues = [];
+  industryValues = [];
+  @track selectedTypeValues = [];
+  @track selectedExperienceValues = [];
+  @track selectedIndustryValues = [];
+  @track searchLocation = "";
+  @track searchTitle = "";
+  @track isLoading = false;
+  @track errorMessage = false;
+  @track jobListdata;
 
-    connectedCallback() {
+  connectedCallback() {
+    this.searchTitle = sessionStorage.getItem("searchText") || "";
+    console.log(
+      "unique value from session storage------->",
+      sessionStorage.getItem("uniqueValue")
+    );
+    sessionStorage.clear();
+    //this.searchLocation = sessionStorage.getItem('searchText') || '';
+    console.log("searchTitle-->", this.searchLocation);
+    console.log("searchLocation-->", this.searchLocation);
 
-        this.searchTitle = sessionStorage.getItem('searchText') || '';
-        sessionStorage.clear();
-        //this.searchLocation = sessionStorage.getItem('searchText') || '';
-        console.log('searchTitle-->',this.searchLocation);
-        console.log('searchLocation-->',this.searchLocation);
+    getTypePicklistValues()
+      .then((result) => {
+        this.typeValues = result;
+      })
+      .catch((error) => {
+        console.error("Error fetching type picklist values:", error);
+      });
+    getExperiencePicklistValues()
+      .then((result) => {
+        this.experienceValues = result;
+      })
+      .catch((error) => {
+        console.error("Error fetching experience picklist values:", error);
+      });
+    getIndustryPicklistValues()
+      .then((result) => {
+        this.industryValues = result;
+      })
+      .catch((error) => {
+        console.error("Error fetching industry picklist values:", error);
+      });
+  }
 
-        getTypePicklistValues()
-            .then(result => {
-                this.typeValues = result;
-            })
-            .catch(error => {
-                console.error('Error fetching type picklist values:', error);
-            });
-        getExperiencePicklistValues()
-            .then(result => {
-                this.experienceValues = result;
-            })
-            .catch(error => {
-                console.error('Error fetching experience picklist values:', error);
-            });
-        getIndustryPicklistValues()
-            .then(result => {
-                this.industryValues = result;
-            })
-            .catch(error => {
-                console.error('Error fetching industry picklist values:', error);
-            });
+  @wire(getJobs, {
+    searchTitle: "$searchTitle",
+    searchLocation: "$searchLocation",
+    selectedTypeValues: "$selectedTypeValues",
+    selectedExperienceValues: "$selectedExperienceValues",
+    selectedIndustryValues: "$selectedIndustryValues"
+  })
+  jobList({ data, error }) {
+    if (data) {
+      this.jobListdata = data;
+      if (this.jobListdata.length > 0) {
+        this.errorMessage = false;
+      } else {
+        this.errorMessage = true;
+      }
     }
+  }
 
-    @wire(getJobs, { searchTitle: '$searchTitle', searchLocation: '$searchLocation', selectedTypeValues: '$selectedTypeValues', selectedExperienceValues: '$selectedExperienceValues', selectedIndustryValues: '$selectedIndustryValues' })
-    jobList({data, error}){
-        if(data){
-            this.jobListdata = data;
-            if(this.jobListdata.length > 0){
-                this.errorMessage = false;
-            }else{
-                this.errorMessage = true;
-            }
-        }
+  get sortOptions() {
+    return [
+      { label: "Date", value: "date" },
+      { label: "Closet", value: "closet" }
+    ];
+  }
+
+  handleTypeChange(event) {
+    const selectedType = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
+    } else {
+      this.selectedTypeValues = this.selectedTypeValues.filter(
+        (item) => item !== selectedType
+      );
     }
-    
-    get sortOptions() {
-        return [
-            { label: 'Date', value: 'date' },
-            { label: 'Closet', value: 'closet' },
-        ];
+  }
+
+  handleExperienceChange(event) {
+    const selectedExperience = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      this.selectedExperienceValues = [
+        ...this.selectedExperienceValues,
+        selectedExperience
+      ];
+    } else {
+      this.selectedExperienceValues = this.selectedExperienceValues.filter(
+        (item) => item !== selectedExperience
+      );
     }
+  }
 
-    handleTypeChange(event) {
-        const selectedType = event.target.value;
-        const isChecked = event.target.checked;
+  handleIndustryChange(event) {
+    const selectedIndustry = event.target.value;
+    const isChecked = event.target.checked;
 
-        if (isChecked) {
-            this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
-        } else {
-            this.selectedTypeValues = this.selectedTypeValues.filter((item) => item !== selectedType);
-        }
+    if (isChecked) {
+      this.selectedIndustryValues = [
+        ...this.selectedIndustryValues,
+        selectedIndustry
+      ];
+    } else {
+      this.selectedIndustryValues = this.selectedIndustryValues.filter(
+        (item) => item !== selectedIndustry
+      );
     }
+  }
 
-    handleExperienceChange(event) {
-        const selectedExperience = event.target.value;
-        const isChecked = event.target.checked;
+  handleChange(event) {
+    this.sortValue = event.detail.value;
+  }
 
-        if (isChecked) {
-            this.selectedExperienceValues = [...this.selectedExperienceValues, selectedExperience];
-        } else {
-            this.selectedExperienceValues = this.selectedExperienceValues.filter((item) => item !== selectedExperience);
-        }
+  handleSearchTitleChange(event) {
+    this.searchTitle = event.target.value;
+  }
+
+  handleSearchLocationChange(event) {
+    this.searchLocation = event.target.value;
+  }
+
+  handleClearFilters() {
+    this.selectedTypeValues = [];
+    this.selectedExperienceValues = [];
+    this.selectedIndustryValues = [];
+
+    const checkboxList = this.template.querySelectorAll('[data-id="checkbox"]');
+    for (const checkboxElement of checkboxList) {
+      checkboxElement.checked = false;
     }
+  }
 
-    handleIndustryChange(event) {
-        const selectedIndustry = event.target.value;
-        const isChecked = event.target.checked;
-
-        if (isChecked) {
-            this.selectedIndustryValues = [...this.selectedIndustryValues, selectedIndustry];
-        } else {
-            this.selectedIndustryValues = this.selectedIndustryValues.filter((item) => item !== selectedIndustry);
-        }
-    }
-
-    handleChange(event) {
-        this.sortValue = event.detail.value;
-    }
-
-    handleSearchTitleChange(event) {
-        this.searchTitle = event.target.value;
-    }
-
-    handleSearchLocationChange(event) {
-        this.searchLocation = event.target.value;
-    }
-
-    handleClearFilters() {
-        this.selectedTypeValues = [];
-        this.selectedExperienceValues = [];
-        this.selectedIndustryValues = [];
-
-        const checkboxList = this.template.querySelectorAll('[data-id="checkbox"]');
-        for (const checkboxElement of checkboxList) {
-            checkboxElement.checked = false;
-        }
-    }
-
-    handleJobDetail(event) {
-        let jobId = event.currentTarget.id;
-        jobId = jobId.split("-");
-            this[NavigationMixin.GenerateUrl]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: '/s/job-detail?id=' + jobId[0]
-                }
-            }).then(generatedUrl => {
-                window.open(generatedUrl);
-            });
-    }
+  handleJobDetail(event) {
+    let jobId = event.currentTarget.id;
+    jobId = jobId.split("-");
+    this[NavigationMixin.GenerateUrl]({
+      type: "standard__webPage",
+      attributes: {
+        url: "/s/job-detail?id=" + jobId[0]
+      }
+    }).then((generatedUrl) => {
+      window.open(generatedUrl);
+    });
+  }
 }

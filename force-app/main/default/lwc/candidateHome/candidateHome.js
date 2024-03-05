@@ -3,11 +3,12 @@ import universities from "@salesforce/resourceUrl/universities";
 import discoverjobs from "@salesforce/resourceUrl/discoverJobs";
 import hiringCandidate from "@salesforce/resourceUrl/Start_Hiring";
 import { NavigationMixin } from "lightning/navigation";
-
 export default class CandidateHome extends NavigationMixin(LightningElement) {
   universities = universities;
   discoverjobs = discoverjobs;
   hiringCandidate = hiringCandidate;
+  emailId;
+  showToUser = true;
 
   @api testimonial_1 =
     "Securing my dream job was a breeze with SkillMatch. The intuitive interface and personalized job recommendations made my job hunt efficient and effective. I landed my ideal position faster than I ever imagined. Thank you, SkillMatch, for turning my career aspirations into reality!";
@@ -29,10 +30,5 @@ export default class CandidateHome extends NavigationMixin(LightningElement) {
     }).then((generatedUrl) => {
       window.open(generatedUrl);
     });
-  }
-
-  connectedCallback() {
-    var temp = localStorage.getItem("emailId__1");
-    console.log("temp------>", temp);
   }
 }

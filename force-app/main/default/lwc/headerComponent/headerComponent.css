@@ -1,8 +1,7 @@
 .main{
     width: 100%;
     background-color: white;
-    height: 20vh;
-    border-bottom: 1px solid black;
+    height: 18vh;
 }
 .header{
     display: flex;
@@ -33,7 +32,7 @@
     cursor: pointer;
 }
 .login-signup{
-    padding-right: 3%;
+    padding-right: 5%;
     padding-top: 2%;
     cursor: pointer;
 }

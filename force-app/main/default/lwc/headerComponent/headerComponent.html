@@ -2,7 +2,7 @@
   @description       : header compoenent for candidate portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-29-2024
+  @last modified on  : 03-04-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -12,24 +12,31 @@
                 <div class="logo">
                     <img src={skillMatch_logo} alt="na">
                 </div>
-                <div class="home ? home-tab-1 : home-tab" onclick={navigateToHome}>
+                <div class="home-tab" onclick={navigateToHome}>
                     <h1>Home</h1>
                 </div>
                 <div class="Jobs-tab" onclick={navigateToJobs}>
                     <h1>Jobs</h1>
                 </div>
-                <div class="my-jobs" onclick={navigateToMyJobs}>
+                <template if:true={showToUser}>
+                    <div class="my-jobs" onclick={navigateToMyJobs}>
                     <h1>My Jobs</h1>
                 </div>
+                </template>
             </div>
             <div class="login-signup">
                 <div class="login-signup-btn">
-                    <h1>
-                        <lightning-button-menu>
-                            <lightning-menu-item value="MenuItemOne" label="Profile"></lightning-menu-item>
-                            <lightning-menu-item value="MenuItemTwo" label="Logout"></lightning-menu-item>
-                        </lightning-button-menu>
-                    </h1>
+                    <template if:true={showToUser}>
+                        <h1>
+                            <lightning-button-menu>
+                                <lightning-menu-item value="MenuItemOne" label="Profile"></lightning-menu-item>
+                                <lightning-menu-item value="MenuItemTwo" label="Logout"></lightning-menu-item>
+                            </lightning-button-menu>
+                        </h1>
+                    </template>
+                    <template if:false={showToUser}>
+                        <h1 onclick={navigateToLogin}>Login/Signup</h1>
+                    </template>
                 </div>
             </div>
         </div>

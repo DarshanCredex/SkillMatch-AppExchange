@@ -3,12 +3,16 @@ import skillMatch_logo from "@salesforce/resourceUrl/skillMatch_logo";
 import { NavigationMixin } from "lightning/navigation";
 
 export default class HeaderComponent extends NavigationMixin(LightningElement) {
+  emailId;
   skillMatch_logo = skillMatch_logo;
+  showToUser = false;
 
-  myjobs = false;
-  jobs = false;
-  home = true;
-
+  connectedCallback() {
+    this.emailId = sessionStorage.getItem("emailId");
+    if (this.emailId !== null) {
+      this.showToUser = true;
+    }
+  }
   navigateToJobs() {
     const pageReference = {
       type: "standard__webPage",
@@ -17,9 +21,6 @@ export default class HeaderComponent extends NavigationMixin(LightningElement) {
       }
     };
     this[NavigationMixin.Navigate](pageReference);
-     this.home = false;
-     this.myjobs = false;
-     this.jobs = true;
   }
 
   navigateToHome() {
@@ -30,9 +31,6 @@ export default class HeaderComponent extends NavigationMixin(LightningElement) {
       }
     };
     this[NavigationMixin.Navigate](pageReference);
-    this.home = true;
-    this.myjobs = false;
-    this.jobs = false;
   }
   navigateToMyJobs() {
     const pageReference = {
@@ -42,8 +40,15 @@ export default class HeaderComponent extends NavigationMixin(LightningElement) {
       }
     };
     this[NavigationMixin.Navigate](pageReference);
-     this.home =false;
-     this.myjobs = true;
-     this.jobs = false;
+  }
+
+  navigateToLogin() {
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/custom-login"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }
