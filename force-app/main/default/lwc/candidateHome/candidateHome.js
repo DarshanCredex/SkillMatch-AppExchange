@@ -31,4 +31,11 @@ export default class CandidateHome extends NavigationMixin(LightningElement) {
       window.open(generatedUrl);
     });
   }
+
+  connectedCallback() {
+    this.emailId = sessionStorage.getItem("emailId");
+    if (this.emailId !== null) {
+      this.showToUser = false;
+    }
+  }
 }

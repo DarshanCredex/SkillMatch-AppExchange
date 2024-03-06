@@ -1,18 +1,11 @@
 /**
  * @description       :
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 02-28-2024
+ * @last modified on  : 03-06-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class CandidateAppliedJobsController {
-  public CandidateAppliedJobsController() {
-    system.debug('inside');
-    if (Cache.Session.contains('emailId')) {
-      string cachedDt = (string) Cache.Org.get('local.myPartition.emailId');
-      system.debug('email cache' + cachedDt);
-    }
-  }
   public class JobWrapper {
     @AuraEnabled
     public Integer appliedCount { get; set; }
@@ -72,7 +65,7 @@ public with sharing class CandidateAppliedJobsController {
   public static JobWrapper getAppliedJobs(
     String searchTitle,
     String searchCompany,
-    Id userId,
+    string email,
     String statusFilter
   ) {
     List<Candidate_Details__c> candidateDetails = [
@@ -80,7 +73,7 @@ public with sharing class CandidateAppliedJobsController {
         Id,
         (SELECT Id, Application_Status__c, Job_Id__c FROM Job_Applicants__r)
       FROM Candidate_Details__c
-      WHERE User__c = :userId
+      WHERE Candidate_Email__c = :email
       LIMIT 1
     ];
     Set<Id> candidateApplicationId = new Set<Id>();
@@ -139,27 +132,5 @@ public with sharing class CandidateAppliedJobsController {
       wrappedAppliedJobs.jobWrapperList.addAll(wrappedJobs);
     }
     return wrappedAppliedJobs;
-  }
-
-  @AuraEnabled(cacheable=true)
-  public static string returnEmail() {
-
-    // String email;
-    // System.debug('inside return email method');
-    // try {
-    //     email = (String) Cache.Org.get('local.myPartition.emailId');
-    //     System.debug('Email found in cache------>' + email);
-    // } catch (Exception e) {
-    //   throw new AuraHandledException(e.getMessage());
-    // }
-    // return email;
-
-    string emailNew;
-    Cache.Org.put('local.myPartition.emailId', 'hello');
-    emailNew = (String) Cache.Org.get('local.myPartition.emailId');
-    system.debug('email (get)----->' + emailNew);
-    system.debug('put into cache');
-    
-    return null;
   }
 }

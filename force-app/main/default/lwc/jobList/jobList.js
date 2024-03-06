@@ -5,16 +5,15 @@ import getTypePicklistValues from "@salesforce/apex/JobListController.getTypeVal
 import getExperiencePicklistValues from "@salesforce/apex/JobListController.getExperienceValues";
 import getIndustryPicklistValues from "@salesforce/apex/JobListController.getIndustryValues";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-
 import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
   companyLogo = alternateCompanyLogo;
-  @track sortValue = "date";
-  typeValues = [];
   emptyBox = emptyBox;
+  typeValues = [];
   experienceValues = [];
   industryValues = [];
+  @track sortValue = "date";
   @track selectedTypeValues = [];
   @track selectedExperienceValues = [];
   @track selectedIndustryValues = [];
@@ -31,7 +30,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
       sessionStorage.getItem("uniqueValue")
     );
     sessionStorage.clear();
-    //this.searchLocation = sessionStorage.getItem('searchText') || '';
     console.log("searchTitle-->", this.searchLocation);
     console.log("searchLocation-->", this.searchLocation);
 
@@ -57,7 +55,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
         console.error("Error fetching industry picklist values:", error);
       });
   }
-
   @wire(getJobs, {
     searchTitle: "$searchTitle",
     searchLocation: "$searchLocation",
@@ -65,7 +62,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  jobList({ data, error }) {
+  jobList({ data }) {
     if (data) {
       this.jobListdata = data;
       if (this.jobListdata.length > 0) {
@@ -75,7 +72,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
       }
     }
   }
-
   get sortOptions() {
     return [
       { label: "Date", value: "date" },
@@ -86,7 +82,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleTypeChange(event) {
     const selectedType = event.target.value;
     const isChecked = event.target.checked;
-
     if (isChecked) {
       this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
     } else {
@@ -115,7 +110,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleIndustryChange(event) {
     const selectedIndustry = event.target.value;
     const isChecked = event.target.checked;
-
     if (isChecked) {
       this.selectedIndustryValues = [
         ...this.selectedIndustryValues,
@@ -144,7 +138,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
     this.selectedTypeValues = [];
     this.selectedExperienceValues = [];
     this.selectedIndustryValues = [];
-
     const checkboxList = this.template.querySelectorAll('[data-id="checkbox"]');
     for (const checkboxElement of checkboxList) {
       checkboxElement.checked = false;
@@ -159,8 +152,14 @@ export default class JobList extends NavigationMixin(LightningElement) {
       attributes: {
         url: "/s/job-detail?id=" + jobId[0]
       }
-    }).then((generatedUrl) => {
-      window.open(generatedUrl);
+    }).then(() => {
+      const pageReference = {
+        type: "standard__webPage",
+        attributes: {
+          url: "/job-detail"
+        }
+      };
+      this[NavigationMixin.Navigate](pageReference);
     });
   }
 }

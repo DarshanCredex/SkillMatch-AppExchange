@@ -2,10 +2,11 @@
   @description       : candidate portal home page for authenticated User
   @author            : Sagar Medatwal
   @group             : 
-  @last modified on  : 03-01-2024
+  @last modified on  : 03-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
+    <template lwc:if={showToUser}>
         <div class="main">
         <div>
             <div class="jobs-discover">
@@ -57,4 +58,5 @@
             </div>
         </div>
     </div>
+    </template>
 </template>

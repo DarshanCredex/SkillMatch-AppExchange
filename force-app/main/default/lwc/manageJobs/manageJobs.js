@@ -19,7 +19,6 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   jobId;
   noJobs = no_jobs;
 
-  // Store wired result variables
   wiredPostedJobListResult;
   wiredDraftedJobListResult;
 

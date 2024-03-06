@@ -3,7 +3,6 @@ import alternateCompanyLogo from "@salesforce/resourceUrl/Alternate_Company_Logo
 import getAppliedJobs from "@salesforce/apex/CandidateAppliedJobsController.getAppliedJobs";
 import { NavigationMixin } from "lightning/navigation";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-// import returnEmail from "@salesforce/apex/CandidateAppliedJobsController.returnEmail";
 
 export default class CandidateAppliedJobs extends NavigationMixin(
   LightningElement
@@ -30,8 +29,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   }
 
   connectedCallback() {
-    this.emailId = localStorage.getItem("emailId__1");
-    console.log("local storage---->", localStorage);
+    this.emailId = sessionStorage.getItem("emailId");
     console.log("emailId(connected Callback)----->", this.emailId);
   }
 

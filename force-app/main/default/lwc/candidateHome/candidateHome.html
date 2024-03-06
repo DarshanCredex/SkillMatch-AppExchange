@@ -2,11 +2,12 @@
   @description       : candidate portal home page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-01-2024
+  @last modified on  : 03-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-  <div class="main">
+  <template lwc:if={showToUser}>
+    <div class="main">
     <div>
       <div class="jobs-discover">
         <div class="discover-jobs-logo">
@@ -95,4 +96,5 @@
       </div>
     </div>
   </div>
+  </template>
 </template>

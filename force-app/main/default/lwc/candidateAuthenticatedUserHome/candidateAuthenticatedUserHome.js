@@ -9,6 +9,12 @@ export default class CandidateAuthenticatedUserHome extends LightningElement {
   AchieveDream = AchieveDream;
 
   emailId;
+  showToUser = false;
 
-  
+  connectedCallback() {
+    this.emailId = sessionStorage.getItem("emailId");
+    if (this.emailId !== null) {
+      this.showToUser = true;
+    }
+  }
 }
