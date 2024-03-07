@@ -4,12 +4,23 @@ import { NavigationMixin } from "lightning/navigation";
 
 export default class HeaderComponent extends NavigationMixin(LightningElement) {
   emailId;
+  emailInLocalStorage;
   skillMatch_logo = skillMatch_logo;
   showToUser = false;
 
   connectedCallback() {
     this.emailId = sessionStorage.getItem("emailId");
-    if (this.emailId !== null) {
+    this.emailInLocalStorage = localStorage.getItem("emailId");
+    console.log(
+      " this.emailId from session storage-------->",
+      sessionStorage.getItem("emailId")
+    );
+
+    console.log(
+      "this.emailInLocalStorage----------->",
+      this.emailInLocalStorage
+    );
+    if (this.emailInLocalStorage !== null) {
       this.showToUser = true;
     }
   }
@@ -47,6 +58,28 @@ export default class HeaderComponent extends NavigationMixin(LightningElement) {
       type: "standard__webPage",
       attributes: {
         url: "/custom-login"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
+  }
+
+  handleLogout() {
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/custom-login"
+      }
+    };
+    localStorage.clear();
+    sessionStorage.clear();
+    this[NavigationMixin.Navigate](pageReference);
+  }
+
+  handleProfile() {
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/profile"
       }
     };
     this[NavigationMixin.Navigate](pageReference);

@@ -29,8 +29,8 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   }
 
   connectedCallback() {
-    this.emailId = sessionStorage.getItem("emailId");
-    console.log("emailId(connected Callback)----->", this.emailId);
+    this.emailId = localStorage.getItem("emailId");
+    
   }
 
   handleSearchLocationChange(event) {

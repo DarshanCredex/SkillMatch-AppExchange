@@ -33,7 +33,7 @@ export default class CandidateHome extends NavigationMixin(LightningElement) {
   }
 
   connectedCallback() {
-    this.emailId = sessionStorage.getItem("emailId");
+    this.emailId = localStorage.getItem("emailId");
     if (this.emailId !== null) {
       this.showToUser = false;
     }

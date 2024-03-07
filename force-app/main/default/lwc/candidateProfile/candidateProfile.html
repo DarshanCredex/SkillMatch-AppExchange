@@ -1,101 +1,105 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-07-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
     <div class="slds-is-relative slds-p-around_large" if:true={isLoadingFullScreen}>
         <lightning-spinner alternative-text="Loading"></lightning-spinner>
     </div>
-    <div if:false={isLoadingFullScreen}>
-        <div class="profile-container">
-            <div class="profile-left-container">
-                <div class="profile-image">
-                    <lightning-formatted-rich-text
-                            value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
-                </div>
-                <p class="name">{candidateDetails.Name}</p>
-                <p class="title">Senior Salesforce Developer</p>
-                <p class="about-me">
-                    {candidateDetails.About__c}
-                </p>
-                <div class="skill-container">
-                    <p class="heading-text">Skills</p>
-                    <div class="skill-list">
-                        <template if:true={candidateSkills}>
-                            <template for:each={candidateSkills} for:item="Skill">
-                                <p key={Skill} class="skill-info">{Skill}</p>
-                            </template>
+    <div class="profile-container">
+        <div class="profile-left-container">
+            <div class="profile-image">
+                <lightning-formatted-rich-text
+                    value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
+            </div>
+            <p class="name">{candidateDetails.Name}</p>
+            <p class="title">Senior Salesforce Developer</p>
+            <p class="about-me">
+                {candidateDetails.About__c}
+            </p>
+            <div class="skill-container">
+                <p class="heading-text">Skills</p>
+                <div class="skill-list">
+                    <template if:true={candidateSkills}>
+                        <template for:each={candidateSkills} for:item="Skill">
+                            <p key={Skill} class="skill-info">{Skill}</p>
                         </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="profile-right-container">
+            <div class="basic-detail">
+                <div class="basic-heading-container">
+                    <p class="heading-text">
+                        Basic Information
+                    </p>
+                    <div style="align-self: center;">
+                        <lightning-button label="Resume" onclick={handleResume} class="edit-button"></lightning-button>
+                        <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
+                    </div>
+                </div>
+                <div class="detail-container">
+                    <div class="section">
+                        <div class="top-section">
+                            <div class="detail-heading">Date of Birth</div>
+                            <div class="detail-info">{candidateDetails.Date_of_birth__c}</div>
+                        </div>
+                        <div class="bottom-section">
+                            <div class="detail-heading">CTC</div>
+                            <div class="detail-info">
+                                <lightning-formatted-number
+                                    value={candidateDetails.CTC__c}></lightning-formatted-number>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="top-section">
+                            <div class="detail-heading">Years of Experience</div>
+                            <div class="detail-info">{candidateDetails.Experience__c} years</div>
+                        </div>
+                        <div class="bottom-section">
+                            <div class="detail-heading">Location</div>
+                            <div class="detail-info">{candidateDetails.City__c}, {candidateDetails.Country__c}</div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="top-section">
+                            <div class="detail-heading">Phone</div>
+                            <div class="detail-info">{candidateDetails.Phone_Number__c}</div>
+                        </div>
+                        <div class="bottom-section">
+                            <div class="detail-heading">Email</div>
+                            <div class="detail-info">{candidateDetails.Candidate_Email__c}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="profile-right-container">
-                <div class="basic-detail">
-                    <div class="basic-heading-container">
-                        <p class="heading-text">
-                            Basic Information
-                        </p>
-                        <div style="align-self: center;">
-                            <lightning-button label="Resume" onclick={handleResume}
-                                class="edit-button"></lightning-button>
-                            <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
-                        </div>
-                    </div>
-                    <div class="detail-container">
-                        <div class="section">
-                            <div class="top-section">
-                                <div class="detail-heading">Date of Birth</div>
-                                <div class="detail-info">{candidateDetails.Date_of_birth__c}</div>
-                            </div>
-                            <div class="bottom-section">
-                                <div class="detail-heading">CTC</div>
-                                <div class="detail-info">
-                                    <lightning-formatted-number
-                                        value={candidateDetails.CTC__c}></lightning-formatted-number>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="section">
-                            <div class="top-section">
-                                <div class="detail-heading">Years of Experience</div>
-                                <div class="detail-info">{candidateDetails.Experience__c} years</div>
-                            </div>
-                            <div class="bottom-section">
-                                <div class="detail-heading">Location</div>
-                                <div class="detail-info">{candidateDetails.City__c}, {candidateDetails.Country__c}</div>
-                            </div>
-                        </div>
-                        <div class="section">
-                            <div class="top-section">
-                                <div class="detail-heading">Phone</div>
-                                <div class="detail-info">{candidateDetails.Phone_Number__c}</div>
-                            </div>
-                            <div class="bottom-section">
-                                <div class="detail-heading">Email</div>
-                                <div class="detail-info">{candidateDetails.Candidate_Email__c}</div>
-                            </div>
-                        </div>
+            <div class="experience-detail">
+                <div class="basic-heading-container">
+                    <p class="heading-text">
+                        Work Experience
+                    </p>
+                    <div style="align-self: center;">
+                        <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
                     </div>
                 </div>
-                <div class="experience-detail">
-                    <div class="basic-heading-container">
-                        <p class="heading-text">
-                            Work Experience
-                        </p>
-                        <div style="align-self: center;">
-                            <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
-                        </div>
-                    </div>
-                    <div class="exp-detail-container">
-                        <template if:true={candidateDetails.Work_Experience__r}>
-                            <template for:each={candidateDetails.Work_Experience__r} for:item="work">
-                                <div key={work.Id} data-id={work.Id} class="exp-list" onclick={handleEditExperience}>
-                                    <div>
-                                        <p class="exp-company-name">{work.Organisation__c}</p>
-                                        <p class="exp-designation">{work.Name}</p>
-                                        <p class="exp-year">{work.From_Date__c} - {work.To_Date__c} | {work.City__c},
-                                            {work.Country__c}</p>
-                                    </div>
+                <div class="exp-detail-container">
+                    <template if:true={candidateDetails.Work_Experience__r}>
+                        <template for:each={candidateDetails.Work_Experience__r} for:item="work">
+                            <div key={work.Id} data-id={work.Id} class="exp-list" onclick={handleEditExperience}>
+                                <div>
+                                    <p class="exp-company-name">{work.Organisation__c}</p>
+                                    <p class="exp-designation">{work.Name}</p>
+                                    <p class="exp-year">{work.From_Date__c} - {work.To_Date__c} | {work.City__c},
+                                        {work.Country__c}</p>
                                 </div>
-                            </template>
+                            </div>
                         </template>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -155,7 +159,8 @@
                         <lightning-messages> </lightning-messages>
                         <div style="display: flex;">
                             <lightning-input-field field-name="Organisation__c"></lightning-input-field>
-                            <lightning-input-field field-name="CandidateId__c" value={candidateDetails.Id} disabled="true"></lightning-input-field>
+                            <lightning-input-field field-name="CandidateId__c" value={candidateDetails.Id}
+                                disabled="true"></lightning-input-field>
                         </div>
                         <div style="display: flex;">
                             <lightning-input-field field-name="Name"></lightning-input-field>

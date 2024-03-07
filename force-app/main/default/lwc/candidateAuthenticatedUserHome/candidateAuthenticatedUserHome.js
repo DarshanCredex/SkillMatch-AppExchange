@@ -12,7 +12,7 @@ export default class CandidateAuthenticatedUserHome extends LightningElement {
   showToUser = false;
 
   connectedCallback() {
-    this.emailId = sessionStorage.getItem("emailId");
+    this.emailId = localStorage.getItem("emailId");
     if (this.emailId !== null) {
       this.showToUser = true;
     }

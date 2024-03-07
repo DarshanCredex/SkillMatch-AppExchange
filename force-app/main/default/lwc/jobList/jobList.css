@@ -1,6 +1,12 @@
+.container{
+    width: 100%;
+    height: 100vh;
+}
 .job-list-container {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden; 
+    height: max-content;
 }
 
 .job-filter-header {
@@ -170,24 +176,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-  
-  .no-jobs div h1 {
+}
+
+.no-jobs div h1 {
     font-size: 30px;
-  }
-  
-  .no-jobs div img {
+}
+
+.no-jobs div img {
     width: 70%;
     height: auto;
     border: 0;
-  }
-/* Media queries for responsiveness */
-@media (max-width: 480px) {
+}
 
-    /* Adjust styles for smaller screens here */
+@media (max-width: 480px) {
     .job-card {
         flex-direction: row;
-        /* Switch to horizontal layout on smaller screens */
     }
 
     .job-list {
@@ -209,11 +212,8 @@
 }
 
 @media screen and (min-width: 480px) and (max-width: 768px) {
-
-    /* Adjust styles for smaller screens here */
     .job-card {
         flex-direction: row;
-        /* Switch to horizontal layout on smaller screens */
     }
 
     .job-list {

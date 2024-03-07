@@ -36,3 +36,10 @@
     padding-top: 2%;
     cursor: pointer;
 }
+
+.login-signup:hover,
+.home-tab:hover,
+.Jobs-tab:hover,
+.my-jobs:hover{
+    color: rgb(255, 0, 0);
+}

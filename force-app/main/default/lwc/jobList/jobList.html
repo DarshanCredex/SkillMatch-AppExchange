@@ -1,106 +1,115 @@
+<!--
+  @description       : 
+  @author            : Sagar Medatwal
+  @group             : 
+  @last modified on  : 03-07-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
     <div class="container">
-    <div class="job-list-container">
-        <div class="job-filter-header">
-            <div style="width: 25%;"></div>
-            <div style="width: 75%; display: flex;justify-content: space-between;padding-left: 12px;">
-                <div style="display: flex;">
-                    <lightning-input name="enter-job" class="job-search-box" variant="label-hidden"
-                        label="Search when user hits the 'enter' key" placeholder="Search for a job..."
-                        type="Search" onchange={handleSearchTitleChange}></lightning-input>
-                    <lightning-input class="job-search-box" name="enter-location" variant="label-hidden"
-                        label="Search when user hits the 'enter' key" placeholder="Search for location.."
-                        type="Search" onchange={handleSearchLocationChange}></lightning-input>
-                </div>
-                <div class="job-sort-bar">
-                    <div class="job-sort-text">Sort By</div>
-                    <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status" variant="label-hidden"
-                            value={sortValue} options={sortOptions} onchange={handleChange}></lightning-combobox></div>
-                </div>
-            </div>
-        </div>
-        <div class="job-list-content">
-            <div class="job-filter-tab">
-                <div class="job-filter-header">
-                    <div style="font-weight: 700;font-size: 1rem;color: #131313;">Filters</div>
-                    <div style="color: #0A32C6;font-size: 0.875rem;cursor: pointer;" onclick={handleClearFilters}>Clear
-                        All</div>
-                </div>
-                <div class="job-filter-type">
-                    <h2 style="font-size: larger;padding: 10px 5px 5px 0px;">Type</h2>
-                    <template for:each={typeValues} for:item="type">
-                        <lightning-input type="checkbox" data-id="checkbox" key={type.Id} label={type} value={type}
-                            onchange={handleTypeChange}></lightning-input>
-                    </template>
-                    <h2 style="font-size: larger;padding: 25px 5px 5px 0px;">Experience</h2>
-                    <template for:each={experienceValues} for:item="experience">
-                        <lightning-input type="checkbox" data-id="checkbox" key={experience.Id} label={experience} value={experience}
-                            onchange={handleExperienceChange}></lightning-input>
-                    </template>
-                    <h2 style="font-size: larger;padding: 25px 5px 5px 0px;">Industry</h2>
-                    <template for:each={industryValues} for:item="industry">
-                        <lightning-input type="checkbox" data-id="checkbox" key={industry.Id} label={industry} value={industry}
-                            onchange={handleIndustryChange}></lightning-input>
-                    </template>
+        <div class="job-list-container">
+            <div class="job-filter-header">
+                <div style="width: 25%;"></div>
+                <div style="width: 75%; display: flex;justify-content: space-between;padding-left: 12px;">
+                    <div style="display: flex;">
+                        <lightning-input name="enter-job" class="job-search-box" variant="label-hidden"
+                            label="Search when user hits the 'enter' key" placeholder="Search for a job..."
+                            type="Search" onchange={handleSearchTitleChange}></lightning-input>
+                        <lightning-input class="job-search-box" name="enter-location" variant="label-hidden"
+                            label="Search when user hits the 'enter' key" placeholder="Search for location.."
+                            type="Search" onchange={handleSearchLocationChange}></lightning-input>
+                    </div>
+                    <div class="job-sort-bar">
+                        <div class="job-sort-text">Sort By</div>
+                        <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status"
+                                variant="label-hidden" value={sortValue} options={sortOptions}
+                                onchange={handleChange}></lightning-combobox></div>
+                    </div>
                 </div>
             </div>
-            <div class="job-list">
-                <template if:true={isLoading}>
-                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
-                </template>
-                <template if:true={jobListdata}>
-                    <template for:each={jobListdata} for:item="job">
-                        <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
-                            <div class="job-card-top">
-                                <div class="job-card-top-left">
-                                    <div class="job-header">
-                                        <h3>{job.title}</h3>
-                                    </div>
-                                    <div class="job-information">
-                                        <p class="job-company">{job.company}</p>
-                                        <p class="job-info">
-                                            <template if:true={job.city}>
-                                                <lightning-icon style="vertical-align: text-bottom;"
-                                                    icon-name="utility:checkin" size="xx-small" alternative-text="City"
-                                                    title="City">
-                                                </lightning-icon>
-                                                {job.city}, {job.country}
-                                            </template>
-                                        </p>
-                                        <p class="job-info">{job.jobType}</p>
-                                        <p class="job-info">
-                                            <lightning-formatted-number format-style="currency" value={job.salary}
-                                                minimum-fraction-digits="0"></lightning-formatted-number>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="job-logo">
-                                    <img alt="Company logo" src={companyLogo} />
-                                </div>
-                            </div>
-                            <div class="job-card-bottom">
-                                <div class="job-details">
-                                    <p class="job-summary">{job.summary}</p>
-                                </div>
-                                <div>
-                                    <p class="job-posted-date">{job.daysAgo} days ago</p>
-                                </div>
-                            </div>
-                        </div>
+            <div class="job-list-content">
+                <div class="job-filter-tab">
+                    <div class="job-filter-header">
+                        <div style="font-weight: 700;font-size: 1rem;color: #131313;">Filters</div>
+                        <div style="color: #0A32C6;font-size: 0.875rem;cursor: pointer;" onclick={handleClearFilters}>
+                            Clear
+                            All</div>
+                    </div>
+                    <div class="job-filter-type">
+                        <h2 style="font-size: larger;padding: 10px 5px 5px 0px;">Type</h2>
+                        <template for:each={typeValues} for:item="type">
+                            <lightning-input type="checkbox" data-id="checkbox" key={type.Id} label={type} value={type}
+                                onchange={handleTypeChange}></lightning-input>
+                        </template>
+                        <h2 style="font-size: larger;padding: 25px 5px 5px 0px;">Experience</h2>
+                        <template for:each={experienceValues} for:item="experience">
+                            <lightning-input type="checkbox" data-id="checkbox" key={experience.Id} label={experience}
+                                value={experience} onchange={handleExperienceChange}></lightning-input>
+                        </template>
+                        <h2 style="font-size: larger;padding: 25px 5px 5px 0px;">Industry</h2>
+                        <template for:each={industryValues} for:item="industry">
+                            <lightning-input type="checkbox" data-id="checkbox" key={industry.Id} label={industry}
+                                value={industry} onchange={handleIndustryChange}></lightning-input>
+                        </template>
+                    </div>
+                </div>
+                <div class="job-list">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </template>
-                </template>
-                <template if:true={errorMessage}>
+                    <template if:true={jobListdata}>
+                        <template for:each={jobListdata} for:item="job">
+                            <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
+                                <div class="job-card-top">
+                                    <div class="job-card-top-left">
+                                        <div class="job-header">
+                                            <h3>{job.title}</h3>
+                                        </div>
+                                        <div class="job-information">
+                                            <p class="job-company">{job.company}</p>
+                                            <p class="job-info">
+                                                <template if:true={job.city}>
+                                                    <lightning-icon style="vertical-align: text-bottom;"
+                                                        icon-name="utility:checkin" size="xx-small"
+                                                        alternative-text="City" title="City">
+                                                    </lightning-icon>
+                                                    {job.city}, {job.country}
+                                                </template>
+                                            </p>
+                                            <p class="job-info">{job.jobType}</p>
+                                            <p class="job-info">
+                                                <lightning-formatted-number format-style="currency" value={job.salary}
+                                                    minimum-fraction-digits="0"></lightning-formatted-number>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="job-logo">
+                                        <img alt="Company logo" src={companyLogo} />
+                                    </div>
+                                </div>
+                                <div class="job-card-bottom">
+                                    <div class="job-details">
+                                        <p class="job-summary">{job.summary}</p>
+                                    </div>
+                                    <div>
+                                        <p class="job-posted-date">{job.daysAgo} days ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:true={errorMessage}>
                         <div class="no-jobs">
-                          <div>
-                            <h1> No available jobs😞!!! Keep searching. </h1>
-                            <div class="emptyBox">
-                              <img src={emptyBox} alt="empty">
+                            <div>
+                                <h1> No available jobs😞!!! Keep searching. </h1>
+                                <div class="emptyBox">
+                                    <img src={emptyBox} alt="empty">
+                                </div>
                             </div>
-                          </div>
                         </div>
-                </template>
+                    </template>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </template>

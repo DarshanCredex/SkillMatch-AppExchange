@@ -3,8 +3,9 @@ import { LightningElement } from "lwc";
 import skillMatch_logo from "@salesforce/resourceUrl/skillMatch_logo";
 import candidateResgisterMethod from "@salesforce/apex/registerCandidateController.candidateResgisterMethod";
 import { NavigationMixin } from "lightning/navigation";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
-export default class SignupComponent extends  NavigationMixin(LightningElement) {
+export default class SignupComponent extends NavigationMixin(LightningElement) {
   firstName = "";
   lastName = "";
   email = "";
@@ -40,15 +41,26 @@ export default class SignupComponent extends  NavigationMixin(LightningElement) 
         email: this.email,
         password: this.password
       });
-       const pageReference = {
-         type: "standard__webPage",
-         attributes: {
-           url: "/custom-sign-up"
-         }
-       };
-       this[NavigationMixin.Navigate](pageReference);
+      this.showToast("Success", "Registered successfully", "success");
+      const pageReference = {
+        type: "standard__webPage",
+        attributes: {
+          url: "/custom-login"
+        }
+      };
+      this[NavigationMixin.Navigate](pageReference);
     } else if (this.password !== this.confirmPassword) {
       alert("Passwords do not match");
     }
+  }
+
+  showToast(title, message, variant) {
+    this.dispatchEvent(
+      new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant
+      })
+    );
   }
 }

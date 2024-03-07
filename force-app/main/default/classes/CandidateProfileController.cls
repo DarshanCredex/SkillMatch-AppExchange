@@ -1,11 +1,11 @@
 /**
- * @description       :
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @description       : 
+ * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 02-26-2024
+ * @last modified on  : 03-07-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
-public with sharing class CandidateProfileController {
+public without sharing class CandidateProfileController {
   @AuraEnabled
   public static void attachFileToCandidate(
     string emailId,
@@ -36,6 +36,7 @@ public with sharing class CandidateProfileController {
 
   @AuraEnabled(cacheable=true)
   public static Candidate_Details__c getCandidateDetails(string emailId) {
+    system.debug('emailid----->'+emailId);
     try {
       List<Candidate_Details__c> currentCandidate = [
         SELECT

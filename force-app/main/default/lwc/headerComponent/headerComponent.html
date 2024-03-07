@@ -2,7 +2,7 @@
   @description       : header compoenent for candidate portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-04-2024
+  @last modified on  : 03-07-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -20,8 +20,8 @@
                 </div>
                 <template if:true={showToUser}>
                     <div class="my-jobs" onclick={navigateToMyJobs}>
-                    <h1>My Jobs</h1>
-                </div>
+                        <h1>My Jobs</h1>
+                    </div>
                 </template>
             </div>
             <div class="login-signup">
@@ -29,8 +29,10 @@
                     <template if:true={showToUser}>
                         <h1>
                             <lightning-button-menu>
-                                <lightning-menu-item value="MenuItemOne" label="Profile"></lightning-menu-item>
-                                <lightning-menu-item value="MenuItemTwo" label="Logout"></lightning-menu-item>
+                                <lightning-menu-item value="MenuItemOne" label="Profile"
+                                    onclick={handleProfile}></lightning-menu-item>
+                                <lightning-menu-item value="MenuItemTwo" label="Logout"
+                                    onclick={handleLogout}></lightning-menu-item>
                             </lightning-button-menu>
                         </h1>
                     </template>

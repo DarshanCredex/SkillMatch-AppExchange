@@ -16,11 +16,12 @@ export default class JobDetail extends LightningElement {
   showUser = false;
 
   connectedCallback() {
-    this.emailId = sessionStorage.getItem("emailId");
+    this.emailId = localStorage.getItem("emailId");
     if (this.emailId) {
       this.showUser = true;
     }
   }
+  
 
   @wire(CurrentPageReference)
   getPageReferenceParameters(currentPageReference) {
@@ -30,6 +31,7 @@ export default class JobDetail extends LightningElement {
       console.log("inside page reference---", this.jobId);
     }
   }
+
 
   @wire(checkJobStatus, { email: "$emailId", jobId: "$jobId" })
   wiredcheckJobStatus({ error, data }) {
@@ -41,6 +43,7 @@ export default class JobDetail extends LightningElement {
     }
   }
 
+
   @wire(getJobDetails, { jobId: "$jobId" })
   wiredgetJobDetail({ error, data }) {
     if (error) {
@@ -51,6 +54,7 @@ export default class JobDetail extends LightningElement {
       console.log("this.jobDetails-------->", this.jobDetails);
     }
   }
+
 
   handleApply() {
     if (this.emailId != null && this.jobId != null) {

@@ -1,5 +1,5 @@
 <!--
-  @description       : 
+  @description       : candidate signup component 
   @author            : Rudransh Shukla
   @group             : 
   @last modified on  : 03-06-2024
@@ -15,26 +15,21 @@
                 <div class="detail-container-sub">
                     <div class="separator"></div>
                     <div class="input-group">
-                        <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
                         <input type="text" required placeholder="First Name" value={firstName}
                             oninput={handleFirstNameChange} />
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
                         <input type="text" required placeholder="Last Name" value={lastName}
                             oninput={handleLastNameChange} />
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
                         <input type="email" required placeholder="Email" value={email} oninput={handleEmailChange} />
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
                         <input type="password" required placeholder="Password" value={password}
                             oninput={handlePasswordChange} />
                     </div>
                     <div class="input-group">
-                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
                         <input type="password" required placeholder="Confirm Password" value={confirmPassword}
                             oninput={handleConfirmPasswordChange} />
                     </div>

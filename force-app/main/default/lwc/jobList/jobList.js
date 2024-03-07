@@ -147,19 +147,13 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleJobDetail(event) {
     let jobId = event.currentTarget.id;
     jobId = jobId.split("-");
-    this[NavigationMixin.GenerateUrl]({
+    const pageReference = {
       type: "standard__webPage",
       attributes: {
-        url: "/s/job-detail?id=" + jobId[0]
+        url: "/job-detail?id=" + jobId[0]
       }
-    }).then(() => {
-      const pageReference = {
-        type: "standard__webPage",
-        attributes: {
-          url: "/job-detail"
-        }
-      };
-      this[NavigationMixin.Navigate](pageReference);
-    });
+    }
+    this[NavigationMixin.Navigate](pageReference);
+    
   }
 }
