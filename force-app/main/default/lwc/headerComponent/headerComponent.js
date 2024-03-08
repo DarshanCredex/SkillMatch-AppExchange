@@ -4,23 +4,12 @@ import { NavigationMixin } from "lightning/navigation";
 
 export default class HeaderComponent extends NavigationMixin(LightningElement) {
   emailId;
-  emailInLocalStorage;
   skillMatch_logo = skillMatch_logo;
   showToUser = false;
 
   connectedCallback() {
-    this.emailId = sessionStorage.getItem("emailId");
-    this.emailInLocalStorage = localStorage.getItem("emailId");
-    console.log(
-      " this.emailId from session storage-------->",
-      sessionStorage.getItem("emailId")
-    );
-
-    console.log(
-      "this.emailInLocalStorage----------->",
-      this.emailInLocalStorage
-    );
-    if (this.emailInLocalStorage !== null) {
+    this.emailId = localStorage.getItem("emailId");
+    if (this.emailId !== null) {
       this.showToUser = true;
     }
   }

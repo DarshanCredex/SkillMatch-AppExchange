@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-08-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
   <div class="job-detail-container">
     <template for:each={jobDetails} for:item="job">
@@ -26,7 +33,7 @@
               </div>
             </div>
           </div>
-          <template if:false={isGuestUser}>
+          <template if:true={showUser}>
             <template if:false={jobStatus}>
               <div>
                 <lightning-button variant="brand" label="Apply" title="Primary action" onclick={handleApply}

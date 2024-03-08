@@ -5,7 +5,7 @@
  * @last modified on  : 03-07-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
-public without sharing class CandidateProfileController {
+public with sharing class CandidateProfileController {
   @AuraEnabled
   public static void attachFileToCandidate(
     string emailId,

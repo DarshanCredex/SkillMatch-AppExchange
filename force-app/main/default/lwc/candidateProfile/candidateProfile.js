@@ -29,7 +29,8 @@ export default class CandidateProfile extends LightningElement {
   }
 
   @wire(fetchCandidateDetails, { emailId: "$emailId" }) list(result) {
-    this.candidateDetailsWire = result;
+      this.candidateDetailsWire = result;
+      console.log('result----->', result);
     if (result.data) {
       this.candidateDetails = result.data;
       console.log("Data received in wire---", result.data);

@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 03-06-2024
+ * @last modified on  : 03-08-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobDetailController {
@@ -143,4 +143,5 @@ public with sharing class JobDetailController {
       return daysAgo;
     }
   }
+  
 }
