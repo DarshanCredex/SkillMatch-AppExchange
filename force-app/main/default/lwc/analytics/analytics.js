@@ -5,6 +5,7 @@ import { loadScript } from "lightning/platformResourceLoader";
 import applicantGender from "@salesforce/apex/analyticsDatasets.applicantGender";
 import industryJobsDataset from "@salesforce/apex/analyticsDatasets.industryJobsDataset";
 import numberOfApplicantsVsJobs from "@salesforce/apex/analyticsDatasets.numberOfApplicantsVsJobs";
+import Id from "@salesforce/user/Id";
 
 export default class Analytics extends LightningElement {
   @track ageWithNumberDataset = [];
@@ -22,7 +23,9 @@ export default class Analytics extends LightningElement {
   chart;
   numberfApplicantsVsJobsChart;
 
-  @wire(industryJobsDataset)
+  userId = Id;
+
+  @wire(industryJobsDataset, {userId:"$userId"})
   wiredindustryJobsDataset({ error, data }) {
     if (error) {
       console.error("error----->", error);
@@ -48,7 +51,7 @@ export default class Analytics extends LightningElement {
     }
   }
 
-  @wire(AgeWithNumberOfApplicants)
+  @wire(AgeWithNumberOfApplicants , {userId:"$userId"})
   wiredAgeWithNumberOfApplicants({ error, data }) {
     if (error) {
       console.error("error----->", error.message);
@@ -79,7 +82,7 @@ export default class Analytics extends LightningElement {
       );
     }
   }
-  @wire(applicantGender)
+  @wire(applicantGender , {userId:"$userId"})
   wiredApplicantGender({ error, data }) {
     if (error) {
       console.error("error----->", error.message);
@@ -107,7 +110,7 @@ export default class Analytics extends LightningElement {
     }
   }
 
-  @wire(numberOfApplicantsVsJobs)
+  @wire(numberOfApplicantsVsJobs, {userId:"$userId"})
   wiredNumberOfApplicantsVsJobs({ error, data }) {
     if (error) {
       console.error("Error------>", error);

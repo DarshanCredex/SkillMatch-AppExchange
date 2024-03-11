@@ -150,7 +150,7 @@ wiredGetDraftJobList({ error, data }) {
     }
   }
 
-  @wire(getApplicantDataset)
+  @wire(getApplicantDataset, {userId:"$userId"})
   applicants({ error, data }) {
     if (data) {
       this.applicantChartDataset = data;
@@ -171,7 +171,7 @@ wiredGetDraftJobList({ error, data }) {
     }
   }
 
-  @wire(numberOfApplicantsShortlistedAndRejected)
+  @wire(numberOfApplicantsShortlistedAndRejected , {userId:"$userId"})
   wiredNumberOfApplicantsShortlistedAndRejected({ error, data }) {
     if (error) {
       console.error("error rejected applicant----->", error.message);
