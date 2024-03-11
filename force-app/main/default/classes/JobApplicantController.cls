@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-20-2024
+ * @last modified on  : 03-11-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -123,14 +123,16 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<Candidate_Details__c> getApplicantsList() {
+  public static List<Candidate_Details__c> getApplicantsList(string userId) {
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
+    user u = [select companyName from user where id = :userId limit 1];
+    string companyname = u.CompanyName;
 
     try {
       List<Job_Applicants__c> applicantList = [
         SELECT CandidateId__c
         FROM Job_Applicants__c
-        WHERE Application_Status__c = 'Pending'
+        WHERE Application_Status__c = 'Pending' AND Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)
         LIMIT 3
       ];
 
@@ -157,12 +159,16 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfJobsPosted() {
-    return [SELECT COUNT() FROM Job__c WHERE Status__c = 'Completed'];
+  public static integer getNumberOfJobsPosted(string userId) {
+    user u = [select companyName from user where id = :userId limit 1];
+    string companyname = u.CompanyName;
+    return [SELECT COUNT() FROM Job__c WHERE Status__c = 'Completed' and Company_Name__c = :companyname];
   }
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfApplicants() {
-    return [SELECT COUNT() FROM Job_Applicants__c];
+  public static integer getNumberOfApplicants(string userId) {
+    user u = [select companyName from user where id = :userId limit 1];
+    string companyname = u.CompanyName;
+    return [SELECT COUNT() FROM Job_Applicants__c where Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)];
   }
   @AuraEnabled(cacheable=true)
   public static list<job__c> fetchJobDetails(string jobId) {

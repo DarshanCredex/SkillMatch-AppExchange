@@ -20,9 +20,13 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   numberOfApplicants;
   numberOfJobsPosted;
   doughnutChart;
+
   doughnutChartjsInitialized = false;
   pieChart;
   pieChartjsInitialized = false;
+  showApplicants = false;
+
+  userId = Id;
 
   config = {
     type: "doughnut",
@@ -108,25 +112,27 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
       console.error("Error fetching user data", error);
     }
   }
-  @wire(getApplicantsList)
+  @wire(getApplicantsList, { userId: "$userId" })
   wiredGetApplicantsList({ error, data }) {
     if (data) {
       this.applicantsList = data;
+      this.showApplicants = true;
+
     } else {
       console.log("error------->", error);
     }
   }
-  @wire(getDraftJobList)
-  wiredGetDraftJobList({ error, data }) {
+  @wire(getDraftJobList, { userId: "$userId" })
+wiredGetDraftJobList({ error, data }) {
     if (data) {
-      this.draftJobList = data;
-      this.showDrafts = true;
+        this.draftJobList = data;
+        this.showDrafts = true;
     } else if (error) {
-      console.error("Error fetching draft job list", error);
+        console.error("Error fetching draft job list", error);
     }
-  }
+}
 
-  @wire(getNumberOfApplicants)
+  @wire(getNumberOfApplicants, { userId: "$userId" })
   wiredGetNumebrOfApplicants({ error, data }) {
     if (data) {
       this.numberOfApplicants = data;
@@ -135,7 +141,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     }
   }
 
-  @wire(getNumberOfJobsPosted)
+  @wire(getNumberOfJobsPosted, { userId: "$userId" })
   wiredJobsPosted({ error, data }) {
     if (data) {
       this.numberOfJobsPosted = data;

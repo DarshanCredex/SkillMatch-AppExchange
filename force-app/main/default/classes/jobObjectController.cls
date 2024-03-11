@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-14-2024
+ * @last modified on  : 03-11-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -99,10 +99,15 @@ public with sharing class jobObjectController {
     }
   }
   @AuraEnabled(cacheable=true)
-  public static list<job__c> getDraftJobList() {
+  public static list<job__c> getDraftJobList(string userId) {
     System.debug('start');
 
+    user u = [select companyName from user where id = :userId limit 1];
+    string companyname = u.CompanyName;
+    system.debug('companyname---->'+companyname);
     list<job__c> draftJobList = new List<job__c>();
+
+
 
     for (job__c job : [
       SELECT
@@ -119,7 +124,7 @@ public with sharing class jobObjectController {
         Status__c,
         Id
       FROM Job__c
-      WHERE Status__c = 'Draft'
+      WHERE Status__c = 'Draft' AND Company_Name__c=:companyname 
       LIMIT 3
     ]) {
       draftJobList.add(job);

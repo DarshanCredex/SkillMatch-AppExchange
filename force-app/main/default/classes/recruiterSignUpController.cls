@@ -1,8 +1,8 @@
 /**
- * @description       :
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @description       : recruiter sign up page controller
+ * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-19-2024
+ * @last modified on  : 03-11-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class recruiterSignUpController {
@@ -27,6 +27,7 @@ public with sharing class recruiterSignUpController {
       communityNickname = value == null ? value : value.trim();
     }
   }
+  public string CompanyName{get; set;}
 
   public recruiterSignUpController() {
     String expid = ApexPages.currentPage().getParameters().get('expid');
@@ -40,7 +41,6 @@ public with sharing class recruiterSignUpController {
   }
 
   public PageReference registerUser() {
-    // it's okay if password is null - we'll send the user a random password in that case
     if (!isValidPassword()) {
       ApexPages.Message msg = new ApexPages.Message(
         ApexPages.Severity.ERROR,
@@ -50,7 +50,6 @@ public with sharing class recruiterSignUpController {
       return null;
     }
     Id profileId = [SELECT Id FROM Profile WHERE Name = 'Recruiter' LIMIT 1].Id;
-    //String profileId = '00e5h000005BX1xAAG';
 
     String accountId = '0015h00001cwIQIAA2';
     System.debug(email);
@@ -64,6 +63,7 @@ public with sharing class recruiterSignUpController {
     u.LastName = lastName;
     u.CommunityNickname = firstName + lastName;
     u.ProfileId = profileId;
+    u.CompanyName = CompanyName;
     String userId;
 
     try {
@@ -82,9 +82,6 @@ public with sharing class recruiterSignUpController {
           new ApexPages.Message(ApexPages.Severity.ERROR, error)
         );
       }
-
-      // This message is used for debugging. Do not display this in the UI to the end user.
-      // It has the information around why the user creation failed.
       System.debug(ex.getMessage());
     }
 

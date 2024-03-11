@@ -17,18 +17,7 @@ export default class CandidateLoginSetup extends NavigationMixin(
     "https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage";
 
   connectedCallback() {
-    this.emailInLocalStorage = localStorage.getItem("emailId");
-    this.emailId = sessionStorage.getItem("emailId");
-
-    console.log(
-      " this.emailId from session storage-------->",
-      sessionStorage.getItem("emailId")
-    );
-
-    console.log(
-      "this.emailInLocalStorage----------->",
-      this.emailInLocalStorage
-    );
+    localStorage.clear();
   }
 
   handleEmailChange(event) {
@@ -54,7 +43,6 @@ export default class CandidateLoginSetup extends NavigationMixin(
           }
         };
         this[NavigationMixin.Navigate](pageReference);
-        sessionStorage.setItem("emailId", this.email);
         localStorage.setItem("emailId", this.email);
       }
     });

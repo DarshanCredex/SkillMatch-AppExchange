@@ -1,50 +1,46 @@
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable @lwc/lwc/no-api-reassignments */
-import { LightningElement, track, api, wire } from "lwc";
+import { LightningElement, api, wire } from "lwc";
 import fetchCandidateDetails from "@salesforce/apex/CandidateProfileController.getCandidateDetails";
 import attachFileToCandidate from "@salesforce/apex/CandidateProfileController.attachFileToCandidate";
 import { refreshApex } from "@salesforce/apex";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 export default class CandidateProfile extends LightningElement {
-  @track isExpModalOpen = false;
-  @track isEditModalOpen = false;
-  @track isResumeModalOpen = false;
-  @track isToDateDisabled = false;
-  @track isEditExpModalOpen = false;
-  @track candidateDetails;
-  @track candidateSkills;
-  @api recordId;
-  candidateDetailsWire;
-  @track experienceToUpdate;
-  @track experienceToUpdate;
-  @api isLoading = false;
-  @api isLoadingFullScreen = false;
+  isExpModalOpen = false;
+  isEditModalOpen = false;
+  isResumeModalOpen = false;
+  isToDateDisabled = false;
+  isEditExpModalOpen = false;
+
+  candidateDetails = [];
+  candidateSkills = [];
+  experienceToUpdate;
+  experienceToUpdate;
   emailId;
+  candidateDetailsWire;
+  candidateDetailsArray = [];
+
+  @api recordId;
 
   connectedCallback() {
     this.emailId = localStorage.getItem("emailId");
-    console.log("this.emailId", this.emailId);
     refreshApex(this.candidateDetailsWire);
   }
 
   @wire(fetchCandidateDetails, { emailId: "$emailId" }) list(result) {
-      this.candidateDetailsWire = result;
-      console.log('result----->', result);
+    this.candidateDetailsWire = result;
     if (result.data) {
       this.candidateDetails = result.data;
-      console.log("Data received in wire---", result.data);
+      console.log("this.candidateDetails------>", this.candidateDetails);
+      this.candidateDetailsArray = Object.values(result.data);
+      //console.log("candidateDetailsArray--->", this.candidateDetailsArray);
       this.candidateSkills = [...this.candidateDetails.Skills__c.split(",")];
-      console.log(
-        "this.candidateSkills--->",
-        JSON.stringify(this.candidateSkills)
-      );
     } else if (result.error) {
       console.log("Error received in wire----->", result.error);
     }
     this.isLoadingFullScreen = false;
   }
-
   handleCurrentCompanyChange(event) {
     this.isToDateDisabled = event.detail.checked;
   }

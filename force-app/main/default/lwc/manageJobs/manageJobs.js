@@ -3,7 +3,7 @@ import no_jobs from "@salesforce/resourceUrl/no_jobs";
 import { NavigationMixin } from "lightning/navigation";
 import getPostedJobList from "@salesforce/apex/GetPostedJobList.getPostedJobList";
 import getDraftedJobList from "@salesforce/apex/GetPostedJobList.getDraftedJobList";
-import { refreshApex } from "@salesforce/apex";
+import Id from "@salesforce/user/Id";
 
 export default class ManageJobs extends NavigationMixin(LightningElement) {
   @track postedJobList = [];
@@ -18,6 +18,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
 
   jobId;
   noJobs = no_jobs;
+  userId = Id;
 
   wiredPostedJobListResult;
   wiredDraftedJobListResult;
@@ -32,7 +33,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     this[NavigationMixin.Navigate](pageReference);
   }
 
-  @wire(getPostedJobList)
+  @wire(getPostedJobList, {userId: "$userId"})
   wiredPostedJobList(result) {
     this.wiredPostedJobListResult = result;
     const { data, error } = result;
@@ -42,20 +43,18 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
         this.IsEmptyJobList = false;
       }
       console.log("this.postedJobList-------->", this.postedJobList);
-      this.refreshData();
     } else if (error) {
       console.log("error------>", error);
     }
   }
 
-  @wire(getDraftedJobList)
+  @wire(getDraftedJobList, {userId: "$userId"})
   wiredDraftedJobList(result) {
     this.wiredDraftedJobListResult = result;
     const { data, error } = result;
     if (data) {
       this.draftedJobList = data;
       console.log("this.draftedJobList------->", this.draftedJobList);
-      this.refreshData();
       if (this.draftedJobList) {
         this.IsEmptyDraftList = false;
       }
@@ -64,11 +63,6 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     }
   }
 
-  // Method to refresh wired data
-  refreshData() {
-    refreshApex(this.wiredPostedJobListResult);
-    refreshApex(this.wiredDraftedJobListResult);
-  }
 
   handlejobDescriptionPageView(event) {
     this.jobId = event.currentTarget.dataset.jobid;

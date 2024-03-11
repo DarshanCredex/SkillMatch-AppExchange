@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-20-2024
+  @last modified on  : 03-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -36,9 +36,10 @@
             <h1>Latest Applicants</h1>
           </div>
           <hr>
-          <div class="applicants">
+          <template if:true={showApplicants}>
             <template for:each={applicantsList} for:item="applicant">
-              <div class="applicant-box" key={applicant.Id} data-candidateid={applicant.Id} onclick={navigateToApplicantPage}>
+              <div class="applicant-box" key={applicant.Id} data-candidateid={applicant.Id}
+                onclick={navigateToApplicantPage}>
                 <h1 class="applicants-name">{applicant.Name}</h1>
                 <div class="applicantDetails">
                   <p> <lightning-icon icon-name="utility:email" alternative-text="Connected" size="xx-small"
@@ -50,7 +51,10 @@
                 </div>
               </div>
             </template>
-          </div>
+          </template>
+          <template if:false={showApplicants}>
+            <h1>No Applicants Pending</h1>
+          </template>
         </div>
       </div>
       <div class="right-box">

@@ -2,7 +2,7 @@
   @description       : hr sign up page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-19-2024
+  @last modified on  : 03-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <apex:page showHeader="false" standardStylesheets="false" controller="recruiterSignUpController" title="Sign Up">
@@ -93,8 +93,8 @@
 
                 .buttons-container {
                     display: flex;
-            justify-content: center;
-            width: 100%;
+                    justify-content: center;
+                    width: 100%;
                 }
 
                 .btn-Login,
@@ -144,6 +144,10 @@
                             <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
                             <apex:inputText required="true" html-placeholder="Email"  label="{!$Label.site.email}"/>
                         </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
+                            <apex:inputText required="true" html-placeholder="Company Name" label="Company Name"/>
+                        </div>  
                         <div class="input-group">
                             <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
                             <apex:inputSecret html-placeholder="Password"/>

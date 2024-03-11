@@ -1,8 +1,8 @@
 <!--
   @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @author            : 
   @group             : 
-  @last modified on  : 03-08-2024
+  @last modified on  : 03-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -33,7 +33,7 @@
               </div>
             </div>
           </div>
-          <template if:true={showUser}>
+          <template if:true={showToUser}>
             <template if:false={jobStatus}>
               <div>
                 <lightning-button variant="brand" label="Apply" title="Primary action" onclick={handleApply}
@@ -66,9 +66,6 @@
                 <div class="inner-section">
                   <p class="inner-header">Required Skills: </p>
                   <ul class="list-skill">
-                    <template for:each={job.skills} for:item="skill" index="i">
-                      <li key={i}>{skill}</li>
-                    </template>
                   </ul>
                 </div>
               </template>
