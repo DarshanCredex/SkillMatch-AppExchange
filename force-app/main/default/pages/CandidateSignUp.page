@@ -2,7 +2,7 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 02-26-2024
+  @last modified on  : 03-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <apex:page id="SignUpComponent" showHeader="false" standardStylesheets="false" controller="CandidateSignUpController" title="Sign Up">
@@ -87,28 +87,28 @@
                 transition: border-bottom 0.3s, box-shadow 0.3s;
                 }
                 
-                ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+                ::-webkit-input-placeholder {
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+                :-moz-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-moz-placeholder { /* Mozilla Firefox 19+ */
+                ::-moz-placeholder {
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-ms-input-placeholder { /* Internet Explorer 10-11 */
+                :-ms-input-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-ms-input-placeholder { /* Microsoft Edge */
+                ::-ms-input-placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }
                 
-                ::placeholder { /* Most modern browsers support this now. */
+                ::placeholder { 
                 color:    #ffffff;
                 opacity: 0.8;
                 }

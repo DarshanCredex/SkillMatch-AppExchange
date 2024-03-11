@@ -10,6 +10,7 @@ import getApplicantsList from "@salesforce/apex/JobApplicantController.getApplic
 import getNumberOfApplicants from "@salesforce/apex/JobApplicantController.getNumberOfApplicants";
 import getNumberOfJobsPosted from "@salesforce/apex/JobApplicantController.getNumberOfJobsPosted";
 import numberOfApplicantsShortlistedAndRejected from "@salesforce/apex/analyticsDatasets.numberOfApplicantsShortlistedAndRejected";
+import empty_box from "@salesforce/resourceUrl/empty_box";
 export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @track currentUserName;
   @track draftJobList = [];
@@ -27,6 +28,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   showApplicants = false;
 
   userId = Id;
+  empty_box = empty_box;
 
   config = {
     type: "doughnut",
@@ -116,14 +118,17 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   wiredGetApplicantsList({ error, data }) {
     if (data) {
       this.applicantsList = data;
-      this.showApplicants = true;
+      if(this.applicantsList.length > 0){
+        this.showApplicants = true;
+      }
+      console.log(this.showApplicants);
 
     } else {
       console.log("error------->", error);
     }
   }
   @wire(getDraftJobList, { userId: "$userId" })
-wiredGetDraftJobList({ error, data }) {
+  wiredGetDraftJobList({ error, data }) {
     if (data) {
         this.draftJobList = data;
         this.showDrafts = true;

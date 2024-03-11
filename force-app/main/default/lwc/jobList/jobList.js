@@ -154,6 +154,5 @@ export default class JobList extends NavigationMixin(LightningElement) {
       }
     }
     this[NavigationMixin.Navigate](pageReference);
-    
   }
 }

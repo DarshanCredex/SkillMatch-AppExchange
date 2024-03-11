@@ -53,7 +53,12 @@
             </template>
           </template>
           <template if:false={showApplicants}>
-            <h1>No Applicants Pending</h1>
+            <div class="no-applicants">
+              <h1>No Applicants Pending</h1>
+            <div class="img">
+              <img src={empty_box} alt="na">
+            </div>
+            </div>
           </template>
         </div>
       </div>

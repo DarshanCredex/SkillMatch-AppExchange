@@ -54,8 +54,8 @@ public with sharing class recruiterSignUpController {
     String accountId = '0015h00001cwIQIAA2';
     System.debug(email);
     String userName = email;
-
     system.debug(email + 'Username');
+    
     User u = new User();
     u.Username = userName;
     u.Email = email;

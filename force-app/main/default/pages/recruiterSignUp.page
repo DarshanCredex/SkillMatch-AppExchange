@@ -134,27 +134,27 @@
                         <div class="separator"></div>
                         <div class="input-group">
                             <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputText required="true" html-placeholder="First Name"  label="First Name"/>
+                            <apex:inputText required="true" html-placeholder="First Name" id="firstName" value="{!firstName}" label="First Name"/>
                         </div>
                         <div class="input-group">
                             <i class="fas fa-user" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputText required="true" html-placeholder="Last Name"  label="Last Name"/>
+                            <apex:inputText required="true" html-placeholder="Last Name" id="lastName"  value="{!lastName}"  label="Last Name"/>
                         </div>
                         <div class="input-group">
                             <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputText required="true" html-placeholder="Email"  label="{!$Label.site.email}"/>
+                            <apex:inputText required="true" html-placeholder="Email" id="email"  value="{!email}" label="{!$Label.site.email}"/>
                         </div>
                         <div class="input-group">
                             <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputText required="true" html-placeholder="Company Name" label="Company Name"/>
+                            <apex:inputText required="true" html-placeholder="Company Name"  label="Company Name" value="{!companyName}"/>
                         </div>  
                         <div class="input-group">
                             <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputSecret html-placeholder="Password"/>
+                            <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
                         </div>
                         <div class="input-group">
                             <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                            <apex:inputSecret html-placeholder="Confirm Password"/>
+                            <apex:inputSecret html-placeholder="Confirm Password" id="confirmPassword" value="{!confirmPassword}"/>
                         </div>
                         <div class="buttons-container">
                             <apex:commandButton action="{!registerUser}" styleClass="btn-signup" value="Sign Up"/>
