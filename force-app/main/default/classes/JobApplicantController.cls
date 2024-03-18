@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-11-2024
+ * @last modified on  : 03-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -63,6 +63,7 @@ public with sharing class JobApplicantController {
 
   @AuraEnabled(cacheable=true)
   public static List<CandidateWrapper> fetchCandidateNames(string jobId) {
+    
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
 

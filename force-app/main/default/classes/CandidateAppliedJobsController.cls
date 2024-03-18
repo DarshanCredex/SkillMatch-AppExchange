@@ -2,10 +2,10 @@
  * @description       :
  * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 03-06-2024
+ * @last modified on  : 03-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
-public with sharing class CandidateAppliedJobsController {
+public without sharing class CandidateAppliedJobsController {
   public class JobWrapper {
     @AuraEnabled
     public Integer appliedCount { get; set; }

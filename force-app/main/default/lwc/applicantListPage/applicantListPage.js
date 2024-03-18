@@ -37,6 +37,7 @@ export default class ApplicantListPage extends NavigationMixin(
   fetchCandidateNames() {
     fetchCandidateNames({ jobId: this.jobId }).then((data) => {
       this.candidateDetails = data;
+      console.log('this.candidateDetails',this.candidateDetails);
       if (this.candidateDetails.length > 0) {
         this.candiateListIsEmpty = true;
       }
@@ -90,10 +91,12 @@ export default class ApplicantListPage extends NavigationMixin(
     this.showPending = false;
     this.showRejected = true;
   }
+
   filterAll() {
     this.showAllCandidates = true;
     this.showAccepted = false;
     this.showPending = false;
     this.showRejected = false;
   }
+
 }

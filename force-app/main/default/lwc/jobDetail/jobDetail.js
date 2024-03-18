@@ -55,11 +55,13 @@ export default class JobDetail extends LightningElement {
   }
 
   handleApply() {
-    if (this.emailId != null && this.jobId != null) {
-      createJobApplicants({ email: "$email", jobId: this.jobId })
+    console.log('inside apply method');
+    if (this.emailId !== null && this.jobId !== null) {
+      createJobApplicants({ email: this.emailId, jobId: this.jobId })
         .then((result) => {
           this.jobStatus = result;
           console.log("this.jobStatus", this.jobStatus);
+          console.log(' this.showApplied------->', this.showApplied = true);
         })
         .catch((error) => {
           console.log("error-->", error);

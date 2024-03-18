@@ -2,13 +2,14 @@
  * @description       : 
  * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 03-08-2024
+ * @last modified on  : 03-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobDetailController {
   @AuraEnabled
-  public static Boolean createJobApplicants(string email, Id jobId) {
+  public static Boolean createJobApplicants(string email, string jobId) {
     System.debug('jobId---->' + jobId);
+    system.debug('email------>'+email);
     if (email != null) {
       List<Candidate_Details__c> candidate = [
         SELECT Id

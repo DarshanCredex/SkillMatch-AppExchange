@@ -149,10 +149,10 @@
 
 .applicant-box {
   width: 95%;
-  height: 30%;
+  height: fit-content;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  margin-bottom: 2%;
+  margin: 2%;
   background-color: #fff;
   padding: 2%;
   cursor: pointer;

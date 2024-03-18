@@ -18,8 +18,8 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @track addShortlistedCss = "information";
   @track addPendingCss = "information";
   @track isLoading = false;
-  @track searchCompany = "";
-  @track searchTitle = "";
+  @track searchCompany = " ";
+  @track searchTitle = " ";
   @track selectedTab = "Applied";
   @track errorMessage = false;
   @track emailId;
@@ -30,7 +30,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
 
   connectedCallback() {
     this.emailId = localStorage.getItem("emailId");
-    
+    console.log('emailid--->', this.emailId); 
   }
 
   handleSearchLocationChange(event) {
@@ -39,7 +39,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @wire(getAppliedJobs, {
     searchTitle: "$searchTitle",
     searchCompany: "$searchCompany",
-    emailId: "$emailId"
+    email: "$emailId"
   })
   appliedJobList({ data, error }) {
     if (data) {
@@ -87,6 +87,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+
   handleTabChange2() {
     this.isLoading = true;
     this.selectedTab = "Shortlisted";
@@ -116,6 +117,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+
   handleTabChange3() {
     this.isLoading = true;
     this.selectedTab = "Pending";
@@ -144,4 +146,5 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+  
 }
