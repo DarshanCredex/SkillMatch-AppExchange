@@ -1,10 +1,3 @@
-<!--
-  @description       : 
-  @author            : Sagar Medatwal
-  @group             : 
-  @last modified on  : 03-07-2024
-  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
--->
 <template>
     <div class="detail-container">
         <div class="detail-header">
@@ -34,6 +27,11 @@
                         label="Search when user hits the 'enter' key" placeholder="Search for company.." type="Search"
                         onchange={handleSearchLocationChange}></lightning-input>
                 </div>
+                <!--div class="job-sort-bar">
+                    <div class="job-sort-text">Sort By</div>
+                    <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status" variant="label-hidden"
+                            value={sortValue} options={sortOptions} onchange={handleChange}></lightning-combobox></div>
+                </div-->
             </div>
         </div>
         <div class="job-list-content">

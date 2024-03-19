@@ -49,8 +49,7 @@ export default class SignupComponent extends NavigationMixin(LightningElement) {
         }
       };
       this[NavigationMixin.Navigate](pageReference);
-    }
-    else if (this.password !== this.confirmPassword) {
+    } else if (this.password !== this.confirmPassword) {
       alert("Passwords do not match");
     }
   }

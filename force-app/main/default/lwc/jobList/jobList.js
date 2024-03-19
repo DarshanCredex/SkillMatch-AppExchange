@@ -5,15 +5,16 @@ import getTypePicklistValues from "@salesforce/apex/JobListController.getTypeVal
 import getExperiencePicklistValues from "@salesforce/apex/JobListController.getExperienceValues";
 import getIndustryPicklistValues from "@salesforce/apex/JobListController.getIndustryValues";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
+
 import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
   companyLogo = alternateCompanyLogo;
-  emptyBox = emptyBox;
+  @track sortValue = "date";
   typeValues = [];
+  emptyBox = emptyBox;
   experienceValues = [];
   industryValues = [];
-  @track sortValue = "date";
   @track selectedTypeValues = [];
   @track selectedExperienceValues = [];
   @track selectedIndustryValues = [];
@@ -25,10 +26,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
 
   connectedCallback() {
     this.searchTitle = sessionStorage.getItem("searchText") || "";
-    console.log(
-      "unique value from session storage------->",
-      sessionStorage.getItem("uniqueValue")
-    );
     sessionStorage.clear();
     console.log("searchTitle-->", this.searchLocation);
     console.log("searchLocation-->", this.searchLocation);
@@ -55,6 +52,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
         console.error("Error fetching industry picklist values:", error);
       });
   }
+
   @wire(getJobs, {
     searchTitle: "$searchTitle",
     searchLocation: "$searchLocation",
@@ -62,7 +60,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  jobList({ data }) {
+  jobList({ data, error }) {
     if (data) {
       this.jobListdata = data;
       if (this.jobListdata.length > 0) {
@@ -70,8 +68,11 @@ export default class JobList extends NavigationMixin(LightningElement) {
       } else {
         this.errorMessage = true;
       }
+    } else {
+      console.error(error);
     }
   }
+
   get sortOptions() {
     return [
       { label: "Date", value: "date" },
@@ -82,6 +83,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleTypeChange(event) {
     const selectedType = event.target.value;
     const isChecked = event.target.checked;
+
     if (isChecked) {
       this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
     } else {
@@ -110,6 +112,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleIndustryChange(event) {
     const selectedIndustry = event.target.value;
     const isChecked = event.target.checked;
+
     if (isChecked) {
       this.selectedIndustryValues = [
         ...this.selectedIndustryValues,
@@ -138,6 +141,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
     this.selectedTypeValues = [];
     this.selectedExperienceValues = [];
     this.selectedIndustryValues = [];
+
     const checkboxList = this.template.querySelectorAll('[data-id="checkbox"]');
     for (const checkboxElement of checkboxList) {
       checkboxElement.checked = false;
@@ -147,12 +151,13 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleJobDetail(event) {
     let jobId = event.currentTarget.id;
     jobId = jobId.split("-");
-    const pageReference = {
+    this[NavigationMixin.GenerateUrl]({
       type: "standard__webPage",
       attributes: {
-        url: "/job-detail?id=" + jobId[0]
+        url: "/s/job-detail?id=" + jobId[0]
       }
-    }
-    this[NavigationMixin.Navigate](pageReference);
+    }).then((generatedUrl) => {
+      window.open(generatedUrl);
+    });
   }
 }

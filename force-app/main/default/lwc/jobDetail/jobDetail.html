@@ -1,10 +1,3 @@
-<!--
-  @description       : 
-  @author            : Sagar Medatwal 
-  @group             : 
-  @last modified on  : 03-12-2024
-  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
--->
 <template>
   <div class="job-detail-container">
     <template for:each={jobDetails} for:item="job">
@@ -33,7 +26,7 @@
               </div>
             </div>
           </div>
-          <template if:true={showUser}>
+          <template if:false={isGuestUser}>
             <template if:false={jobStatus}>
               <div>
                 <lightning-button variant="brand" label="Apply" title="Primary action" onclick={handleApply}
@@ -66,6 +59,9 @@
                 <div class="inner-section">
                   <p class="inner-header">Required Skills: </p>
                   <ul class="list-skill">
+                    <template for:each={job.skills} for:item="skill" index="i">
+                      <li key={i}>{skill}</li>
+                    </template>
                   </ul>
                 </div>
               </template>

@@ -1,29 +1,27 @@
 <!--
-  @description       : 
+  @description       : component to show list of jobs to Candidate
   @author            : Sagar Medatwal
   @group             : 
-  @last modified on  : 03-07-2024
+  @last modified on  : 03-19-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <div class="container">
+    <div class="main">
         <div class="job-list-container">
             <div class="job-filter-header">
-                <div style="width: 25%;"></div>
                 <div style="width: 75%; display: flex;justify-content: space-between;padding-left: 12px;">
                     <div style="display: flex;">
                         <lightning-input name="enter-job" class="job-search-box" variant="label-hidden"
-                            label="Search when user hits the 'enter' key" placeholder="Search for a job..."
-                            type="Search" onchange={handleSearchTitleChange}></lightning-input>
+                            label="Search when user hits the 'enter' key" placeholder="Search for a job..." type="Search"
+                            onchange={handleSearchTitleChange}></lightning-input>
                         <lightning-input class="job-search-box" name="enter-location" variant="label-hidden"
-                            label="Search when user hits the 'enter' key" placeholder="Search for location.."
-                            type="Search" onchange={handleSearchLocationChange}></lightning-input>
+                            label="Search when user hits the 'enter' key" placeholder="Search for location.." type="Search"
+                            onchange={handleSearchLocationChange}></lightning-input>
                     </div>
                     <div class="job-sort-bar">
                         <div class="job-sort-text">Sort By</div>
-                        <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status"
-                                variant="label-hidden" value={sortValue} options={sortOptions}
-                                onchange={handleChange}></lightning-combobox></div>
+                        <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status" variant="label-hidden"
+                                value={sortValue} options={sortOptions} onchange={handleChange}></lightning-combobox></div>
                     </div>
                 </div>
             </div>
@@ -70,8 +68,8 @@
                                             <p class="job-info">
                                                 <template if:true={job.city}>
                                                     <lightning-icon style="vertical-align: text-bottom;"
-                                                        icon-name="utility:checkin" size="xx-small"
-                                                        alternative-text="City" title="City">
+                                                        icon-name="utility:checkin" size="xx-small" alternative-text="City"
+                                                        title="City">
                                                     </lightning-icon>
                                                     {job.city}, {job.country}
                                                 </template>

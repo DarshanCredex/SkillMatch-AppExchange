@@ -59,11 +59,11 @@
         }
 
         .about-me:hover {
-            overflow: overlay;
-            white-space: normal;
-            width: auto;
-            -webkit-line-clamp: 4;
-            /*margin: 5% 2% 5% 2%;*/
+                overflow: overlay;
+                white-space: normal;
+                width: auto;
+                -webkit-line-clamp: 4;
+                /*margin: 5% 2% 5% 2%;*/
         }
 
         .skill-container {
@@ -164,56 +164,53 @@
                 height: 80%;
                 text-align: start;
                 display: grid;
-                grid-template-columns: 50% 50%;
-                grid-template-rows: auto;
-            }
+                grid-template-rows: 33% 33% 33%;
+                grid-template-columns: auto;
 
-            .exp-list {
-                max-width: 50%;
-                align-self: center;
-                background: aliceblue;
-                padding: 1.5%;
-                border-radius: 35px;
+                .exp-list {
+                    max-width: 50%;
+                    align-self: center;
+                    background: aliceblue;
+                    padding: 1.5%;
+                    border-radius: 35px;
 
-                .exp-company-name {
-                    color: #006072;
-                    font-weight: bold;
+                    .exp-company-name {
+                        color: #006072;
+                        font-weight: bold;
+                    }
+
+                    .exp-year {
+                        color: gray;
+                    }
                 }
 
-                .exp-year {
-                    color: gray;
-                }
-            }
-
-            .exp-list:hover {
-                background: radial-gradient(circle at center, #17eedf, #325757) no-repeat center center fixed;
-                ;
-                cursor: pointer;
-
-                .exp-company-name {
-                    color: black;
-                    font-weight: bold;
-                }
-
-                .exp-year {
-                    color: #d3f9ff;
+                .exp-list:hover {
+                    background: radial-gradient(circle at center, #17eedf, #325757) no-repeat center center fixed;;
+                    cursor: pointer;
+                    
+                    .exp-company-name {
+                        color: black;
+                        font-weight: bold;
+                    }
+                    .exp-year {
+                        color: #d3f9ff;
+                    }
                 }
             }
         }
     }
-}
 
-.heading-text {
-    text-align: start;
-    font-weight: bold;
-    padding: 1%;
-    height: 15%;
-}
+    .heading-text {
+        text-align: start;
+        font-weight: bold;
+        padding: 1%;
+        height: 15%;
+    }
 
-.slds-modal__header {
-    background: radial-gradient(circle at center, #17eedf, #325757) no-repeat center center fixed;
-}
-
-.slds-button_icon-current-color {
-    color: white !important;
+    .slds-modal__header {
+        background: radial-gradient(circle at center, #17eedf , #325757) no-repeat center center fixed;
+    }
+    .slds-button_icon-current-color {
+        color: white !important;
+    }
 }

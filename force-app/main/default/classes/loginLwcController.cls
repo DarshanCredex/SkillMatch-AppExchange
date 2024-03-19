@@ -24,4 +24,3 @@ public with sharing class loginLwcController {
         return authenticated;
     }
 }
-

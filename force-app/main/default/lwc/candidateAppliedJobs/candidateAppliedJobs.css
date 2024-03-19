@@ -39,6 +39,10 @@
         width: auto;
     }
 
+    /* .job-search-button {
+        line-height: 2.4375rem;
+    } */
+
     .job-sort-text {
         font-size: 0.875rem;
         line-height: 1.125rem;
@@ -58,7 +62,7 @@
 
 .job-list-content {
     height: 90vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     display: flex;
     gap: 1rem;
     padding: 1rem;
@@ -85,7 +89,7 @@
     }
 
     .job-list {
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         border-radius: 5px;
 
@@ -120,7 +124,7 @@
                         color: #4978d1;
                         gap: 1rem;
                         margin-bottom: 0.5rem;
-                        
+                        /* Add spacing between header and details */
                     }
 
                     .job-information {

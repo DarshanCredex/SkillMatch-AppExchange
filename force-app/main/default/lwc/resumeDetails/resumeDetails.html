@@ -1,0 +1,28 @@
+<!--
+  @description       : 
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 01-02-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="main">
+        <div class="information">
+            <div class="name">
+                <lightning-input type="text" data-id="name" label="Name"></lightning-input>
+            </div>
+            <div class="experience">
+                <lightning-input type="text" data-id="exp" label="Experience"></lightning-input>
+            </div>
+            <div class="skills">
+                <lightning-input type="text" data-id="skills" label="Skills"></lightning-input>
+            </div>
+            <div class="email">
+                <lightning-input type="text" data-id="email" label="Email"></lightning-input>
+            </div>
+        </div>
+        <div class="buttons">
+            <lightning-button variant="brand" label='Save' onclick={saveButton}></lightning-button> 
+        </div>
+    </div>
+</template>

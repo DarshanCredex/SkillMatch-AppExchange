@@ -1,11 +1,23 @@
-<!--
-  @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
-  @group             : 
-  @last modified on  : 03-05-2024
-  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
--->
 <apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
+    
+    <!--apex:form id="loginForm" forceSSL="true">
+<apex:outputPanel layout="block">
+<apex:pageMessages id="error"/>
+
+<apex:outputLabel value="{!$Label.site.username}" for="username"/>
+<apex:inputText id="username" value="{!username}"/>
+<apex:outputLabel value="{!$Label.site.password}" for="password"/>
+<apex:inputSecret id="password" value="{!password}"/>
+<apex:outputText value=""/>
+<apex:commandButton action="{!login}" value="{!$Label.site.login_button}" id="loginButton"/>
+
+
+</apex:outputPanel>
+</apex:form>
+
+If you're an employee, you can go here:
+<a href="https://login.salesforce.com//servlet/networks/session/create?portal=060D00000000XYT&amp;site=0DMD0000000054I&amp;inst=D">Log in here</a-->
+    
     <html>
         <head>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -74,32 +86,33 @@
                 transition: border-bottom 0.3s, box-shadow 0.3s;
                 }
                 
-                ::-webkit-input-placeholder { 
+                ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-moz-placeholder { 
+                :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-moz-placeholder { 
+                ::-moz-placeholder { /* Mozilla Firefox 19+ */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                :-ms-input-placeholder { 
+                :-ms-input-placeholder { /* Internet Explorer 10-11 */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
-                ::-ms-input-placeholder { 
+                ::-ms-input-placeholder { /* Microsoft Edge */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
                 
-                ::placeholder { 
+                ::placeholder { /* Most modern browsers support this now. */
                 color:    #ffffff;
                 opacity: 0.8;
                 }
                 .input-group input:focus {
+                /*border-bottom: 2px solid white;*/
                 box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.8);
                 }
                 
@@ -170,7 +183,7 @@
         </head>
         <body>
             <apex:form id="loginForm" forceSSL="true">
-                <apex:pageblock id="pageBlock">
+                <apex:pageblock >
                     <div class="login-container">
                         <div class="login-inner-container">
                             <div class="logo-container">
@@ -184,12 +197,12 @@
                                     </div>
                                     <div class="input-group">
                                         <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
-                                        <apex:inputText html-placeholder="Email" id="email" onchange="javascript:getEmailValue()" value="{!email}"/>
+                                        <apex:inputText html-placeholder="Email" id="email" value="{!email}"/>
                                     </div>
                                     
                                     <div class="input-group">
                                         <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
-                                        <apex:inputSecret html-placeholder="Password" id="password"  value="{!password}"/>
+                                        <apex:inputSecret html-placeholder="Password" id="password" value="{!password}"/>
                                     </div>
                                     
                                     <div class="forgot-password">
@@ -198,8 +211,7 @@
                                     
                                     <div class="buttons-container">
                                         <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
-                                         <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
-                                        <!-- <a href="https://skillmatch-dev-ed.develop.my.site.com/Candidate"> Login </a> -->
+                                        <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
                                     </div>
                                     
                                     <div class="separator"></div>
@@ -218,38 +230,6 @@
                     </div>
                 </apex:pageblock>
             </apex:form>
-            <script type="text/javascript">
-                console.log('loaded');
-                function getEmailValue() {
-                        const emailElement = document.getElementById('{!$Component.loginComponent.loginForm.pageBlock.email}');
-                        console.log('Email Element:', emailElement);
-                        
-                        if (emailElement) {
-                            const emailValue = emailElement.value;      //------>this works
-                            console.log('Email Value:', emailValue);   //------->this works
-                            //alert('Email: ' + emailValue);
-                            sessionStorage.setItem('emailId__1', emailValue);
-                            console.log('item in session storge---->', sessionStorage.getItem('emailId__1'));  //------->this works
-                        } else {
-                            console.error('Email element not found.');
-                        }
-                }
-
-                    // let emailValue = '';
-                    // let messageToLWC;
-                    // let VfOrigin = '';
-                    // const emailElement = document.getElementById('{!$Component.loginComponent.loginForm.pageBlock.email}');
-                    // if (emailElement) {
-                    //     emailValue = emailElement.value;   
-                    // }
-
-                    // VfOrigin = 'https://skillmatch-dev-ed.develop.my.site.com/Candidate';
-                    // messageToLWC = {
-                    //     message: emailValue
-                    // }
-                    // window.parent.postMessage(messgaeToLWC, VfOrigin);
-                    
-            </script>
         </body>
     </html>
 </apex:page>
