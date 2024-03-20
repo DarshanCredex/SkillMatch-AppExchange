@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-21-2024
+  @last modified on  : 03-20-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -14,9 +14,10 @@
                         <h1>{job.Title_of_position__c}</h1>
 
                         <div class="buttons">
-                            <lightning-button variant="brand" label="Applicants" data-job-id={job.id} lwc:if={showApplicantsButton}
-                                onclick={handleApplicantButton}></lightning-button>
-                            <lightning-button variant="Neutral" label="Edit" onclick={handleEditButton}></lightning-button>
+                            <lightning-button variant="brand" label="Applicants" data-job-id={job.id}
+                                lwc:if={showApplicantsButton} onclick={handleApplicantButton}></lightning-button>
+                            <lightning-button variant="Neutral" label="Edit"
+                                onclick={handleEditButton}></lightning-button>
                         </div>
                     </div>
                     <h2>📍{job.City__c}, {job.Country__c}</h2>
@@ -37,10 +38,13 @@
                     <p>Salary - Rs {job.Salary__c}</p>
                     <p>Industry - {job.Industry__c}</p>
                 </div>
+                <hr>
+                <div>
+                    <lightning-button variant="brand-outline" label="Add Questions"
+                        onclick={handleAddQuestionsModal}></lightning-button>
+                </div>
             </div>
-
         </template>
-
         <template lwc:if={isEditModalOpen}>
             <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container">
@@ -50,7 +54,8 @@
                             class="slds-modal__close"></lightning-button-icon>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium">
-                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c" onsuccess={handleSuccess}>
+                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c"
+                            onsuccess={handleSuccess}>
                             <lightning-input-field field-name="Title_of_position__c"> </lightning-input-field>
                             <lightning-input-field field-name="City__c"> </lightning-input-field>
                             <lightning-input-field field-name="Company_Name__c"> </lightning-input-field>
@@ -80,4 +85,98 @@
             <div class="slds-backdrop slds-backdrop_open"></div>
         </template>
     </div>
+    <template if:true={showAddQuestionsModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <template lwc:if={showQuestion}>
+                        <h2 class="slds-modal__title">Add Question</h2>
+                    </template>
+                    <template lwc:elseif={showOptions}>
+                        <h2 class="slds-modal__title">Add Options</h2>
+                    </template>
+
+                    <lightning-button-icon icon-name="utility:close" onclick={handleClose} alternative-text="Close"
+                        class="slds-modal__close"></lightning-button-icon>
+                </header>
+                <template lwc:if={showQuestion}>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="picklist">
+                            <label for="type">Type</label>
+                            <select id="question" onchange={handleQuesType}>
+                                <option value="" disabled selected>Select Type</option>
+                                <template for:each={questionTypeValues} for:item="ques">
+                                    <option key={ques} value={ques}>{ques}</option>
+                                </template>
+                            </select>
+                        </div>
+                        <lightning-input type="text" value={questionName} label="Enter Question"
+                            onchange={handleQuestionName}></lightning-input>
+                        <lightning-input type="number" value={weightage} label="Weightage %"
+                            onchange={handleWeightage}></lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div style="text-align: right; margin: 1%;">
+                            <lightning-button variant="brand" type="submit" label="Next" onclick={handleNext}
+                                style="padding-right: 1%"></lightning-button>
+                            <lightning-button variant="Neutral" label="Add from CSV"></lightning-button>
+                        </div>
+                    </footer>
+                </template>
+                <template lwc:if={showOptionsObjective}>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="optionss">
+                            <lightning-input type="text" value={optionA} label="Enter option A"
+                                onchange={handleOptionA}></lightning-input>
+                            <lightning-input type="checkbox" label="Is Correct Answer"
+                                onchange={handleCheckbox_1}></lightning-input>
+                        </div>
+                        <div class="optionss">
+                            <lightning-input type="text" value={optionB} label="Enter option B"
+                                onchange={handleOptionB}></lightning-input>
+                            <lightning-input type="checkbox" label="Is Correct Answer"
+                                onchange={handleCheckbox_2}></lightning-input>
+                        </div>
+                        <div class="optionss">
+                            <lightning-input type="text" value={optionC} label="Enter option C"
+                                onchange={handleOptionC}></lightning-input>
+                            <lightning-input type="checkbox" label="Is Correct Answer"
+                                onchange={handleCheckbox_3}></lightning-input>
+                        </div>
+                        <div class="optionss">
+                            <lightning-input type="text" value={optionD} label="Enter option D"
+                                onchange={handleOptionD}></lightning-input>
+                            <lightning-input type="checkbox" label="Is Correct Answer"
+                                onchange={handleCheckbox_4}></lightning-input>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div style="text-align: right; margin: 1%;">
+                            <lightning-button variant="brand" style="padding-right: 1%" type="submit" label="Previous"
+                                onclick={handlePrevious}></lightning-button>
+                            <lightning-button variant="brand" type="submit" label="Save Answers"
+                                onclick={handleSaveQuestionAnswers}></lightning-button>
+                        </div>
+                    </footer>
+                </template>
+                <template lwc:if={showOptionsSubjective}>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div class="optionss">
+                            <lightning-input type="text" value={answer} label="Enter Answer"
+                                onchange={handleAnswer}></lightning-input>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div style="text-align: right; margin: 1%;">
+                            <lightning-button variant="brand" style="padding-right: 1%" type="submit" label="Previous"
+                                onclick={handlePrevious}></lightning-button>
+                            <lightning-button variant="brand" type="submit" label="Save Answers"
+                                onclick={handleSaveQuestionAnswers}></lightning-button>
+                        </div>
+                    </footer>
+                </template>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>

@@ -7,7 +7,6 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
 import { NavigationMixin } from "lightning/navigation";
 
-
 export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValues = [];
   industryValues = [];
@@ -24,6 +23,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   typeValue = "";
   industryValue = "";
   skills = "";
+
+  showQuestionModal = false;
 
   connectedCallback() {
     experienceFieldValues().then((result) => {
@@ -162,5 +163,12 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         variant: variant
       })
     );
+  }
+
+  handleAddQuestion() {
+    this.showQuestionModal = true;
+  }
+  handleClose() {
+    this.showQuestionModal = false;
   }
 }
