@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Current_Company__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check if it&apos;s you are currently working here.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Check if it&apos;s you are currently working here.</inlineHelpText>
+    <label>Is Current Company?</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <description>The type of questions which refers to either objective(MCQ) or subjective</description>
+    <externalId>false</externalId>
+    <label>Type</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Objective</fullName>
+                <default>false</default>
+                <label>Objective</label>
+            </value>
+            <value>
+                <fullName>Subjective</fullName>
+                <default>false</default>
+                <label>Subjective</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
