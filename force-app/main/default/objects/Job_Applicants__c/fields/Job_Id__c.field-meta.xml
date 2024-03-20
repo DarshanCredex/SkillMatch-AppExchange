@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Job_Id__c</fullName>
+    <description>A master detail relation between job object and job_applicants object</description>
+    <externalId>false</externalId>
+    <label>Job_Id</label>
+    <referenceTo>Job__c</referenceTo>
+    <relationshipLabel>Job Applicants</relationshipLabel>
+    <relationshipName>Job_Applicants</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

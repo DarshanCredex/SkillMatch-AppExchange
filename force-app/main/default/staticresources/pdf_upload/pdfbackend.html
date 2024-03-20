@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+ 
+</head>
+
+<body>
+  <div id="message">Loading...</div>
+  <div id="viewer"></div> 
+
+  <script id="pdf-js" src="pdf.js"></script>
+  <script>
+
+  PDFJS.workerSrc = document.getElementById("pdf-js").getAttribute("src");</script>
+
+  <script src="app.js"></script>
+  <script>var app = new App;</script>
+</body>
+
+</html>
