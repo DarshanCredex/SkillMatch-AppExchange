@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-20-2024
+  @last modified on  : 03-21-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -92,7 +92,10 @@
                     <template lwc:if={showQuestion}>
                         <h2 class="slds-modal__title">Add Question</h2>
                     </template>
-                    <template lwc:elseif={showOptions}>
+                    <template lwc:if={showOptionsObjective}>
+                        <h2 class="slds-modal__title">Add Options</h2>
+                    </template>
+                    <template lwc:if={showOptionsSubjective}>
                         <h2 class="slds-modal__title">Add Options</h2>
                     </template>
 
