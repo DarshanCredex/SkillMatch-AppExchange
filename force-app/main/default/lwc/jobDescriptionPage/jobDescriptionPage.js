@@ -5,9 +5,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import questionTypeValue from "@salesforce/apex/QuestionsController.questionTypeValue";
 import insertQuestionAndOptions from "@salesforce/apex/QuestionsController.insertQuestionAndOptions";
-export default class JobDescriptionPage extends NavigationMixin(
-  LightningElement
-) {
+export default class JobDescriptionPage extends NavigationMixin(LightningElement) {
   jobDetails;
   error;
   jobId;
@@ -171,6 +169,7 @@ export default class JobDescriptionPage extends NavigationMixin(
     }
   }
 
+
   handleNext() {
     this.getQuestionInput();
 
@@ -244,5 +243,9 @@ export default class JobDescriptionPage extends NavigationMixin(
       }
     };
     this[NavigationMixin.Navigate](pageReference);
+  }
+
+  handleViewQuestions() {
+    
   }
 }
