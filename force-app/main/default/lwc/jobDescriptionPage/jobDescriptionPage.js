@@ -9,8 +9,8 @@ import insertQuestionAndOptions from "@salesforce/apex/QuestionsController.inser
 export default class JobDescriptionPage extends NavigationMixin(
   LightningElement
 ) {
-  @track jobDetails;
-  @track error;
+  jobDetails;
+  error;
   jobId;
   isEditModalOpen = false;
   questionId;
@@ -40,7 +40,6 @@ export default class JobDescriptionPage extends NavigationMixin(
   connectedCallback() {
     if (sessionStorage.getItem("postedJobId")) {
       this.jobId = sessionStorage.getItem("postedJobId");
-      console.log("this.jobId(reciever)", this.jobId);
     }
   }
 
@@ -48,7 +47,6 @@ export default class JobDescriptionPage extends NavigationMixin(
   wiredGetPostedJobListBasedOnId(result) {
     this.wiredResult = result;
     if (result.error) {
-      console.error("error----->", result.error);
       this.error = result.error;
       this.jobDetails = undefined;
     } else if (result.data) {
@@ -90,17 +88,10 @@ export default class JobDescriptionPage extends NavigationMixin(
   handleSuccess() {
     return refreshApex(this.wiredResult)
       .then(() => {
-        this.dispatchEvent(
-          new ShowToastEvent({
-            title: "Success",
-            message: "Updated Successfully",
-            variant: "success"
-          })
-        );
+        this.showToast("Success", "Updated Successfully", "success");
         this.isEditModalOpen = false;
       })
       .catch((error) => {
-        console.error("Error refreshing Apex:", error);
         this.error = error;
       });
   }
@@ -131,7 +122,7 @@ export default class JobDescriptionPage extends NavigationMixin(
     if (data) {
       this.questionTypeValues = data;
     } else if (error) {
-      console.error("error", error);
+      this.error = error;
     }
   }
 
@@ -212,6 +203,9 @@ export default class JobDescriptionPage extends NavigationMixin(
         .then(() => {
           this.showToast("Success", "Questions saved successfully", "success");
           this.showAddQuestionsModal = false;
+          this.showQuestion = false;
+          this.showOptionsObjective = false;
+          this.showOptionsSubjective = false;
         })
         .catch(() => {
           this.showToast("Error", "Questions could not be saved", "error");

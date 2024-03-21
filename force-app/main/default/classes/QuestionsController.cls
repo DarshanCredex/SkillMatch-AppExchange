@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-20-2024
+ * @last modified on  : 03-21-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -78,7 +78,9 @@ public with sharing class QuestionsController {
         optionsList.add(option);
       }
 
-      insert optionsList;
+      if (!optionsList.IsEmpty()) {
+        insert optionsList;
+      }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
