@@ -36,13 +36,15 @@ export default class ViewQuestionsComponent extends LightningElement {
     this.recordId = event.currentTarget.dataset.questionid;
   }
   closeModal() {
-      this.showEditQuestionsModal = false;
-      this.showEditOptionModal = false;
+    this.showEditQuestionsModal = false;
+    this.showEditOptionModal = false;
   }
 
   handleSuccess() {
     refreshApex(this.wiredResult);
-    this.showToast("Success", "Updated Successfully", "success");
+      this.showToast("Success", "Updated Successfully", "success");
+      this.showEditQuestionsModal = false;
+      this.showEditOptionModal = false;
   }
 
   handleOptionEdit(event) {
@@ -60,6 +62,6 @@ export default class ViewQuestionsComponent extends LightningElement {
     );
   }
   handleSave() {
-    this.template.querySelector("lightning-record-edit-form").submit(); 
+    this.template.querySelector("lightning-record-edit-form").submit();
   }
 }
