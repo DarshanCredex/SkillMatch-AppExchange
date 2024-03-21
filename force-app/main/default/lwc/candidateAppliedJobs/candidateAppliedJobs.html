@@ -1,0 +1,91 @@
+<!--
+  @description       : 
+  @author            : Sagar Medatwal
+  @group             : 
+  @last modified on  : 03-07-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="detail-container">
+        <div class="detail-header">
+            <div class={addAppliedCss} onclick={handleTabChange}>
+                <p class="heading-information">Applied</p>
+                <p class="Applied-information"></p>
+            </div>
+            <div class={addShortlistedCss} onclick={handleTabChange2}>
+                <p class="heading-information">
+                    Shortlisted
+                </p>
+                <p class="Shortlisted-information"></p>
+            </div>
+            <div class={addPendingCss} onclick={handleTabChange3}>
+                <p class="heading-information">Pending</p>
+                <p class="Pending-information"></p>
+            </div>
+        </div>
+        <div class="filter-header">
+            <div style="width: 25%;"></div>
+            <div style="width: 75%; display: flex;justify-content: space-between;padding-left: 12px;">
+                <div style="display: flex;">
+                    <lightning-input name="enter-job" class="job-search-box" variant="label-hidden"
+                        label="Search when user hits the 'enter' key" placeholder="Search for a job..." type="Search"
+                        onchange={handleSearchTitleChange}></lightning-input>
+                    <lightning-input class="job-search-box" name="enter-company" variant="label-hidden"
+                        label="Search when user hits the 'enter' key" placeholder="Search for company.." type="Search"
+                        onchange={handleSearchLocationChange}></lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="job-list-content">
+            <div class="job-list">
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+                <template if:true={selectedJob}>
+                    <template for:each={selectedJob.jobWrapperList} for:item="job">
+                        <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
+                            <div class="job-card-top">
+                                <div class="job-card-top-left">
+                                    <div class="job-header">
+                                        <h3>{job.title}</h3>
+                                    </div>
+                                    <div class="job-information">
+                                        <p class="job-company">{job.company}</p>
+                                        <p class="job-info">
+                                            <template if:true={job.city}>
+                                                <lightning-icon style="vertical-align: text-bottom;"
+                                                    icon-name="utility:checkin" size="xx-small" alternative-text="City"
+                                                    title="City">
+                                                </lightning-icon>
+                                                {job.city}, {job.country}
+                                            </template>
+                                        </p>
+                                        <p class="job-info">{job.jobType}</p>
+                                        <p class="job-info">
+                                            <lightning-formatted-number format-style="currency" value={job.salary}
+                                                minimum-fraction-digits="0"></lightning-formatted-number>
+                                        </p>
+                                    </div>
+                                    <div class="job-status">{job.status}</div>
+                                </div>
+                                <div class="job-logo">
+                                    <img alt="Company logo" src={companyLogo} />
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+                <template if:true={errorMessage}>
+                    <div class="no-jobs">
+                      <div>
+                        <h1> No jobs😞!!! Keep looking. </h1>
+                        <div class="emptyBox">
+                          <img src={emptyBox} alt="empty">
+                        </div>
+                      </div>
+                    </div>
+            </template>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,62 @@
+<!--
+  @description       : candidate portal home page for authenticated User
+  @author            : Sagar Medatwal
+  @group             : 
+  @last modified on  : 03-05-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template lwc:if={showToUser}>
+        <div class="main">
+        <div>
+            <div class="jobs-discover">
+                <div class="discover-jobs-logo">
+                    <img src={StartCareer} alt="Start your Journey" />
+                </div>
+                <div class="text-content">
+                    <div>
+                        <h1>Ready, Set and Go!</h1>
+                    </div>
+                    <div>
+                        <p>
+                            Begin your career journey by exploring opportunities on our job portal, where countless
+                            possibilities await.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="universities">
+                <div class="university-text-content">
+                    <div>
+                        <h1>Stay Motivated</br>In Your Job Search Journey</h1>
+                    </div>
+                    <div>
+                        <p>
+                            Maintain unwavering motivation throughout your job search journey, embracing each challenge
+                            as a stepping stone toward success.
+                        </p>
+                    </div>
+                </div>
+                <div class="university-logo">
+                    <img src={StayMotivated} alt="na" />
+                </div>
+            </div>
+            <div class="recruiter-discover">
+                <div class="recruiter-jobs-logo">
+                    <img src={AchieveDream} alt="na" />
+                </div>
+                <div class="text-content">
+                    <div class="recruiter-text">
+                        <h1>Keep Searching!</br>Keep learning!</h1>
+                    </div>
+                    <div>
+                        <p>
+                            Persist, Learn, Achieve: Your Dreams Await.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </template>
+</template>

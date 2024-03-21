@@ -1,0 +1,83 @@
+<!--
+  @description       : job description and edit page for the HR
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 02-21-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="main">
+        <template for:each={jobDetails} for:item="job">
+            <div key={job.Id}>
+                <div class="job-description">
+                    <div class="title">
+                        <h1>{job.Title_of_position__c}</h1>
+
+                        <div class="buttons">
+                            <lightning-button variant="brand" label="Applicants" data-job-id={job.id} lwc:if={showApplicantsButton}
+                                onclick={handleApplicantButton}></lightning-button>
+                            <lightning-button variant="Neutral" label="Edit" onclick={handleEditButton}></lightning-button>
+                        </div>
+                    </div>
+                    <h2>📍{job.City__c}, {job.Country__c}</h2>
+                    <hr>
+                    <h2>Job Description</h2>
+                    <p><lightning-formatted-rich-text value={job.Description__c}></lightning-formatted-rich-text></p>
+                </div>
+                <hr>
+                <div class="skills">
+                    <h1>Skills</h1>
+                    <p>{job.Skills_Required__c}</p>
+                </div>
+                <hr>
+                <div class="requirements">
+                    <h1>Requirements</h1>
+                    <p>Experience- {job.Experience__c}</p>
+                    <p>Type- {job.Type__c}</p>
+                    <p>Salary - Rs {job.Salary__c}</p>
+                    <p>Industry - {job.Industry__c}</p>
+                </div>
+            </div>
+
+        </template>
+
+        <template lwc:if={isEditModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-modal__title">Edit Job</h2>
+                        <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
+                            class="slds-modal__close"></lightning-button-icon>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-record-edit-form record-id={jobId} object-api-name="Job__c" onsuccess={handleSuccess}>
+                            <lightning-input-field field-name="Title_of_position__c"> </lightning-input-field>
+                            <lightning-input-field field-name="City__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Company_Name__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Country__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Description__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Experience__c"> </lightning-input-field>
+                            <lightning-input-field field-name="External_Application_Link__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Industry__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Location__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Publish_end_date__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Publish_start_date__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Salary__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Status__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Summary__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Type__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Skills_Required__c"> </lightning-input-field>
+                        </lightning-record-edit-form>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div style="text-align: right;">
+                            <lightning-button variant="brand" type="submit" label="Save"
+                                onclick={handleSave}></lightning-button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

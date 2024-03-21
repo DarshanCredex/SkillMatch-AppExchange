@@ -1,0 +1,100 @@
+<!--
+  @description       : candidate portal home page
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 03-05-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <template lwc:if={showToUser}>
+    <div class="main">
+    <div>
+      <div class="jobs-discover">
+        <div class="discover-jobs-logo">
+          <img src={discoverjobs} alt="na" />
+        </div>
+        <div class="text-content">
+          <div>
+            <h1>Discover Jobs</h1>
+          </div>
+          <div>
+            <p>
+              We source millions of jobs from thousands of the world’s top
+              companies. Our jobs come directly from employer career sites, so
+              we can ensure reliable and fresh opportunities.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="universities">
+        <div class="university-text-content">
+          <div>
+            <h1>Loved by job seekers</h1>
+          </div>
+          <div>
+            <p>
+              SkillMatch has helped over 160k job seekers from all over the
+              world, including students and graduates from hundreds of
+              educational institutions.
+            </p>
+          </div>
+        </div>
+        <div class="university-logo">
+          <img src={universities} alt="na" />
+        </div>
+      </div>
+      <div class="recruiter-discover">
+        <div class="recruiter-jobs-logo">
+          <img src={hiringCandidate} alt="na" />
+        </div>
+        <div class="text-content">
+          <div class="recruiter-text" onclick={handleRecruiterLogin}>
+            <h1>Recruiter?<br />Start Hiring Today</h1>
+          </div>
+          <div>
+            <p>
+              Discover a faster, easier way to fill open positions. Post jobs, manage applicants, and hire the best -
+              all in one place. Sign up free and revolutionize your hiring.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonials">
+      <div class="test-1">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_1}</p>
+        </div>
+        <div>
+          <h1>{author1}</h1>
+        </div>
+      </div>
+      <div class="test-2">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_2}</p>
+        </div>
+        <div>
+          <h1>{author2}</h1>
+        </div>
+      </div>
+      <div class="test-3">
+        <div>
+          <h2>"</h2>
+        </div>
+        <div>
+          <p>{testimonial_3}</p>
+        </div>
+        <div>
+          <h1>{author3}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  </template>
+</template>

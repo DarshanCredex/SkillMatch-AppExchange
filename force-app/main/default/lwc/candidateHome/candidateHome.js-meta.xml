@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="candidateHome">
+<apiVersion>45.0</apiVersion>
+<isExposed>true</isExposed>
+<masterLabel>Candidate Home</masterLabel>
+<targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+</targets>
+<targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+        
+            <property name="testimonial_1" label="Testimonial 1" type="String" default=""/>
+            <property name="author1" label="Author 1" type="String" default=""/>
+            <property name="testimonial_2" label="Testimonial 2" type="String" default=""/>
+            <property name="author2" label="Author 2" type="String" default=""/>
+            <property name="testimonial_3" label="Testimonial 3" type="String" default=""/>
+            <property name="author3" label="Author 3" type="String" default=""/>
+                        
+    </targetConfig>
+</targetConfigs>
+</LightningComponentBundle>

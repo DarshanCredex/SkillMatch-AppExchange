@@ -1,0 +1,26 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-28-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page sidebar="false" showHeader="false">
+    <body>
+        <div>
+            <h1>
+                visual force page
+            </h1>
+            <script type="module">
+                const resume = 'https://resume.io/r/WG4rjfqrd';
+                resume.parseToJSON()
+                    .then(data => {
+                        console.log('Yay! ', data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
+        </div>
+    </body>
+</apex:page>

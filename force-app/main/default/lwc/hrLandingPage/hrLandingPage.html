@@ -1,0 +1,87 @@
+<!--
+  @description       : the main landing page of HR portal
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 03-11-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <div class="main">
+    <div class="blue-box">
+      <h1>Welcome Back, {currentUserName}</h1>
+      <p>{currentDate}</p>
+    </div>
+    <div class="white-box">
+      <div class="slds-m-around_medium">
+        <canvas class="donut" lwc:dom="manual"></canvas>
+      </div>
+      <hr>
+      <div class="jobs-posted-box">
+        <h1>Jobs Posted</h1>
+        <p>{numberOfJobsPosted}</p>
+      </div>
+      <hr>
+      <div class="no-of-applicants">
+        <h1>Number of applicants</h1>
+        <p>{numberOfApplicants}</p>
+      </div>
+      <div class="slds-m-around_medium">
+        <canvas class="pie" lwc:dom="manual"></canvas>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="left-box">
+        <div class="box-heading">
+          <div class="box-heading">
+            <h1>Latest Applicants</h1>
+          </div>
+          <hr>
+          <template if:true={showApplicants}>
+            <template for:each={applicantsList} for:item="applicant">
+              <div class="applicant-box" key={applicant.Id} data-candidateid={applicant.Id}
+                onclick={navigateToApplicantPage}>
+                <h1 class="applicants-name">{applicant.Name}</h1>
+                <div class="applicantDetails">
+                  <p> <lightning-icon icon-name="utility:email" alternative-text="Connected" size="xx-small"
+                      variant="brand"></lightning-icon> {applicant.Candidate_Email__c}</p>
+                  <p class="location"> <lightning-icon icon-name="utility:checkin" alternative-text="Connected"
+                      size="xx-small" variant="brand"></lightning-icon>
+                    {applicant.City__c}, {applicant.Country__c}</p>
+                  <p>{applicantExperience__c}</p>
+                </div>
+              </div>
+            </template>
+          </template>
+          <template if:false={showApplicants}>
+            <div class="no-applicants">
+              <h1>No Applicants Pending</h1>
+            <div class="img">
+              <img src={empty_box} alt="na">
+            </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="right-box">
+        <div class="box-heading">
+          <h1>Draft Jobs</h1>
+        </div>
+        <hr>
+        <div class="drafts">
+          <template for:each={draftJobList} for:item="job">
+            <div class="draft-job" key={job.Id} data-jobid={job.Id} onclick={navigateToJobDescPage}>
+              {job.id}
+              <h1 class="job-title">{job.Title_of_position__c}</h1>
+              <div class="job-details">
+                <p class="company-name">{job.Company_Name__c}</p>
+                <p class="location"> <lightning-icon icon-name="utility:checkin" alternative-text="Connected"
+                    size="xx-small" variant="brand"></lightning-icon>
+                  {job.City__c}, {job.Country__c}</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

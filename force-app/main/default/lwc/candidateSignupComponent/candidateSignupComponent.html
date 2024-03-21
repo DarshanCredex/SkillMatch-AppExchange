@@ -1,0 +1,47 @@
+<!--
+  @description       : candidate signup component 
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 03-06-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="signup-container">
+        <div class="signup-inner-container">
+            <div class="logo-container">
+                <img class="logo" src={skillMatchLogo} alt="SkillMatch" />
+            </div>
+            <div class="detail-container">
+                <div class="detail-container-sub">
+                    <div class="separator"></div>
+                    <div class="input-group">
+                        <input type="text" required placeholder="First Name" value={firstName}
+                            oninput={handleFirstNameChange} />
+                    </div>
+                    <div class="input-group">
+                        <input type="text" required placeholder="Last Name" value={lastName}
+                            oninput={handleLastNameChange} />
+                    </div>
+                    <div class="input-group">
+                        <input type="email" required placeholder="Email" value={email} oninput={handleEmailChange} />
+                    </div>
+                    <div class="input-group">
+                        <input type="password" required placeholder="Password" value={password}
+                            oninput={handlePasswordChange} />
+                    </div>
+                    <div class="input-group">
+                        <input type="password" required placeholder="Confirm Password" value={confirmPassword}
+                            oninput={handleConfirmPasswordChange} />
+                    </div>
+                    <div class="buttons-container">
+                        <button class="signup" onclick={registerUser}>Sign Up</button>
+                    </div>
+                    <div class="separator-bottom"></div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; Copyright 2024, Credex Technology, All rights reserved
+        </div>
+    </div>
+</template>

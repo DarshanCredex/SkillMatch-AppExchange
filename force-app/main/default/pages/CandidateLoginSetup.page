@@ -1,0 +1,255 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-05-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page controller="CandidateLoginSetupController" id="loginComponent" showheader="false" standardStylesheets="false" title="Login">
+    <html>
+        <head>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+            <style>
+                body {
+                background: radial-gradient(circle at center, #17eedf , #325757) no-repeat center center fixed;
+                background-size: cover;
+                height: 100vh;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                }
+                
+                .login-container {
+                width: 30vw;
+                height: 100%;
+                text-align: center;
+                }
+                
+                .login-inner-container {
+                padding: 20px 50px 10px 50px;
+                border-radius: 30px;
+                box-shadow:  20px 20px 60px #4dbec0,
+                -20px -20px 60px #68ffff;
+                }
+                
+                .logo {
+                max-width: 180px;
+                max-height: 113px;
+                }
+                
+                .detail-container {
+                height: 70%;
+                width:100%
+                }
+                
+                .detail-container-sub {
+                width:100%
+                }
+                
+                .separator {
+                width: 100%;
+                border-top: 1px groove rgba(255, 255, 255, 0.2);
+                margin: 20px 0;
+                }
+                
+                .input-group {
+                margin-bottom: 15px;
+                width: 100%;
+                display: flex;
+                background: #2171733b;
+                }
+                
+                .input-group input {
+                width: 100%;
+                padding: 10px;
+                height: 40px;
+                box-sizing: border-box;
+                border: none;
+                border-bottom: 2px solid transparent;
+                background-color: #2171733b;
+                color: white;
+                transition: border-bottom 0.3s, box-shadow 0.3s;
+                }
+                
+                ::-webkit-input-placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                :-moz-placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                ::-moz-placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                :-ms-input-placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                ::-ms-input-placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                
+                ::placeholder { 
+                color:    #ffffff;
+                opacity: 0.8;
+                }
+                .input-group input:focus {
+                box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.8);
+                }
+                
+                .input-group input:focus-visible {
+                outline: thick;
+                }
+                
+                .forgot-password {
+                text-align: left;
+                padding-bottom: 20px;
+                }
+                
+                .forgot-password a {
+                color: white;
+                text-decoration: none;
+                }
+                
+                .forgot-password-link:hover {
+                color: grey;
+                }
+                
+                .buttons-container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                }
+                
+                .btn-login,
+                .btn-signup {
+                width: 30%;
+                box-shadow: 2px 3px 15px 1px cadetblue;
+                
+                border: 2px solid white;
+                color: black;
+                padding: 7px;
+                border-radius: 5px;
+                cursor: pointer;
+                border: aliceblue;
+                
+                background-color: white;
+                
+                }
+                
+                .btn-login:hover,
+                .btn-signup:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                }
+                
+                .hr-portal-link {
+                color: white;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                }
+                
+                .hr-portal-link:hover {
+                color: grey;
+                }
+                
+                .copyright {
+                padding-top: 50px;
+                align-items: end;
+                display: flex;
+                justify-content: center;
+                height: 10%;
+                opacity: 0.8;
+                }
+            </style>
+        </head>
+        <body>
+            <apex:form id="loginForm" forceSSL="true">
+                <apex:pageblock id="pageBlock">
+                    <div class="login-container">
+                        <div class="login-inner-container">
+                            <div class="logo-container">
+                                <img class="logo" src="{!URLFOR($Resource.SkillMatch_Logo_White)}" alt="SkillMatch" />
+                            </div>
+                            <div class="detail-container">
+                                <div class="detail-container-sub">
+                                    <div class="separator"></div>
+                                    <div class="error-container">
+                                        <apex:pageMessages />
+                                    </div>
+                                    <div class="input-group">
+                                        <i class="fas fa-envelope" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputText html-placeholder="Email" id="email" onchange="javascript:getEmailValue()" value="{!email}"/>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <i class="fas fa-lock" style="align-self: center;padding: 9px;"></i>
+                                        <apex:inputSecret html-placeholder="Password" id="password"  value="{!password}"/>
+                                    </div>
+                                    
+                                    <div class="forgot-password">
+                                        <a class="forgot-password-link" href="https://skillmatch-dev-ed.develop.my.site.com/Candidate/apex/ForgotPassword">Forgot your password?</a>
+                                    </div>
+                                    
+                                    <div class="buttons-container">
+                                        <apex:commandButton action="{!onSignup}" styleClass="btn-signup" title="Sign up" value="Sign up" />
+                                         <apex:commandButton action="{!dologin}" styleClass="btn-login" title="Login" id="doLoginButton" value="Login"/>
+                                        <!-- <a href="https://skillmatch-dev-ed.develop.my.site.com/Candidate"> Login </a> -->
+                                    </div>
+                                    
+                                    <div class="separator"></div>
+                                    
+                                    <div class="hr-portal">
+                                        <a class="hr-portal-link" href="https://skillmatch-dev-ed.develop.my.site.com/HR/apex/recruiterLoginPage">Login/Register as Recruiter</a>
+                                    </div>
+                                    
+                                    <div class="separator"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="copyright">
+                            &#169; Copyright 2024, Credex Technology, All rights reserved
+                        </div>
+                    </div>
+                </apex:pageblock>
+            </apex:form>
+            <script type="text/javascript">
+                console.log('loaded');
+                function getEmailValue() {
+                        const emailElement = document.getElementById('{!$Component.loginComponent.loginForm.pageBlock.email}');
+                        console.log('Email Element:', emailElement);
+                        
+                        if (emailElement) {
+                            const emailValue = emailElement.value;      //------>this works
+                            console.log('Email Value:', emailValue);   //------->this works
+                            //alert('Email: ' + emailValue);
+                            sessionStorage.setItem('emailId__1', emailValue);
+                            console.log('item in session storge---->', sessionStorage.getItem('emailId__1'));  //------->this works
+                        } else {
+                            console.error('Email element not found.');
+                        }
+                }
+
+                    // let emailValue = '';
+                    // let messageToLWC;
+                    // let VfOrigin = '';
+                    // const emailElement = document.getElementById('{!$Component.loginComponent.loginForm.pageBlock.email}');
+                    // if (emailElement) {
+                    //     emailValue = emailElement.value;   
+                    // }
+
+                    // VfOrigin = 'https://skillmatch-dev-ed.develop.my.site.com/Candidate';
+                    // messageToLWC = {
+                    //     message: emailValue
+                    // }
+                    // window.parent.postMessage(messgaeToLWC, VfOrigin);
+                    
+            </script>
+        </body>
+    </html>
+</apex:page>

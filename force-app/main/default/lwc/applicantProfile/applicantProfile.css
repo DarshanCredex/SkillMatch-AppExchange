@@ -1,0 +1,125 @@
+.main {
+    display: flex; 
+    justify-content: space-evenly;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #efefef;
+}
+
+.profile-details {
+    width: 60%;
+    margin: 2.5%;
+    height: 100%;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about {
+    width: 30%;
+    margin: 2.5%;
+    height: auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+.upper{
+    width: 100%;
+    height: 35%;
+    display: flex;
+    flex-direction: row;
+    
+}
+.lower{
+    width: 100%;
+    max-height: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    overflow-y: scroll;
+    padding-bottom: 5%;
+}
+.profile-image{
+    width: 20%;
+    height: 20%;
+    padding: 2%;
+
+}
+.hr{
+    margin: 2%;
+}
+
+.profile-info {
+    padding: 3%;
+}
+.profile-info h1{
+    font-size: 40px;
+}
+.profile-info div p{
+    font-size: 25px;
+}
+.profile-info lightning-button{
+    padding-top: 5%;
+}
+
+.workExp{
+    padding: 2%;
+    font-size: 25px;
+    font-weight: 600;
+}
+.exp{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 90%;
+    height: max-content;
+    margin: 2%;
+    margin-left: 5%;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 2%;
+}
+
+.exp h1{
+    font-size: 18px;
+}
+.exp h2{
+    font-size:14px;
+}
+.exp p{
+    font-size: 12px;
+}
+.about {
+    display: flex;
+    flex-direction: column;
+}
+
+.about h1 {
+    font-size: 23px;
+    padding: 2%;
+    align-self: flex-start;
+}
+
+.about p {
+    text-wrap: wrap; 
+    width: 90%;
+    height: auto;
+    font-size: 15px;
+    padding: 1%;
+    margin: 0 auto;  
+}
+.applicant-p-tag{
+    text-wrap: wrap; 
+    width: 90%;
+    height: auto;
+    font-size: 15px;
+    background-color: #efefef; 
+    padding: 2%;
+    margin: 0 auto; 
+}
+.buttons{
+    display: flex;
+    flex-direction: row;
+}
+.buttons lightning-button{
+    padding-left: 2%;
+}

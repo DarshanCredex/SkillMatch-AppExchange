@@ -1,0 +1,68 @@
+<!--
+  @description       : applicant details page
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 02-21-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template for:each={applicantDetails} for:item="applicant">
+        <div key={applicant.Id} class="main">
+            <div class="profile-details">
+                <div class="upper">
+                    <div class="profile-image">
+                        <lightning-formatted-rich-text
+                            value={applicant.Profile_Picture__c}></lightning-formatted-rich-text>
+                    </div>
+                    <div class="profile-info">
+                        <h1>{applicant.Name}</h1>
+                        <div style="display:flex; flex-direction: row;">
+                            <p>{applicant.Job_Title__c}</p>
+                        </div>
+                        <div class="buttons">
+                            <!-- <lightning-button variant="Neutral" label="View CV"
+                                onclick={handleResumePreview}></lightning-button> -->
+                            <lightning-button value="Accepted" variant="brand" label="Shortlist" disabled={IsAccepted}
+                                onclick={handleShortlistButton}></lightning-button>
+
+                            <lightning-button value="Rejected" variant="Destructive" label="Reject"
+                                disabled={IsRejected} onclick={handleRejectedButton}></lightning-button>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr">
+                <div class="lower">
+                    <div class="workExp">
+                        <h1>Experience</h1>
+                    </div>
+                    <template for:each={workExpDetails} for:item="exp">
+                        <div key={exp.Id}>
+                            <div class="exp">
+                                <h1>{exp.Organisation__c}</h1>
+                                <h2>{exp.Name}</h2>
+                                <p>{exp.From_Date__c} - {exp.To_Date__c}</p>
+                                <p>{exp.City__c}, {exp.Country__c}</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="about">
+                <h1>About</h1>
+                <p class="applicant-p-tag">{applicant.About__c}</p>
+                <hr class="hr">
+                <h1>Skills</h1>
+                <p>{applicant.Skills__c}</p>
+                <hr class="hr">
+                <h1>Applied For</h1>
+                <template for:each={appliedJob} for:item="job">
+                    <p key={job.Id}>{job.Title_of_position__c}</p>
+                </template>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={contentDocumentId}>
+        <iframe src={pdfUrl} width="100%" height="500px" frameborder="0"></iframe>
+    </template>
+</template>

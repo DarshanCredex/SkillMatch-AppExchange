@@ -1,0 +1,181 @@
+.main {
+  height: 100vh;
+  background-color: rgb(243, 243, 243);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 5%;
+}
+
+.header-content-text {
+  font-size: 2vw;
+}
+
+.post-job-button {
+  font-size: 1vw;
+}
+
+.filter-text {
+  display: flex;
+  flex-direction: row;
+}
+
+.filter-text p {
+  font-size: 1.5vw;
+  font-weight: 600;
+  padding-left: 0.5%;
+}
+
+.job-filters {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.job-filters p {
+  padding-top: 2.5%;
+  padding-bottom: 2.5%;
+  padding-left: 1%;
+  font-size: 1vw;
+}
+.job-filters h1 {
+  padding-bottom: 1%;
+  font-weight: 600;
+  padding-top: 0.5%;
+  font-size: 1.3vw;
+}
+.filter {
+  padding-left: 5%;
+  color: rgb(107, 107, 107);
+  width: 25%;
+}
+
+.main-content {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+.all-jobs {
+  width: 75%;
+  height: auto;
+  display: flex;
+  background: white;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10%;
+}
+
+.posted-all-jobs {
+  display: contents;
+}
+
+.no-expired-jobs,
+.no-drafts,
+.no-jobs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.no-expired-jobs img,
+.no-drafts img,
+.no-jobs img {
+  width: 30%;
+  height: 30%;
+}
+
+.no-expired-jobs h1,
+.no-expired-jobs p,
+.no-drafts h1,
+.no-drafts p,
+.no-jobs h1,
+.no-jobs p {
+  padding-bottom: 5%;
+  text-wrap: nowrap;
+  font-size: 1.2vw;
+}
+
+.hr-1 {
+  width: 60%;
+  text-align: left;
+}
+
+.expired-jobs,
+.drafted-jobs,
+.posted-jobs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto; 
+  max-height: 25rem;
+}
+
+.expired-jobs h1,
+.drafted-jobs h1,
+.posted-jobs h1 {
+  font-weight: 500;
+  font-size: 20px;
+  padding-bottom: 2%;
+
+}
+
+.expired-jobs table,
+.drafted-jobs table,
+.posted-jobs table {
+  width: 90%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: scroll;
+  
+}
+
+thead {
+  background-color: #acd8ff;
+  position: sticky;
+
+}
+
+thead tr {
+  border-bottom: 2px solid #dddddd;
+}
+
+td,
+th {
+  padding: 12px;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr td {
+  border-bottom: 1px solid #f9f9f9;
+}
+.job-filters p{
+  width: fit-content;
+  height: fit-content;
+  padding: 2%;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.job-filters p:hover{
+  color:#ff0000
+}
+
+tbody tr:hover{
+  background-color: #c6baff;
+  cursor: pointer;
+}

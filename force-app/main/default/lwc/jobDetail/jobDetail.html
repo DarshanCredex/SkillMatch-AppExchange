@@ -1,0 +1,87 @@
+<!--
+  @description       : 
+  @author            : Sagar Medatwal 
+  @group             : 
+  @last modified on  : 03-12-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <div class="job-detail-container">
+    <template for:each={jobDetails} for:item="job">
+      <div key={job.jobId}>
+        <div class="job-detail-header">
+          <div class="position-title">
+            <div class="top-left-header">
+              <div class="title-of-job">
+                {job.title}
+              </div>
+              <div class="job-information">
+                <p class="job-company">{job.company}</p>
+                <p class="job-info">
+                  <template if:true={job.city}>
+                    <lightning-icon style="vertical-align: text-bottom;" icon-name="utility:checkin" size="xx-small"
+                      alternative-text="City" title="City">
+                    </lightning-icon>
+                    {job.city}, {job.country}
+                  </template>
+                </p>
+                <p class="job-info">{job.jobType}</p>
+                <p class="job-info">
+                  <lightning-formatted-number format-style="currency" value={job.salary}
+                    minimum-fraction-digits="0"></lightning-formatted-number>
+                </p>
+              </div>
+            </div>
+          </div>
+          <template if:true={showUser}>
+            <template if:false={jobStatus}>
+              <div>
+                <lightning-button variant="brand" label="Apply" title="Primary action" onclick={handleApply}
+                  class="slds-m-left_x-small"></lightning-button>
+              </div>
+            </template>
+            <template if:true={jobStatus}>
+              <div class="applied-button">
+                <div>Applied</div>
+                <lightning-icon icon-name="action:check" size="xx-small" alternative-text="Applied"
+                  title="Approved"></lightning-icon>
+              </div>
+            </template>
+          </template>
+        </div>
+        <div class="company-info">
+          <div class="job-description-container">
+            <div class="job-description-section">
+              <div class="inner-section">
+                <p class="inner-header">Job Description: </p>
+                <p><lightning-formatted-rich-text value={job.desciption}></lightning-formatted-rich-text></p>
+              </div>
+            </div>
+            <div class="experience-detail-section">
+              <div class="inner-section">
+                <p class="inner-header">Minimum Experience: </p>
+                <p>{job.experienceLevel}</p>
+              </div>
+              <template if:true={job.skills}>
+                <div class="inner-section">
+                  <p class="inner-header">Required Skills: </p>
+                  <ul class="list-skill">
+                  </ul>
+                </div>
+              </template>
+            </div>
+          </div>
+          <div class="company-description-section">
+            <div class="company-name">{job.company}</div>
+            <div class="company-overview-section">
+              <div class="inner-section">
+                <p class="inner-header">Company Overview: </p>
+                <p>{job.summary}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

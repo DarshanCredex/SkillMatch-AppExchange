@@ -1,0 +1,137 @@
+<!--
+  @description       : Manage Jobs Component for Recruitment Portal
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 02-12-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <div class="main">
+    <div class="header-content">
+      <div class="header-content-text">
+        <h1>Manage Jobs and Responses</h1>
+      </div>
+      <div class="post-job-button">
+        <lightning-button variant="brand" label="Post a Job" type="button" onclick={handlePageReference}
+          icon-name="utility:down" icon-position="right"></lightning-button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="filter">
+        <div class="filter-text">
+          <lightning-icon icon-name="utility:down" alternative-text="NA" size="small" variant="brand"></lightning-icon>
+          <p>Filters</p>
+        </div>
+        <hr class="hr-1" />
+        <div class="job-filters">
+          <h1>Job Status</h1>
+          <p onclick={showPostedJobsTable}>Posted Jobs</p>
+          <p onclick={showDraftsTable}>Drafts</p>
+          <p onclick={showBoth}>Show Both</p>
+          <p onclick={showExpiredJobs}>Expired Jobs</p>
+        </div>
+      </div>
+      <template lwc:if={showPostedJobs}>
+        <div if:false={IsEmptyJobList} class="posted-all-jobs">
+          <div class="posted-jobs">
+            <h1>Jobs Posted by you-</h1>
+            <table>
+              <thead>
+                <tr>
+                  <td>Title</td>
+                  <td>Salary</td>
+                  <td>Experience</td>
+                  <td>Organisation</td>
+                  <td>Location</td>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={postedJobList} for:item="job">
+                  <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
+                    <td>{job.Title_of_position__c}</td>
+                    <td>{job.Salary__c}</td>
+                    <td>{job.Experience__c}</td>
+                    <td>{job.Company_Name__c}</td>
+                    <td>{job.City__c}, {job.Country__c}</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-jobs" if:true={IsEmptyJobList}>
+            <img src={noJobs} alt="NA" />
+            <h1>No Jobs Posted</h1>
+            <p>Once you post jobs you can the list here</p>
+            <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
+          </div>
+        </div>
+      </template>
+      <template lwc:if={showDrafts}>
+        <div if:false={IsEmptyDraftList} class="drafted-jobs">
+          <h1>Your Drafted Jobs</h1>
+          <table>
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Salary</td>
+                <td>Experience</td>
+                <td>Organisation</td>
+                <td>Location</td>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={draftedJobList} for:item="job">
+                <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
+                  <td>{job.Title_of_position__c}</td>
+                  <td>{job.Salary__c}</td>
+                  <td>{job.Experience__c}</td>
+                  <td>{job.Company_Name__c}</td>
+                  <td>{job.City__c}, {job.Country__c}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-drafts" if:true={IsEmptyDraftList}>
+          <img src={noJobs} alt="NA" />
+          <h1>No Drafts Available</h1>
+          <p>Once you have drafts you can access them here</p>
+          <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
+        </div>
+      </template>
+      <template lwc:if={showExpiredJobList}>
+        <div if:false={IsEmptyExpiredJobList} class="expired-jobs">
+          <h1>Expired Jobs</h1>
+          <table>
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Salary</td>
+                <td>Experience</td>
+                <td>Organisation</td>
+                <td>Location</td>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={expiredJobList} for:item="job">
+                <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
+                  <td>{job.Title_of_position__c}</td>
+                  <td>{job.Salary__c}</td>
+                  <td>{job.Experience__c}</td>
+                  <td>{job.Company_Name__c}</td>
+                  <td>{job.City__c}, {job.Country__c}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="no-expired-jobs" if:true={IsEmptyExpiredJobList}>
+          <img src={noJobs} alt="NA" />
+          <h1>No Expired Jobs Available</h1>
+          <lightning-button variant="brand" label="Post a job" onclick={handlePageReference}></lightning-button>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
