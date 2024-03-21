@@ -1,0 +1,43 @@
+.main{
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.header{
+    font-size: 25px;
+    font-weight: 600;
+    margin: 1%;
+}
+.question-card h1 {
+    font-size: 20px;
+    margin: 1%;
+    cursor: pointer;
+}
+
+.question-card p {
+    font-size: 20px;
+    cursor: pointer;
+}
+.question-card div {
+    margin-bottom: 1%;
+}
+
+.question-component{
+   border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+}
+.option-component{
+    padding-left: 1%;
+    display: flex;
+    flex-direction: row;
+}
+
+.question-name{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}

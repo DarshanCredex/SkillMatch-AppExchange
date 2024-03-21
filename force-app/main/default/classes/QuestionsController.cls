@@ -85,4 +85,26 @@ public with sharing class QuestionsController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
+  @AuraEnabled(cacheable=true)
+  public static list<Question__c> fetchQuestions(Id jobId) {
+    try {
+      list<Question__c> questionsList = new List<Question__c>();
+
+      questionsList = [
+        SELECT
+          id,
+          Question_Name__c,
+          Type__c,
+          Weightage__c,
+          (SELECT id, Answers__c, Name, Checkbox__c FROM Options__r)
+        FROM Question__c
+        WHERE Job__c = :jobId
+      ];
+
+      return questionsList;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }

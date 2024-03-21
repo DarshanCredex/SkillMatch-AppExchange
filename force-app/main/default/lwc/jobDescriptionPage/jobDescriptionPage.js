@@ -6,9 +6,7 @@ import { refreshApex } from "@salesforce/apex";
 import questionTypeValue from "@salesforce/apex/QuestionsController.questionTypeValue";
 import insertQuestionAndOptions from "@salesforce/apex/QuestionsController.insertQuestionAndOptions";
 
-export default class JobDescriptionPage extends NavigationMixin(
-  LightningElement
-) {
+export default class JobDescriptionPage extends NavigationMixin(LightningElement) {
   jobDetails;
   error;
   jobId;
@@ -135,6 +133,7 @@ export default class JobDescriptionPage extends NavigationMixin(
   handleQuesType(event) {
     this.type = event.target.value;
   }
+
   handleNext() {
     this.showQuestion = false;
     if (this.type === "Objective") {
@@ -221,5 +220,9 @@ export default class JobDescriptionPage extends NavigationMixin(
         variant: variant
       })
     );
+  }
+
+  handleViewQuestions() {
+    
   }
 }
