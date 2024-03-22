@@ -1,0 +1,161 @@
+<apex:page controller="resumeparserController" standardStylesheets="false" showHeader="false" id="resumeParser" docType="html-5.0" >
+    <html>
+        <head>    
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script> 		
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.js"></script>
+            <style>
+                .uploadFileMainContainer{
+                    display: flex;
+                    flex-direction: column;
+                    width:100%
+                }
+                .sub-uploadFileMainContainer{
+				display: flex;
+   				flex-direction: row;
+				width:100%
+
+                    }
+				.uploadfilecontainer{
+                font-family: sans-serif;
+                font-size: medium;
+                border: 1px dashed grey;
+				width: 70%;
+				margin-right: 40px;
+                }
+                
+                input::file-selector-button {
+					background-color: #0070d2;
+                    color: #fff;
+                    padding: 0.5em;
+					font-weight: 400;
+                    border: thin solid grey;
+                    border-radius: 3px;
+                }
+					.slds-button {
+                    display: inline-block;
+                    font-size: 0.875rem; /* 14px */
+                    font-weight: 400;
+                    line-height: 1.5;
+                    text-align: center;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    vertical-align: middle;
+                    cursor: pointer;
+                    user-select: none;
+                    background-color: #0070d2;
+                    border: 1px solid transparent;
+                    color: #fff;
+                    border-radius: 0.25rem; /* 4px */
+                    padding: 0.5rem 1rem;
+                    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+                }
+                .slds-button:hover {
+                    background-color: #005fb2;
+                }
+                .Sslds-button span {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                
+                /* Icon inside the button */
+                .slds-button svg {
+                    width: 1em;
+                    height: 1em;
+                    fill: currentColor;
+                    vertical-align: middle;
+                    padding-right: 0.5rem;
+                }
+				.uploadlabel{
+                 font-weight:bold;
+				padding-bottom:2px;
+                }
+            
+
+			</style>
+            </head>
+
+            <body>
+                <div class="uploadFileMainContainer">
+				<label class="uploadlabel">Attach File</label>
+				<div class="sub-uploadFileMainContainer">
+                    
+                    
+                    <!--<apex:inputFile value="{!resume}" styleclass="uploadfilecontainer" id="pdffile" accept="{!acceptedFormats}" required="true" />-->
+                       
+                        
+                    <input class="uploadfilecontainer" id="pdffile" name="pdffile" type="file" accept="{!acceptedFormats}" />
+                <button class="slds-button slds-button_brand" id="btn" onclick="convert()">Upload</button>
+                </div>    
+                </div>
+                    <div id="result"></div>
+                    </body>
+                    </html>
+                    
+                    <script>
+                       
+            function convert() {
+                var fr=new FileReader();
+                var pdff = new Pdf2TextClass();
+                fr.onload=function(){
+                    pdff.pdfToText(fr.result, null, (text) => { document.getElementById('result').innerText += text; });
+                                                              }
+                                                               fr.readAsDataURL(document.getElementById('pdffile').files[0])
+                                                               
+                                                              }
+                                                               function Pdf2TextClass() {
+                                                               var self = this;
+                                                               this.complete = 0;
+                                                               
+                                                               this.pdfToText = function (data, callbackPageDone, callbackAllDone) {
+                                                               console.assert(data instanceof ArrayBuffer || typeof data == 'string');
+                                                               var loadingTask = pdfjsLib.getDocument(data);
+                                                               loadingTask.promise.then(function (pdf) {
+                                                               
+                                                               
+                                                               var total = pdf._pdfInfo.numPages;
+                                                               //callbackPageDone( 0, total );        
+                                                               var layers = {};
+                                                               for (i = 1; i <= total; i++) {
+                                                               pdf.getPage(i).then(function (page) {
+                                                               var n = page.pageNumber;
+                                                               page.getTextContent().then(function (textContent) {
+                                                               
+                                                               //console.log(textContent.items[0]);0
+                                                               if (null != textContent.items) {
+                                                               var page_text = "";
+                                                               var last_block = null;
+                                                               for (var k = 0; k < textContent.items.length; k++) {
+                                                               var block = textContent.items[k];
+                                                               if (last_block != null && last_block.str[last_block.str.length - 1] != ' ') {
+                                                               if (block.x < last_block.x)
+                                                               page_text += "\r\n";
+                                                               else if (last_block.y != block.y && (last_block.str.match(/^(\s?[a-zA-Z])$|^(.+\s[a-zA-Z])$/) == null))
+                                                               page_text += ' ';
+                                                              }
+                                                               page_text += block.str;
+                                                               last_block = block;
+                                                              }
+                                                               
+                                                               textContent != null && console.log("page " + n + " finished."); //" content: \n" + page_text);
+                                                               layers[n] = page_text + "\n\n";
+                                                              }
+                                                               ++self.complete;
+                                                               //callbackPageDone( self.complete, total );
+                                                               if (self.complete == total) {
+                                                               window.setTimeout(function () {
+                                                               var full_text = "";
+                                                               var num_pages = Object.keys(layers).length;
+                                                               for (var j = 1; j <= num_pages; j++)
+                                                               full_text += layers[j];
+                                                               callbackAllDone(full_text);
+                                                              }, 1000);
+                                                              }
+                                                              }); // end  of page.getTextContent().then
+                                                              }); // end of page.then
+                                                              } // of for
+                                                              });
+                                                              }; // end of pdfToText()
+                                                              }; // end of class
+                                                               </script>
+        </apex:page>
