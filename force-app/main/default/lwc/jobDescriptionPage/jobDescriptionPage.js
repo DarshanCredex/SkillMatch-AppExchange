@@ -9,6 +9,9 @@ import insertQuestionAndOptions from "@salesforce/apex/QuestionsController.inser
 export default class JobDescriptionPage extends NavigationMixin(
   LightningElement
 ) {
+export default class JobDescriptionPage extends NavigationMixin(
+  LightningElement
+) {
   jobDetails;
   error;
   jobId;
@@ -136,6 +139,7 @@ export default class JobDescriptionPage extends NavigationMixin(
     this.type = event.target.value;
   }
   handleNext() {
+    this.getQuestionInput();
     this.showQuestion = false;
     if (this.type === "Objective") {
       this.showOptionsObjective = true;
@@ -148,37 +152,49 @@ export default class JobDescriptionPage extends NavigationMixin(
   }
 
   handlePrevious() {
+    this.getOptionsInput();
     this.showQuestion = true;
     this.showOptionsObjective = false;
     this.showOptionsSubjective = false;
   }
 
-  handleOptionA(event) {
-    this.optionA = event.target.value;
+  getQuestionInput() {
+    console.log("inside input");
+    this.type = this.template.querySelector('option[data-id="type-id"]').value;
+    console.log("this.type--->", this.type);
+    this.questionName = this.template.querySelector(
+      'lightning-input[data-id="question-id"]'
+    ).value;
+    this.weightage = this.template.querySelector(
+      'lightning-input[data-id="weightage-id"]'
+    ).value;
   }
-  handleOptionB(event) {
-    this.optionB = event.target.value;
-  }
-  handleOptionC(event) {
-    this.optionC = event.target.value;
-  }
-  handleOptionD(event) {
-    this.optionD = event.target.value;
-  }
-  handleCheckbox_2(event) {
-    this.checkbox_2 = event.detail.checked;
-  }
-  handleCheckbox_1(event) {
-    this.checkbox_1 = event.detail.checked;
-  }
-  handleCheckbox_3(event) {
-    this.checkbox_3 = event.detail.checked;
-  }
-  handleCheckbox_4(event) {
-    this.checkbox_4 = event.detail.checked;
-  }
-  handleAnswer(event) {
-    this.answer = event.target.value;
+  getOptionsInput() {
+    this.optionA = this.template.querySelector(
+      'lightning-input[data-id="optionA-id"]'
+    ).value;
+    this.optionB = this.template.querySelector(
+      'lightning-input[data-id="optionB-id"]'
+    ).value;
+    this.optionC = this.template.querySelector(
+      'lightning-input[data-id="optionC-id"]'
+    ).value;
+    this.optionD = this.template.querySelector(
+      'lightning-input[data-id="optionD-id"]'
+    ).value;
+    this.checkbox_1 = this.template.querySelector(
+      'lightning-input[data-id="checkboxA"]'
+    ).checked;
+    this.checkbox_2 = this.template.querySelector(
+      'lightning-input[data-id="checkboxB"]'
+    ).checked;
+    this.checkbox_3 = this.template.querySelector(
+      'lightning-input[data-id="checkboxC"]'
+    ).checked;
+    this.checkbox_4 = this.template.querySelector(
+      'lightning-input[data-id="checkboxD"]'
+    ).checked;
+    console.log("this.checkbox_4----->", this.checkbox_4);
   }
 
   handleSaveQuestionAnswers() {

@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-21-2024
+  @last modified on  : 03-22-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -40,8 +40,10 @@
                 </div>
                 <hr>
                 <div>
-                    <lightning-button variant="brand-outline" label="Add Questions"
-                        onclick={handleAddQuestionsModal}></lightning-button>
+                    <lightning-button variant="brand-outline" label="Add Questions" onclick={handleAddQuestionsModal}
+                        style="padding-right: 2%"></lightning-button>
+                    <lightning-button variant="brand" label="View Questions"
+                        onclick={handleViewQuestions}></lightning-button>
                 </div>
             </div>
         </template>
@@ -109,14 +111,14 @@
                             <select id="question" onchange={handleQuesType}>
                                 <option value="" disabled selected>Select Type</option>
                                 <template for:each={questionTypeValues} for:item="ques">
-                                    <option key={ques} value={ques}>{ques}</option>
+                                    <option key={ques} value={ques} data-id="type-id">{ques}</option>
                                 </template>
                             </select>
                         </div>
                         <lightning-input type="text" value={questionName} label="Enter Question"
-                            onchange={handleQuestionName}></lightning-input>
+                            data-id="question-id"></lightning-input>
                         <lightning-input type="number" value={weightage} label="Weightage %"
-                            onchange={handleWeightage}></lightning-input>
+                            data-id="weightage-id"></lightning-input>
                     </div>
                     <footer class="slds-modal__footer">
                         <div style="text-align: right; margin: 1%;">
@@ -130,27 +132,27 @@
                     <div class="slds-modal__content slds-p-around_medium">
                         <div class="optionss">
                             <lightning-input type="text" value={optionA} label="Enter option A"
-                                onchange={handleOptionA}></lightning-input>
+                                data-id="optionA-id"></lightning-input>
                             <lightning-input type="checkbox" label="Is Correct Answer"
-                                onchange={handleCheckbox_1}></lightning-input>
+                                data-id="checkboxA"></lightning-input>
                         </div>
                         <div class="optionss">
                             <lightning-input type="text" value={optionB} label="Enter option B"
-                                onchange={handleOptionB}></lightning-input>
-                            <lightning-input type="checkbox" label="Is Correct Answer"
-                                onchange={handleCheckbox_2}></lightning-input>
+                                data-id="optionB-id"></lightning-input>
+                            <lightning-input data-id="checkboxB" type="checkbox"
+                                label="Is Correct Answer"></lightning-input>
                         </div>
                         <div class="optionss">
                             <lightning-input type="text" value={optionC} label="Enter option C"
-                                onchange={handleOptionC}></lightning-input>
-                            <lightning-input type="checkbox" label="Is Correct Answer"
-                                onchange={handleCheckbox_3}></lightning-input>
+                                data-id="optionC-id"></lightning-input>
+                            <lightning-input data-id="checkboxC" type="checkbox"
+                                label="Is Correct Answer"></lightning-input>
                         </div>
                         <div class="optionss">
                             <lightning-input type="text" value={optionD} label="Enter option D"
-                                onchange={handleOptionD}></lightning-input>
-                            <lightning-input type="checkbox" label="Is Correct Answer"
-                                onchange={handleCheckbox_4}></lightning-input>
+                                data-id="optionD-id"></lightning-input>
+                            <lightning-input type="checkbox" data-id="checkboxD"
+                                label="Is Correct Answer"></lightning-input>
                         </div>
                     </div>
                     <footer class="slds-modal__footer">
