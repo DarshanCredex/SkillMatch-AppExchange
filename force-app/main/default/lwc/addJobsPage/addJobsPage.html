@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-19-2024
+  @last modified on  : 03-26-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -61,6 +61,17 @@
             </template>
           </select>
         </div>
+      </div>
+      <hr />
+      <div class="test-timing">
+        <h1>Test Timings</h1>
+        <label for="timings">Select Timing</label>
+        <select id="timing" onchange={handleTimingChange}>
+          <option value="" disabled selected>Select Industry</option>
+          <template for:each={timingValues} for:item="timing">
+            <option key={timing} value={industrytiming}>{timing}</option>
+          </template>
+        </select>
       </div>
     </div>
     <hr>

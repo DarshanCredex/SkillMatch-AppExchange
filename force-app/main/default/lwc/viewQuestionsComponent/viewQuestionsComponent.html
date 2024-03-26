@@ -2,7 +2,7 @@
   @description       : contains the questions added by the recruiter for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-21-2024
+  @last modified on  : 03-26-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -11,23 +11,35 @@
             <h1>Questions</h1>
         </div>
         <hr>
-        <div class="question-card">
-            <template for:each={questionsList} for:item="question">
-                <div key={question.Id} class="question-component">
-                    <div class="question-name" onclick={handleEditQuestion} data-questionid={question.Id}>
-                        <h1>{question.Question_Name__c}</h1>
-                    </div>
-                    <template for:each={question.Options__r} for:item="option">
-                        <div key={option.Id} class="option-component" data-optionid={option.Id}
-                            onclick={handleOptionEdit}>
-                            <p><lightning-input type="checkbox" checked={option.Checkbox__c}
-                                    disabled=""></lightning-input></p>
-                            <p>{option.Answers__c}</p>
+        <template lwc:if={showQuestionsList}>
+            <div class="question-card">
+                <template for:each={questionsList} for:item="question">
+                    <div key={question.Id} class="question-component">
+                        <div class="question-name" onclick={handleEditQuestion} data-questionid={question.Id}>
+                            <h1>{question.Question_Name__c}</h1>
                         </div>
-                    </template>
+                        <template for:each={question.Options__r} for:item="option">
+                            <div key={option.Id} class="option-component" data-optionid={option.Id}
+                                onclick={handleOptionEdit}>
+                                <p><lightning-input type="checkbox" checked={option.Checkbox__c}
+                                        disabled=""></lightning-input></p>
+                                <p><lightning-formatted-rich-text
+                                        value={option.Answers__c}></lightning-formatted-rich-text>
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <template if:false={showQuestionsList}>
+            <div class="no-questions">
+                <h1> No Questions Added </h1>
+                <div class="emptyBox">
+                    <img src={emptyBox} alt="na">
                 </div>
-            </template>
-        </div>
+            </div>
+        </template>
     </div>
 
     <!--Questions edit Modal-->
@@ -35,14 +47,13 @@
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
-                    <h2 class="slds-modal__title">Edit Job</h2>
+                    <h2 class="slds-modal__title">Edit Question</h2>
                     <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning-record-edit-form record-id={recordId} object-api-name="Question__c"
                         onsuccess={handleSuccess}>
-                        <lightning-input-field field-name="Type__c"></lightning-input-field>
                         <lightning-input-field field-name="Question_Name__c"></lightning-input-field>
                         <lightning-input-field field-name="Weightage__c"></lightning-input-field>
                     </lightning-record-edit-form>
@@ -63,7 +74,7 @@
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
-                    <h2 class="slds-modal__title">Edit Job</h2>
+                    <h2 class="slds-modal__title">Edit Option</h2>
                     <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
                         class="slds-modal__close"></lightning-button-icon>
                 </header>

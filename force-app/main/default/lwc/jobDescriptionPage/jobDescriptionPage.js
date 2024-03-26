@@ -238,6 +238,7 @@ export default class JobDescriptionPage extends NavigationMixin(
   }
 
   handleViewQuestions() {
+    
     const pageReference = {
       type: "standard__webPage",
       attributes: {

@@ -2,6 +2,7 @@ import { LightningElement, wire } from "lwc";
 import fetchQuestions from "@salesforce/apex/QuestionsController.fetchQuestions";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
+import emptyBox from "@salesforce/resourceUrl/empty_box";
 
 export default class ViewQuestionsComponent extends LightningElement {
   questionsList = [];
@@ -10,8 +11,10 @@ export default class ViewQuestionsComponent extends LightningElement {
   wiredResult;
   showEditQuestionsModal = false;
   showEditOptionModal = false;
+  showQuestionsList = false;
   recordId;
   optionId;
+  emptyBox = emptyBox;
 
   connectedCallback() {
     if (sessionStorage.getItem("postedJobId")) {
@@ -24,10 +27,11 @@ export default class ViewQuestionsComponent extends LightningElement {
     this.wiredResult = result;
     if (result.data) {
       this.questionsList = result.data;
-      console.log("this.questionsList----->", this.questionsList);
+      if (this.questionsList.length > 0) {
+        this.showQuestionsList = true;
+      }
     } else if (result.error) {
       this.error = result.error;
-      console.log("this.error", this.error);
     }
   }
 
@@ -42,9 +46,9 @@ export default class ViewQuestionsComponent extends LightningElement {
 
   handleSuccess() {
     refreshApex(this.wiredResult);
-      this.showToast("Success", "Updated Successfully", "success");
-      this.showEditQuestionsModal = false;
-      this.showEditOptionModal = false;
+    this.showToast("Success", "Updated Successfully", "success");
+    this.showEditQuestionsModal = false;
+    this.showEditOptionModal = false;
   }
 
   handleOptionEdit(event) {

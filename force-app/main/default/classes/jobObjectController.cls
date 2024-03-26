@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-11-2024
+ * @last modified on  : 03-26-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -18,11 +18,9 @@ public with sharing class jobObjectController {
     string typeValue,
     string industryValue,
     string summary,
-    string skills
+    string skills,
+    string timing
   ) {
-    system.debug('start');
-    system.debug('jobTitle' + jobTitle);
-
     try {
       list<job__c> jobRecordsList = new List<job__c>();
       job__c newJob = new job__c();
@@ -39,10 +37,9 @@ public with sharing class jobObjectController {
       newJob.City__c = city;
       newJob.Status__c = 'Completed';
       newJob.Skills_Required__c = skills;
+      newJob.Test_Timing__c = timing;
 
       jobRecordsList.add(newJob);
-
-      system.debug('jobRecordsList--------->' + jobRecordsList);
 
       if (!jobRecordsList.isEmpty()) {
         insert jobRecordsList;
@@ -65,9 +62,9 @@ public with sharing class jobObjectController {
     string typeValue,
     string industryValue,
     string summary,
-    string skills
+    string skills,
+    string timing
   ) {
-    System.debug('start');
     try {
       list<job__c> jobRecordsList = new List<job__c>();
       job__c newJob = new job__c();
@@ -84,11 +81,9 @@ public with sharing class jobObjectController {
       newJob.City__c = city;
       newJob.Status__c = 'Draft';
       newJob.Skills_Required__c = skills;
+      newJob.Test_Timing__c = timing;
 
       jobRecordsList.add(newJob);
-
-      system.debug('jobRecordsList--------->' + jobRecordsList);
-
       if (!jobRecordsList.isEmpty()) {
         insert jobRecordsList;
       }
@@ -100,14 +95,9 @@ public with sharing class jobObjectController {
   }
   @AuraEnabled(cacheable=true)
   public static list<job__c> getDraftJobList(string userId) {
-    System.debug('start');
-
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-    system.debug('companyname---->'+companyname);
     list<job__c> draftJobList = new List<job__c>();
-
-
 
     for (job__c job : [
       SELECT
@@ -124,18 +114,16 @@ public with sharing class jobObjectController {
         Status__c,
         Id
       FROM Job__c
-      WHERE Status__c = 'Draft' AND Company_Name__c=:companyname 
+      WHERE Status__c = 'Draft' AND Company_Name__c = :companyname
       LIMIT 3
     ]) {
       draftJobList.add(job);
     }
-    System.debug('draftJobList-------->' + draftJobList);
     return draftJobList;
   }
 
   @AuraEnabled(cacheable=true)
   public static list<job__c> getPostedJobListBasedOnId(string jobId) {
-    system.debug('job------->' + jobId);
     list<job__c> jobDetails = new List<job__c>();
 
     try {
@@ -171,8 +159,6 @@ public with sharing class jobObjectController {
         'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
       );
     }
-
-    system.debug('jobDetails------->' + jobDetails);
     return jobDetails;
   }
 }

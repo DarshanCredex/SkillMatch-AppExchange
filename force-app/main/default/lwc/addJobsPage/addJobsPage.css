@@ -30,11 +30,12 @@
   font-weight: 600;
   font-size: 2vw;
 }
+.test-timing,
 .requirements {
   max-width: 70%;
   margin: 2%;
 }
-
+.test-timing h1,
 .requirements h1 {
   color: #333;
   font-size: 1.5vw;

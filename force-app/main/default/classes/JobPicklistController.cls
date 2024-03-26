@@ -2,7 +2,7 @@
  * @description       : To extract the picklist field values in job custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-13-2024
+ * @last modified on  : 03-26-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobPicklistController {
@@ -78,4 +78,20 @@ public with sharing class JobPicklistController {
 
     return picklistValues;
 }
+
+@AuraEnabled
+  public static list<string> TimingsPickListValues() {
+    System.debug('started');
+
+    String fieldName = 'Test_Timing__c';
+    String objectApiName = 'Job__c';
+
+    JobPicklistController controller = new JobPicklistController();
+
+    List<String> picklistValues = controller.getPicklistValues(objectApiName,fieldName);
+
+    System.debug('Picklist Values: ' + picklistValues);
+
+    return picklistValues;
+  }
 }

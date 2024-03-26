@@ -2,6 +2,7 @@ import { LightningElement } from "lwc";
 import experienceFieldValues from "@salesforce/apex/JobPicklistController.experienceFieldValues";
 import typePickListValues from "@salesforce/apex/JobPicklistController.typePickListValues";
 import IndustryPickListValues from "@salesforce/apex/JobPicklistController.IndustryPickListValues";
+import TimingsPickListValues from "@salesforce/apex/JobPicklistController.TimingsPickListValues";
 import postJob from "@salesforce/apex/jobObjectController.postJob";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
@@ -11,6 +12,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValues = [];
   industryValues = [];
   typeValues = [];
+  timingValues = [];
 
   jobTitle = "";
   summary = "";
@@ -23,46 +25,39 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   typeValue = "";
   industryValue = "";
   skills = "";
+  timing = "";
 
   showQuestionModal = false;
 
   connectedCallback() {
     experienceFieldValues().then((result) => {
       this.experienceValues = result;
-      console.log(
-        "this.experienceOptions ---------->",
-        JSON.stringify(this.experienceOptions)
-      );
     });
-
     typePickListValues().then((result) => {
       this.typeValues = result;
-      console.log("this.typeValues", JSON.stringify(this.typeValues));
     });
     IndustryPickListValues().then((result) => {
       this.industryValues = result;
-      console.log("this.industryValues", JSON.stringify(this.industryValues));
+    });
+    TimingsPickListValues().then((result) => {
+      this.timingValues = result;
     });
   }
 
   handleExperienceChange(event) {
     this.experienceValue = event.target.value;
-    console.log(" this.experienceValue----->", this.experienceValue);
   }
 
   handleTypeChange(event) {
     this.typeValue = event.target.value;
-    console.log("this.typeValue----->", this.typeValue);
   }
 
   handleIndustryChange(event) {
     this.industryValue = event.target.value;
-    console.log("this.industryValue0------->", this.industryValue);
   }
 
   handleJobTitleChange(event) {
     this.jobTitle = event.target.value;
-    console.log("this.jobTitle ", this.jobTitle);
   }
   handleDescriptionChange(event) {
     this.description = event.target.value;
@@ -85,6 +80,9 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   handleSkillsChange(event) {
     this.skills = event.target.value;
   }
+  handleTimingChange(event) {
+    this.timing = event.target.value;
+  }
 
   postJobData() {
     postJob({
@@ -98,7 +96,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       typeValue: this.typeValue,
       industryValue: this.industryValue,
       summary: this.summary,
-      skills: this.skills
+      skills: this.skills,
+      timing: this.timing
     })
       .then(() => {
         console.log("true");
@@ -133,7 +132,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       typeValue: this.typeValue,
       industryValue: this.industryValue,
       summary: this.summary,
-      skills: this.skills
+      skills: this.skills,
+      timing: this.timing
     })
       .then(() => {
         console.log("true");
@@ -155,6 +155,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         );
       });
   }
+
   showToast(title, message, variant) {
     this.dispatchEvent(
       new ShowToastEvent({
@@ -163,12 +164,5 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         variant: variant
       })
     );
-  }
-
-  handleAddQuestion() {
-    this.showQuestionModal = true;
-  }
-  handleClose() {
-    this.showQuestionModal = false;
   }
 }
