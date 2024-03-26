@@ -110,6 +110,10 @@ export default class JobDescriptionPage extends NavigationMixin(
     this.answer = "";
   }
 
+  handleQuesType(event) {
+    this.type = event.target.value;
+  }
+
   handleClose() {
     this.showAddQuestionsModal = false;
     this.showQuestion = false;
@@ -126,18 +130,51 @@ export default class JobDescriptionPage extends NavigationMixin(
     }
   }
 
-  handleQuestionName(event) {
-    this.questionName = event.target.value;
+  getQuestionInput() {
+    console.log("inside input");
+    this.questionName = this.template.querySelector(
+      'lightning-input[data-id="question-id"]'
+    ).value;
+    this.weightage = this.template.querySelector(
+      'lightning-input[data-id="weightage-id"]'
+    ).value;
   }
-  handleWeightage(event) {
-    this.weightage = event.target.value;
-  }
-  handleQuesType(event) {
-    this.type = event.target.value;
+  getOptionsInput() {
+    if (this.type === "Subjective") {
+      this.answer = this.template.querySelector(
+        'lightning-input[data-id="answer-id"]'
+      ).value;
+    } else if (this.type === "Objective") {
+      this.optionA = this.template.querySelector(
+        'lightning-input[data-id="optionA-id"]'
+      ).value;
+      this.optionB = this.template.querySelector(
+        'lightning-input[data-id="optionB-id"]'
+      ).value;
+      this.optionC = this.template.querySelector(
+        'lightning-input[data-id="optionC-id"]'
+      ).value;
+      this.optionD = this.template.querySelector(
+        'lightning-input[data-id="optionD-id"]'
+      ).value;
+      this.checkbox_1 = this.template.querySelector(
+        'lightning-input[data-id="checkboxA"]'
+      ).checked;
+      this.checkbox_2 = this.template.querySelector(
+        'lightning-input[data-id="checkboxB"]'
+      ).checked;
+      this.checkbox_3 = this.template.querySelector(
+        'lightning-input[data-id="checkboxC"]'
+      ).checked;
+      this.checkbox_4 = this.template.querySelector(
+        'lightning-input[data-id="checkboxD"]'
+      ).checked;
+    }
   }
 
   handleNext() {
     this.getQuestionInput();
+
     this.showQuestion = false;
     if (this.type === "Objective") {
       this.showOptionsObjective = true;
@@ -156,46 +193,8 @@ export default class JobDescriptionPage extends NavigationMixin(
     this.showOptionsSubjective = false;
   }
 
-  getQuestionInput() {
-    console.log("inside input");
-    this.type = this.template.querySelector('option[data-id="type-id"]').value;
-    console.log("this.type--->", this.type);
-    this.questionName = this.template.querySelector(
-      'lightning-input[data-id="question-id"]'
-    ).value;
-    this.weightage = this.template.querySelector(
-      'lightning-input[data-id="weightage-id"]'
-    ).value;
-  }
-  getOptionsInput() {
-    this.optionA = this.template.querySelector(
-      'lightning-input[data-id="optionA-id"]'
-    ).value;
-    this.optionB = this.template.querySelector(
-      'lightning-input[data-id="optionB-id"]'
-    ).value;
-    this.optionC = this.template.querySelector(
-      'lightning-input[data-id="optionC-id"]'
-    ).value;
-    this.optionD = this.template.querySelector(
-      'lightning-input[data-id="optionD-id"]'
-    ).value;
-    this.checkbox_1 = this.template.querySelector(
-      'lightning-input[data-id="checkboxA"]'
-    ).checked;
-    this.checkbox_2 = this.template.querySelector(
-      'lightning-input[data-id="checkboxB"]'
-    ).checked;
-    this.checkbox_3 = this.template.querySelector(
-      'lightning-input[data-id="checkboxC"]'
-    ).checked;
-    this.checkbox_4 = this.template.querySelector(
-      'lightning-input[data-id="checkboxD"]'
-    ).checked;
-    console.log("this.checkbox_4----->", this.checkbox_4);
-  }
-
   handleSaveQuestionAnswers() {
+    this.getOptionsInput();
     if (!this.questionName || !this.type) {
       this.showToast("Error", "Fields cannot be empty", "error");
     } else {
@@ -221,8 +220,9 @@ export default class JobDescriptionPage extends NavigationMixin(
           this.showOptionsObjective = false;
           this.showOptionsSubjective = false;
         })
-        .catch(() => {
+        .catch((error) => {
           this.showToast("Error", "Questions could not be saved", "error");
+          console.error("error---->", error);
         });
     }
   }
@@ -237,7 +237,7 @@ export default class JobDescriptionPage extends NavigationMixin(
     );
   }
 
-  handleViewQuestions() { 
+  handleViewQuestions() {
     const pageReference = {
       type: "standard__webPage",
       attributes: {
