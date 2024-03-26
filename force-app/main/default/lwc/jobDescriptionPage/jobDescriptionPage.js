@@ -244,8 +244,4 @@ export default class JobDescriptionPage extends NavigationMixin(LightningElement
     };
     this[NavigationMixin.Navigate](pageReference);
   }
-
-  handleViewQuestions() {
-    
-  }
 }
