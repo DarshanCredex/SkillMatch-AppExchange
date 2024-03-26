@@ -1,0 +1,29 @@
+.main {
+        width: 90%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .headline h1 {
+        font-size: 30px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .sub-headline p {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .sub-headline ol {
+        padding-left: 20px;
+        font-size: 18px;
+    }
+
+    .sub-headline ol li {
+        margin-bottom: 10px;
+    }
+    .start-test{
+        display: flex;
+        justify-content: right;
+    }
