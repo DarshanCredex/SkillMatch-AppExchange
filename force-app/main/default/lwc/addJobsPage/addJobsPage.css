@@ -23,6 +23,10 @@
   font-weight: 500;
 }
 .Add-jobs-text {
+  display: flex;
+  justify-content: space-between;
+}
+.Add-jobs-text h1{
   font-weight: 600;
   font-size: 2vw;
 }
