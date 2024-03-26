@@ -111,7 +111,7 @@
                             <select id="question" onchange={handleQuesType}>
                                 <option value="" disabled selected>Select Type</option>
                                 <template for:each={questionTypeValues} for:item="ques">
-                                    <option key={ques} value={ques} data-id="type-id">{ques}</option>
+                                    <option key={ques} value={ques}>{ques}</option>
                                 </template>
                             </select>
                         </div>
@@ -168,7 +168,7 @@
                     <div class="slds-modal__content slds-p-around_medium">
                         <div class="optionss">
                             <lightning-input type="text" value={answer} label="Enter Answer"
-                                onchange={handleAnswer}></lightning-input>
+                                data-id="answer-id"></lightning-input>
                         </div>
                     </div>
                     <footer class="slds-modal__footer">

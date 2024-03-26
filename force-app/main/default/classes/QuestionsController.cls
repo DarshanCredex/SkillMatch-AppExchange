@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-21-2024
+ * @last modified on  : 03-26-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -43,7 +43,7 @@ public with sharing class QuestionsController {
 
       insert question;
 
-      string questionId = question.Id;
+      Id questionId = question.Id;
       list<Options__c> optionsList = new List<Options__c>();
       if (question.Type__c == 'Objective') {
         Options__c option_A = new Options__c();
@@ -74,7 +74,7 @@ public with sharing class QuestionsController {
       } else if (question.Type__c == 'Subjective') {
         Options__c option = new Options__c();
         option.Answers__c = answer;
-        option.Question__c = jobId;
+        option.Question__c = questionId;
         optionsList.add(option);
       }
 
