@@ -116,7 +116,7 @@
                 justify-content: space-between;
 
                 .job-card-top-left {
-                    width: 85%;
+                    width: -webkit-fill-available;
 
                     .job-header {
                         display: flex;
@@ -147,8 +147,12 @@
                 }
 
                 .job-logo {
+                    display: flex;
+                    flex-direction: row;
                     height: 3.5rem;
-                    width: 3.5rem;
+                    width: 20%;
+                    justify-content: space-between;
+                    align-self: center;
                 }
             }
 
@@ -246,4 +250,7 @@
     background: aliceblue;
     border-radius: 5px;
     cursor: pointer;
+}
+.isShortlisted {
+    place-content: end !important;
 }

@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-27-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
     <div class="detail-container">
         <div class="detail-header">
@@ -27,11 +34,6 @@
                         label="Search when user hits the 'enter' key" placeholder="Search for company.." type="Search"
                         onchange={handleSearchLocationChange}></lightning-input>
                 </div>
-                <!--div class="job-sort-bar">
-                    <div class="job-sort-text">Sort By</div>
-                    <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status" variant="label-hidden"
-                            value={sortValue} options={sortOptions} onchange={handleChange}></lightning-combobox></div>
-                </div-->
             </div>
         </div>
         <div class="job-list-content">
@@ -41,9 +43,9 @@
                 </template>
                 <template if:true={selectedJob}>
                     <template for:each={selectedJob.jobWrapperList} for:item="job">
-                        <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
-                            <div class="job-card-top">
-                                <div class="job-card-top-left">
+                        <div id={job.jobId} key={job.jobId} class="job-card">
+                            <div  class="job-card-top">
+                                <div id={job.jobId} onclick={handleJobDetail} class="job-card-top-left">
                                     <div class="job-header">
                                         <h3>{job.title}</h3>
                                     </div>
@@ -66,7 +68,13 @@
                                     </div>
                                     <div class="job-status">{job.status}</div>
                                 </div>
-                                <div class="job-logo">
+                                <div class={assessmentButtonCss}>
+                                    <template lwc:if={isShortlisted}>
+                                        <div style="align-content:center;">
+                                            <lightning-button variant="brand-outline" label="Take Assesment"
+                                                onclick={handleAssesmentButton} value={job.jobId}></lightning-button>
+                                        </div>
+                                    </template>
                                     <img alt="Company logo" src={companyLogo} />
                                 </div>
                             </div>
@@ -75,14 +83,14 @@
                 </template>
                 <template if:true={errorMessage}>
                     <div class="no-jobs">
-                      <div>
-                        <h1> No jobs😞!!! Keep looking. </h1>
-                        <div class="emptyBox">
-                          <img src={emptyBox} alt="empty">
+                        <div>
+                            <h1> No jobs😞!!! Keep looking. </h1>
+                            <div class="emptyBox">
+                                <img src={emptyBox} alt="empty">
+                            </div>
                         </div>
-                      </div>
                     </div>
-            </template>
+                </template>
             </div>
         </div>
     </div>
