@@ -1,50 +1,48 @@
 import { LightningElement, api, track, wire } from "lwc";
+
 import alternateCompanyLogo from "@salesforce/resourceUrl/Alternate_Company_Logo";
 import getAppliedJobs from "@salesforce/apex/CandidateAppliedJobsController.getAppliedJobs";
 import { NavigationMixin } from "lightning/navigation";
+import UserId from "@salesforce/user/Id";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
 
 export default class CandidateAppliedJobs extends NavigationMixin(
   LightningElement
 ) {
   companyLogo = alternateCompanyLogo;
-  emptyBox = emptyBox;
-
+  isShortlisted = false;
+  assessmentButtonCss = "job-logo";
   @api candidateId;
-
   @track appliedJob = [];
   @track selectedJob;
+  emptyBox = emptyBox;
   @track addAppliedCss = "information active";
   @track addShortlistedCss = "information";
   @track addPendingCss = "information";
   @track isLoading = false;
-  @track searchCompany = " ";
-  @track searchTitle = " ";
+  @track searchCompany = "";
+  @track searchTitle = "";
+  @track userId = UserId;
   @track selectedTab = "Applied";
   @track errorMessage = false;
-  @track emailId;
 
   handleSearchTitleChange(event) {
     this.searchTitle = event.target.value;
   }
 
-  connectedCallback() {
-    this.emailId = localStorage.getItem("emailId");
-    console.log('emailid--->', this.emailId); 
-  }
-
   handleSearchLocationChange(event) {
     this.searchCompany = event.target.value;
   }
+
   @wire(getAppliedJobs, {
     searchTitle: "$searchTitle",
     searchCompany: "$searchCompany",
-    email: "$emailId"
+    userId: "$userId"
   })
   appliedJobList({ data, error }) {
     if (data) {
       this.isLoading = true;
-      console.log("Received data------>", data);
+      console.log("Received data-->", data);
       this.appliedJob = data;
       if (this.selectedTab === "Pending") {
         this.handleTabChange3();
@@ -55,7 +53,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
       }
       this.isLoading = false;
     } else {
-      console.log("Received error----->", error);
+      console.log("Received error-->", error);
     }
   }
 
@@ -76,8 +74,10 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     this.isLoading = true;
     this.selectedTab = "Applied";
     this.addAppliedCss = "information active";
+    this.assessmentButtonCss = "job-logo isShortlisted";
     this.addShortlistedCss = "information";
     this.addPendingCss = "information";
+    this.isShortlisted = false;
     this.selectedJob = this.appliedJob;
     console.log("selectedJob-->", this.selectedJob);
     if (this.selectedJob.jobWrapperList.length > 0) {
@@ -87,26 +87,29 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
-
   handleTabChange2() {
     this.isLoading = true;
     this.selectedTab = "Shortlisted";
     this.addAppliedCss = "information";
     this.addShortlistedCss = "information active";
     this.addPendingCss = "information";
+    this.assessmentButtonCss = "job-logo";
     this.selectedJob = this.appliedJob;
-    console.log("selectedJob21----->", this.selectedJob);
+    this.isShortlisted = true;
+    console.log("selectedJob21-->", this.selectedJob);
     try {
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Shortlisted"
       );
+      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
+      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
-      console.error("Error in filtering shortlisted jobs------> ", e.message);
+      console.error("Error in filtering shortlisted jobs --> ", e.message);
     } finally {
       console.log("Selected Job after filter -->", this.selectedJob);
       if (this.selectedJob.jobWrapperList.length > 0) {
@@ -117,27 +120,30 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
-
   handleTabChange3() {
     this.isLoading = true;
     this.selectedTab = "Pending";
     this.addAppliedCss = "information";
     this.addShortlistedCss = "information";
     this.addPendingCss = "information active";
+    this.assessmentButtonCss = "job-logo isShortlisted";
     this.selectedJob = this.appliedJob;
+    this.isShortlisted = false;
     try {
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Pending"
       );
+      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
+      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
-      console.error("Error in filtering shortlisted jobs-----> ", e.message);
+      console.error("Error in filtering shortlisted jobs --> ", e.message);
     } finally {
-      console.log("Selected Job after filter----->", this.selectedJob);
+      console.log("Selected Job after filter -->", this.selectedJob);
       if (this.selectedJob.jobWrapperList.length > 0) {
         this.errorMessage = false;
       } else {
@@ -146,5 +152,15 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
-  
+  handleAssesmentButton(event) {
+    const jobid = event.target.value;
+    sessionStorage.setItem("jobId", jobid);
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/test-instructions"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
+  }
 }
