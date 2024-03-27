@@ -1,0 +1,83 @@
+<!--
+  @description       : contains the questions added by the recruiter for a particular job
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 03-21-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="main">
+        <div class="header">
+            <h1>Questions</h1>
+        </div>
+        <hr>
+        <div class="question-card">
+            <template for:each={questionsList} for:item="question">
+                <div key={question.Id} class="question-component">
+                    <div class="question-name" onclick={handleEditQuestion} data-questionid={question.Id}>
+                        <h1>{question.Question_Name__c}</h1>
+                    </div>
+                    <template for:each={question.Options__r} for:item="option">
+                        <div key={option.Id} class="option-component" data-optionid={option.Id}
+                            onclick={handleOptionEdit}>
+                            <p><lightning-input type="checkbox" checked={option.Checkbox__c}
+                                    disabled=""></lightning-input></p>
+                            <p>{option.Answers__c}</p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
+    <template lwc:if={showEditQuestionsModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">Edit Job</h2>
+                    <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
+                        class="slds-modal__close"></lightning-button-icon>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-edit-form record-id={recordId} object-api-name="Question__c"
+                        onsuccess={handleSuccess}>
+                        <lightning-input-field field-name="Type__c"></lightning-input-field>
+                        <lightning-input-field field-name="Question_Name__c"></lightning-input-field>
+                        <lightning-input-field field-name="Weightage__c"></lightning-input-field>
+                    </lightning-record-edit-form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div style="text-align: right;">
+                        <lightning-button variant="brand" type="submit" label="Save"
+                            onclick={handleSave}></lightning-button>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template lwc:if={showEditOptionModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">Edit Job</h2>
+                    <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
+                        class="slds-modal__close"></lightning-button-icon>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-edit-form record-id={optionId} object-api-name="Options__c"
+                        onsuccess={handleSuccess}>
+                        <lightning-input-field field-name="Answers__c"></lightning-input-field>
+                        <lightning-input-field field-name="Checkbox__c"></lightning-input-field>
+                    </lightning-record-edit-form>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div style="text-align: right;">
+                        <lightning-button variant="brand" type="submit" label="Save"
+                            onclick={handleSave}></lightning-button>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
