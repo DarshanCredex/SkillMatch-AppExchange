@@ -1,8 +1,8 @@
 /**
- * @description       :
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @description       : get picklist values of job custom object field 
+ * @author            : Sagar Medatwal
  * @group             :
- * @last modified on  : 03-27-2024
+ * @last modified on  : 03-28-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobListController {

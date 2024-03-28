@@ -1,163 +1,62 @@
 <!--
-  @description       : candidate list component who have applied for a particular job
-  @author            : Rudransh Shukla
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 03-27-2024
+  @last modified on  : 03-28-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
   <div class="main">
-    <template if:true={candiateListIsEmpty}>
+    <div class="job-description">
+      <template for:each={jobDetails} for:item="job">
+        <div key={job.id}>
+          <h1>{job.Title_of_position__c}</h1>
+        </div>
+        <div key={job.id}>
+          <lightning-button-menu alternative-text="Show menu">
+            <lightning-menu-item label="All" onclick={filterCandidates} data-status="All"></lightning-menu-item>
+            <lightning-menu-item label="Pending" onclick={filterCandidates} data-status="Pending"></lightning-menu-item>
+            <lightning-menu-item label="Shortlisted" onclick={filterCandidates}
+              data-status="Accepted"></lightning-menu-item>
+            <lightning-menu-item label="Rejected" onclick={filterCandidates}
+              data-status="Rejected"></lightning-menu-item>
+          </lightning-button-menu>
+        </div>
+      </template>
+    </div>
 
-      <div class="job-description">
-        <template for:each={jobDetails} for:item="job">
-          <div key={job.id}>
-            <h1>{job.Title_of_position__c}</h1>
-          </div>
-          <div key={job.id} class="buttons">
-            <lightning-button variant="Neutral" label="All" onclick={filterAll}></lightning-button>
-            <lightning-button variant="Neutral" label="Pending" onclick={filterPending}></lightning-button>
-            <lightning-button variant="Neutral" label="Accepted" onclick={filterAccepted}></lightning-button>
-            <lightning-button variant="Neutral" label="Rejected" onclick={filterRejected}></lightning-button>
-          </div>
-        </template>
-      </div>
-      <div class="applicant-list">
-        <template lwc:if={showAllCandidates}>
-          <table>
-            <thead>
-              <tr>
-                <td><b>Name</b></td>
-                <td><b>Email</b></td>
-                <td><b>Experience</b></td>
-                <td><b>Match Percentage</b> </td>
-                <td><b>Location</b></td>
-                <td><b>Status</b></td>
-              </tr>
-            </thead>
-            <tbody>
-              <template for:each={candidateDetails} for:item="candidate">
-                <tr key={candidate.Id} data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-                  <td>{candidate.Name}</td>
-                  <td>{candidate.Candidate_Email}</td>
-                  <td>{candidate.Experience} years</td>
-                  <td>
-                    <div>
-                      <p>{candidate.matchPercentage}%</p>
-                    </div>
-                  </td>
-                  <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.City},
-                    {candidate.Country}</td>
-                  <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-                    <p>{candidate.Status}</p>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </template>
-        <template lwc:elseif={showAccepted}>
-          <table>
-            <thead>
-              <tr>
-                <td><b>Name</b></td>
-                <td><b>Email</b></td>
-                <td><b>Experience</b></td>
-                <td><b>Match Percentage</b> </td>
-                <td><b>Location</b></td>
-                <td><b>Status</b></td>
-              </tr>
-            </thead>
-            <tbody>
-              <template for:each={acceptedCandidates} for:item="candidate">
-                <tr data-candidateid={candidate.Id} onclick={navigateToDetailsPage} key={candidate.Id}>
-                  <td>{candidate.Name}</td>
-                  <td>{candidate.Candidate_Email}</td>
-                  <td>{candidate.Experience} years</td>
-                  <td>
-                    <div>
-                      <p>{candidate.matchPercentage}%</p>
-                    </div>
-                  </td>
-                  <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.City},
-                    {candidate.Country}</td>
-                  <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-                    <p>{candidate.Status}</p>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </template>
-        <template lwc:elseif={showPending}>
-          <table>
-            <thead>
-              <tr>
-                <td><b>Name</b></td>
-                <td><b>Email</b></td>
-                <td><b>Experience</b></td>
-                <td><b>Match Percentage</b> </td>
-                <td><b>Location</b></td>
-                <td><b>Status</b></td>
-              </tr>
-            </thead>
-            <tbody>
-              <template for:each={pendingCandidates} for:item="candidate">
-                <tr key={candidate.Id} data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-                  <td>{candidate.Name}</td>
-                  <td>{candidate.Candidate_Email}</td>
-                  <td>{candidate.Experience} years</td>
-                  <td>
-                    <div>
-                      <p>{candidate.matchPercentage}%</p>
-                    </div>
-                  </td>
-                  <td>{candidate.City},
-                    {candidate.Country}</td>
-                  <td>
-                    <p>{candidate.Status}</p>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </template>
-        <template lwc:elseif={showRejected}>
-          <table>
-            <thead>
-              <tr>
-                <td><b>Name</b></td>
-                <td><b>Email</b></td>
-                <td><b>Experience</b></td>
-                <td><b>Match Percentage</b> </td>
-                <td><b>Location</b></td>
-                <td><b>Status</b></td>
-              </tr>
-            </thead>
-            <tbody>
-              <template for:each={rejectedCandidates} for:item="candidate">
-                <tr key={candidate.Id} data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-                  <td>{candidate.Name}</td>
-                  <td>{candidate.Candidate_Email}</td>
-                  <td>{candidate.Experience} years</td>
-                  <td>
-                    <div>
-                      <p>{candidate.matchPercentage}%</p>
-                    </div>
-                  </td>
-                  <td>{candidate.City},
-                    {candidate.Country}</td>
-                  <td>
-                    <p>{candidate.Status}</p>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </template>
-      </div>
-    </template>
-    <template if:false={candiateListIsEmpty}>
+    <div class="applicant-list">
+      <table>
+        <thead>
+          <tr>
+            <td><b>Name</b></td>
+            <td><b>Email</b></td>
+            <td><b>Experience</b></td>
+            <td><b>Match Percentage</b></td>
+            <td><b>Location</b></td>
+            <td><b>Status</b></td>
+          </tr>
+        </thead>
+        <tbody>
+          <template for:each={filteredCandidateDetails} for:item="candidate">
+            <tr key={candidate.Id} data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
+              <td>{candidate.Name}</td>
+              <td>{candidate.Candidate_Email}</td>
+              <td>{candidate.Experience} years</td>
+              <td>
+                <div>
+                  <p>{candidate.matchPercentage}%</p>
+                </div>
+              </td>
+              <td>{candidate.City}, {candidate.Country}</td>
+              <td>{candidate.Status}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <template if:true={candiateListIsEmpty}>
       <div class="no-applicants">
         <div>
           <h1> No applicants so far 😞!!!! </h1>
@@ -167,6 +66,5 @@
         </div>
       </div>
     </template>
-
   </div>
 </template>
