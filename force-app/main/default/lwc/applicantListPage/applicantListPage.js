@@ -1,4 +1,4 @@
-import { LightningElement } from "lwc";
+import { LightningElement, track } from "lwc";
 import fetchCandidateNames from "@salesforce/apex/JobApplicantController.fetchCandidateNames";
 import fetchJobDetails from "@salesforce/apex/JobApplicantController.fetchJobDetails";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
@@ -8,12 +8,17 @@ export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
   candidateDetails = [];
-  filteredCandidateDetails = [];
+  @track filteredCandidateDetails = [];
   jobDetails = [];
+
   candidateId;
   jobId;
+
   emptyBox = emptyBox;
+  val;
+
   candiateListIsEmpty = false;
+  filteredListIsEmpty = false;
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
@@ -25,9 +30,9 @@ export default class ApplicantListPage extends NavigationMixin(
 
   fetchCandidateNames() {
     fetchCandidateNames({ jobId: this.jobId }).then((data) => {
-      this.candidateDetails = data;
+      this.candidateDetails = data; // source of truth
       this.filteredCandidateDetails = this.candidateDetails;
-      this.candiateListIsEmpty = this.candidateDetails.length === 0;
+      this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
     });
   }
 
@@ -60,5 +65,14 @@ export default class ApplicantListPage extends NavigationMixin(
     } else {
       this.filteredCandidateDetails = this.candidateDetails;
     }
+    this.filteredListIsEmpty = this.filteredCandidateDetails.length === 0;
+  }
+
+  getSliderValue(event) {
+    const sliderValue = parseInt(event.target.value, 10);
+    this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
+      return item.matchPercentage >= sliderValue;
+    });
+    this.filteredListIsEmpty = this.filteredCandidateDetails.length === 0;
   }
 }
