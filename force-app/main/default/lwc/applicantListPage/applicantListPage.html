@@ -1,6 +1,6 @@
 <!--
-  @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @description       : candidate list component who have applied for a particular job
+  @author            : Rudransh Shukla
   @group             : 
   @last modified on  : 03-28-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
@@ -13,6 +13,11 @@
           <h1>{job.Title_of_position__c}</h1>
         </div>
         <div key={job.id}>
+          <lightning-slider label="Match Percentage" max="100" min="0" step="1" type="horizontal" value={val}
+            variant="standard" onchange={getSliderValue}></lightning-slider>
+        </div>
+
+        <div class="filter-picklist" key={job.id}>
           <lightning-button-menu alternative-text="Show menu">
             <lightning-menu-item label="All" onclick={filterCandidates} data-status="All"></lightning-menu-item>
             <lightning-menu-item label="Pending" onclick={filterCandidates} data-status="Pending"></lightning-menu-item>
@@ -25,45 +30,62 @@
       </template>
     </div>
 
-    <div class="applicant-list">
-      <table>
-        <thead>
-          <tr>
-            <td><b>Name</b></td>
-            <td><b>Email</b></td>
-            <td><b>Experience</b></td>
-            <td><b>Match Percentage</b></td>
-            <td><b>Location</b></td>
-            <td><b>Status</b></td>
-          </tr>
-        </thead>
-        <tbody>
-          <template for:each={filteredCandidateDetails} for:item="candidate">
-            <tr key={candidate.Id} data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
-              <td>{candidate.Name}</td>
-              <td>{candidate.Candidate_Email}</td>
-              <td>{candidate.Experience} years</td>
-              <td>
-                <div>
-                  <p>{candidate.matchPercentage}%</p>
-                </div>
-              </td>
-              <td>{candidate.City}, {candidate.Country}</td>
-              <td>{candidate.Status}</td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-
-    <template if:true={candiateListIsEmpty}>
+    <template lwc:if={candiateListIsEmpty}>
       <div class="no-applicants">
         <div>
-          <h1> No applicants so far 😞!!!! </h1>
+          <h1> No applicants so far 😞 </h1>
           <div class="emptyBox">
             <img src={emptyBox} alt="na">
           </div>
         </div>
+      </div>
+    </template>
+    <template lwc:elseif={filteredListIsEmpty}>
+      <div class="no-applicants">
+        <div>
+          <h1> No applicants in this filter 😝</h1>
+          <div class="emptyBox">
+            <img src={emptyBox} alt="na">
+          </div>
+        </div>
+      </div>
+    </template>
+    <template lwc:else>
+      <div class="applicant-list">
+        <table>
+          <thead>
+            <tr>
+              <td>
+                <lightning-input type="checkbox"></lightning-input>
+              </td>
+              <td><b>Name</b></td>
+              <td><b>Email</b></td>
+              <td><b>Experience</b></td>
+              <td><b>Match Percentage</b></td>
+              <td><b>Location</b></td>
+              <td><b>Status</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={filteredCandidateDetails} for:item="candidate">
+              <tr key={candidate.Id}>
+                <td><lightning-input type="checkbox"></lightning-input></td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Name}</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Candidate_Email}</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Experience} years</td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>
+                  <div>
+                    <p>{candidate.matchPercentage}%</p>
+                  </div>
+                </td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.City},
+                  {candidate.Country}
+                </td>
+                <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.Status}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </div>
     </template>
   </div>
