@@ -6,29 +6,34 @@
 }
 
 .job-description {
-  padding: 2%; 
+  padding: 2%;
   background-color: #f2f2f2;
   border-radius: 10px;
   margin: 2%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+
 
 }
 
 .job-description h1 {
   font-size: 24px;
-  color: #333;
+  color: #252525;
   margin: 0;
 }
-.job-description p{
+
+.job-description p {
   font-size: 15px;
 }
+
 .applicant-list {
   margin: 2%;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 table {
@@ -70,11 +75,28 @@ thead tr {
   height: auto;
   border: 0;
 }
-.buttons{
+
+.buttons {
   display: flex;
   flex-direction: row;
   align-self: end;
 }
-.buttons lightning-button{
+
+.buttons lightning-button {
   padding-left: 1%;
 }
+
+:host {
+    --slds-c-slider-track-color-background: orange;
+    --slds-c-slider-thumb-color-foreground: black;
+}
+
+.filter-picklist{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 25%;
+}
+
+

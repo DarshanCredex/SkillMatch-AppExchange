@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-12-2024
+ * @last modified on  : 03-28-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -211,7 +211,7 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled
-  public static void changeStatus(string value, string applicantId) {
+  public static void changeStatus(string value, list<Id> applicantId) {
     system.debug('applicantId---->' + applicantId);
     system.debug('value---->' + value);
 
