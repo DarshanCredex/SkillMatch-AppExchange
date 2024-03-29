@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-20-2024
+ * @last modified on  : 03-29-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -61,23 +61,6 @@ public with sharing class GetApplicantData {
     return workExpList;
   }
 
-  @AuraEnabled(cacheable=true)
-  public static List<ContentDocumentLink> getResume(string applicantId) {
-    System.debug('applicantId------->' + applicantId);
-    List<ContentDocumentLink> cdls = new List<ContentDocumentLink>();
-    try {
-      cdls = [
-        SELECT ContentDocumentId
-        FROM ContentDocumentLink
-        WHERE LinkedEntityId = :applicantId
-      ];
-    } catch (Exception e) {
-      system.debug(e.getMessage() + e.getLineNumber());
-    }
-    system.debug('cdls------->' + cdls);
-    return cdls;
-  }
-
   @AuraEnabled(cacheable = true)
   public static List<Job__c> getAppliedJobById(String candidateId) {
     List<Job__c> appliedJobs = new List<Job__c>();
@@ -103,8 +86,6 @@ public with sharing class GetApplicantData {
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-
-    System.debug('Applied Jobs------>' + appliedJobs);
     return appliedJobs;
   }
 
