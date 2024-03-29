@@ -1,49 +1,35 @@
+/**
+ * @description       : handler class for work experience trigger
+ * @author            : Sagar Medatwal
+ * @group             : 
+ * @last modified on  : 03-29-2024
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
 public class WorkExperienceTriggerHandler {
-    
-    public static void checkIsCurrentCompany (List <Work_Experience__c> workExpList, Map<Id, Work_Experience__c> workExpMap) {
-        if(!workExpList.isEmpty()){
-            
-            Set<Id> workId = new Set<Id>();
-            
+    public static void checkIsCurrentCompany(List<Work_Experience__c> workExpList, Map<Id, Work_Experience__c> workExpMap) {
+        if (workExpList != null && !workExpList.isEmpty()) {
+            Map<Id, Work_Experience__c> candidateCurrentWorkMap = new Map<Id, Work_Experience__c>();
             for(Work_Experience__c work : workExpList){
                 if(workExpMap != null){
                     Work_Experience__c currentWork = workExpMap.get(work.Id);
                     if((work.Is_Current_Company__c != currentWork.Is_Current_Company__c) && work.Is_Current_Company__c == true){
-                        workId.add(work.CandidateId__c);
+                        candidateCurrentWorkMap.put(work.CandidateId__c, work);
                     }
                 }else{
-                    workId.add(work.CandidateId__c);
+                    candidateCurrentWorkMap.put(work.CandidateId__c, work);
                 }
             }
-            
-            List<Work_Experience__c> allWorkExp = new List<Work_Experience__c>();
-            allWorkExp = [Select Id, CandidateId__c, Is_Current_Company__c From Work_Experience__c Where CandidateId__c In: workId And Is_Current_Company__c = true Limit 50000];
-            
-            Map<Id, List<Work_Experience__c>> candidateWorkExperienceMap = new Map<Id, List<Work_Experience__c>>();
-            if(!allWorkExp.isEmpty()){
-                for(Work_Experience__c workExp : allWorkExp){
-                    List<Work_Experience__c> tempWorkExp = new List<Work_Experience__c>();
-                    if(candidateWorkExperienceMap.containsKey(workExp.CandidateId__c)){
-                        tempWorkExp = candidateWorkExperienceMap.get(workExp.CandidateId__c);
-                        tempWorkExp.add(workExp);
-                    }else{
-                        tempWorkExp.add(workExp);
-                        candidateWorkExperienceMap.put(workExp.CandidateId__c, tempWorkExp);
+            if (!candidateCurrentWorkMap.isEmpty()) {
+                List<Work_Experience__c> allCurrentWorkExp = [SELECT Id, CandidateId__c FROM Work_Experience__c WHERE CandidateId__c IN :candidateCurrentWorkMap.keySet() AND Is_Current_Company__c = true];
+                if (!allCurrentWorkExp.isEmpty()) {
+                    for (Work_Experience__c currentWorkExp : allCurrentWorkExp) {
+                        Work_Experience__c latestCurrentWork = candidateCurrentWorkMap.get(currentWorkExp.CandidateId__c);
+                        if (latestCurrentWork != null && latestCurrentWork.Id != currentWorkExp.Id) {
+                            currentWorkExp.Is_Current_Company__c = false;
+                        }
                     }
+                    update allCurrentWorkExp;
                 }
-            }
-            List<Work_Experience__c> workExpListToUpdate = new List<Work_Experience__c>();
-            if(candidateWorkExperienceMap != null){
-                for(List<Work_Experience__c> tempRelatedWorkExp : candidateWorkExperienceMap.values()){
-                    workExpListToUpdate.addAll(tempRelatedWorkExp);
-                }
-                for(Work_Experience__c relatedWorkExp : workExpListToUpdate){
-                    relatedWorkExp.Is_Current_Company__c = false;
-                    //workExpListToUpdate.add(relatedWorkExp);
-                }
-            }
-            if(!workExpListToUpdate.isEmpty()){
-                Update workExpListToUpdate;
             }
         }
     }
