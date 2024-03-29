@@ -16,6 +16,7 @@ export default class ApplicantListPage extends NavigationMixin(
   allIdList = [];
   selectedIdList = [];
   wiredResult = [];
+  temp = [];
 
   candidateId;
   jobId;
@@ -28,6 +29,7 @@ export default class ApplicantListPage extends NavigationMixin(
   selectAllChecked = false;
   disableButtons = true;
   currentFilter = "All";
+  labelVariable = "Sort by";
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
@@ -42,6 +44,7 @@ export default class ApplicantListPage extends NavigationMixin(
     if (result.data) {
       this.candidateDetails = result.data; // source of truth
       this.filteredCandidateDetails = this.candidateDetails;
+      this.temp = this.filteredCandidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
       this.allIdList = this.filteredCandidateDetails.map(
         (candidate) => candidate.Id
@@ -70,6 +73,11 @@ export default class ApplicantListPage extends NavigationMixin(
 
   filterCandidates(event) {
     this.currentFilter = event.currentTarget.dataset.status;
+    if (this.currentFilter === "Accepted") {
+      this.labelVariable = "Sort By - Shortlisted";
+    } else {
+      this.labelVariable = "Sort By - " + this.currentFilter;
+    }
     const status = this.currentFilter;
 
     if (status !== "All") {
@@ -80,11 +88,12 @@ export default class ApplicantListPage extends NavigationMixin(
       this.filteredCandidateDetails = this.candidateDetails;
     }
     this.filteredListIsEmpty = this.filteredCandidateDetails.length === 0;
+    this.temp = this.filteredCandidateDetails;
   }
 
   getSliderValue(event) {
     const sliderValue = parseInt(event.target.value, 10);
-    this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
+    this.filteredCandidateDetails = this.temp.filter((item) => {
       return item.matchPercentage >= sliderValue;
     });
     this.filteredListIsEmpty = this.filteredCandidateDetails.length === 0;
@@ -93,12 +102,10 @@ export default class ApplicantListPage extends NavigationMixin(
   handleCheckBoxSelect(event) {
     const candidateId = event.target.dataset.checkboxid;
     var isChecked = false;
-    //isChecked = event.target.checked;
 
     const candidate = this.candidateDetails.find(
       (item) => item.Id === candidateId
     );
-
     if (candidate.Status === "Rejected") {
       event.target.checked = false;
       event.target.value = false;
@@ -112,7 +119,6 @@ export default class ApplicantListPage extends NavigationMixin(
     } else {
       isChecked = event.target.checked;
     }
-
     if (isChecked) {
       this.selectedIdList.push(candidateId);
       if (this.allIdList.length === this.selectedIdList.length) {
@@ -127,10 +133,6 @@ export default class ApplicantListPage extends NavigationMixin(
         this.disableButtons = true;
       }
     }
-    console.log(
-      "this.selectedIdList----->",
-      JSON.stringify(this.selectedIdList)
-    );
   }
 
   handleSelectAll(event) {
@@ -146,10 +148,6 @@ export default class ApplicantListPage extends NavigationMixin(
       this.selectedIdList = [];
       this.disableButtons = true;
     }
-    console.log(
-      "this.selectedIdList----->",
-      JSON.stringify(this.selectedIdList)
-    );
   }
 
   handleShortlistReject(event) {

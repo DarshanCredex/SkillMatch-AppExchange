@@ -20,20 +20,24 @@
               onclick={handleShortlistReject}></lightning-button>
           </div>
         </template>
-        <div key={job.id}>
-          <lightning-slider label="Match Percentage" max="100" min="0" step="1" type="horizontal" value={val}
-            variant="standard" onchange={getSliderValue}></lightning-slider>
-        </div>
+
 
         <div class="filter-picklist" key={job.id}>
-          <lightning-button-menu label="Sort By" alternative-text="Show menu">
-            <lightning-menu-item label="All" onclick={filterCandidates} data-status="All"></lightning-menu-item>
-            <lightning-menu-item label="Pending" onclick={filterCandidates} data-status="Pending"></lightning-menu-item>
-            <lightning-menu-item label="Shortlisted" onclick={filterCandidates}
-              data-status="Accepted"></lightning-menu-item>
-            <lightning-menu-item label="Rejected" onclick={filterCandidates}
-              data-status="Rejected"></lightning-menu-item>
-          </lightning-button-menu>
+          <div class="slider">
+            <lightning-slider label="Min. Match %" max="100" min="0" step="1" type="horizontal" value={val}
+              variant="standard" onchange={getSliderValue}></lightning-slider>
+          </div>
+          <div>
+            <lightning-button-menu label={labelVariable} alternative-text="Show menu">
+              <lightning-menu-item label="All" onclick={filterCandidates} data-status="All"></lightning-menu-item>
+              <lightning-menu-item label="Pending" onclick={filterCandidates}
+                data-status="Pending"></lightning-menu-item>
+              <lightning-menu-item label="Shortlisted" onclick={filterCandidates}
+                data-status="Accepted"></lightning-menu-item>
+              <lightning-menu-item label="Rejected" onclick={filterCandidates}
+                data-status="Rejected"></lightning-menu-item>
+            </lightning-button-menu>
+          </div>
         </div>
       </template>
     </div>
