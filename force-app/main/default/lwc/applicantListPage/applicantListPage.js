@@ -21,14 +21,13 @@ export default class ApplicantListPage extends NavigationMixin(
   jobId;
 
   emptyBox = emptyBox;
-  val;
 
   candiateListIsEmpty = false;
   filteredListIsEmpty = false;
-  @track checkboxSelected = false;
+  checkboxSelected = false;
   selectAllChecked = false;
   disableButtons = true;
-  disableRejectedCheckbox = false;
+  currentFilter = "All";
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
@@ -41,8 +40,8 @@ export default class ApplicantListPage extends NavigationMixin(
   wiredCandidates(result) {
     this.wiredResult = result;
     if (result.data) {
-      this.candidateDetails = result.data;
-      this.filteredCandidateDetails = result.data;
+      this.candidateDetails = result.data; // source of truth
+      this.filteredCandidateDetails = this.candidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
       this.allIdList = this.filteredCandidateDetails.map(
         (candidate) => candidate.Id
@@ -70,7 +69,8 @@ export default class ApplicantListPage extends NavigationMixin(
   }
 
   filterCandidates(event) {
-    const status = event.currentTarget.dataset.status;
+    this.currentFilter = event.currentTarget.dataset.status;
+    const status = this.currentFilter;
 
     if (status !== "All") {
       this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
@@ -93,7 +93,25 @@ export default class ApplicantListPage extends NavigationMixin(
   handleCheckBoxSelect(event) {
     const candidateId = event.target.dataset.checkboxid;
     var isChecked = false;
-    isChecked = event.target.checked;
+    //isChecked = event.target.checked;
+
+    const candidate = this.candidateDetails.find(
+      (item) => item.Id === candidateId
+    );
+
+    if (candidate.Status === "Rejected") {
+      event.target.checked = false;
+      event.target.value = false;
+      event.target.disabled = true;
+      isChecked = false;
+      this.showToast(
+        "Warning",
+        "Candidate Already Rejetced, further change is not permitted",
+        "warning"
+      );
+    } else {
+      isChecked = event.target.checked;
+    }
 
     if (isChecked) {
       this.selectedIdList.push(candidateId);
@@ -109,23 +127,31 @@ export default class ApplicantListPage extends NavigationMixin(
         this.disableButtons = true;
       }
     }
+    console.log(
+      "this.selectedIdList----->",
+      JSON.stringify(this.selectedIdList)
+    );
   }
 
   handleSelectAll(event) {
     this.selectAllChecked = event.target.checked;
-    console.log("select all checked value---->", this.selectAllChecked);
     if (this.selectAllChecked) {
       this.checkboxSelected = true;
-      this.selectedIdList = this.filteredCandidateDetails.map(
-        (candidate) => candidate.Id
-      );
+      this.selectedIdList = this.filteredCandidateDetails
+        .filter((candidate) => candidate.Status !== "Rejected")
+        .map((candidate) => candidate.Id);
       this.disableButtons = false;
     } else {
       this.checkboxSelected = false;
       this.selectedIdList = [];
       this.disableButtons = true;
     }
+    console.log(
+      "this.selectedIdList----->",
+      JSON.stringify(this.selectedIdList)
+    );
   }
+
   handleShortlistReject(event) {
     const valueOfButton = event.target.value;
     changeStatus({
@@ -143,7 +169,7 @@ export default class ApplicantListPage extends NavigationMixin(
           this.showToast(
             "Rejected",
             "Your selected applicants have been rejected",
-            "error"
+            "success"
           );
         }
         refreshApex(this.wiredResult);
@@ -152,6 +178,7 @@ export default class ApplicantListPage extends NavigationMixin(
         this.showToast("Error", "Some Error occurred", "error");
       });
   }
+
   showToast(title, message, variant) {
     this.dispatchEvent(
       new ShowToastEvent({
@@ -159,6 +186,12 @@ export default class ApplicantListPage extends NavigationMixin(
         message: message,
         variant: variant
       })
+    );
+  }
+
+  get showCheckboxes() {
+    return (
+      this.currentFilter === "Pending" || this.currentFilter === "Accepted"
     );
   }
 }

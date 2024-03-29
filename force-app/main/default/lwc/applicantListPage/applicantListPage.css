@@ -86,6 +86,7 @@ thead tr {
   padding-left: 1%;
 }
 
-:host lightning-slider[data-variant="standard"] {
-  --slds-slider__track-color: red;
+:host {
+    --slds-c-slider-track-color-background: orange;
+    --slds-c-slider-thumb-color-foreground: black;
 }
