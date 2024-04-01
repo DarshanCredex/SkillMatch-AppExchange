@@ -91,18 +91,12 @@ thead tr {
     --slds-c-slider-thumb-color-foreground: black;
 }
 
-.range-hidden .slds-slider-label__range {
-  display: none!important;
-}
-
 .filter-picklist{
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   width: 25%;
-
-
 }
 
 
