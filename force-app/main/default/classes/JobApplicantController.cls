@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-29-2024
+ * @last modified on  : 04-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -63,7 +63,7 @@ public with sharing class JobApplicantController {
   public static List<CandidateWrapper> fetchCandidateNames(string jobId) {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
-    
+
     // Required Skills of job
     List<Job__c> jobs = [
       SELECT Skills_Required__c
@@ -72,7 +72,7 @@ public with sharing class JobApplicantController {
     ];
     Set<String> requiredSkills = new Set<String>();
     for (Job__c job : jobs) {
-      if(String.isNotBlank(job.Skills_Required__c)){
+      if (String.isNotBlank(job.Skills_Required__c)) {
         requiredSkills.addAll(job.Skills_Required__c.split(','));
       }
     }
@@ -100,12 +100,13 @@ public with sharing class JobApplicantController {
         Name,
         OwnerId,
         Phone_Number__c,
-        Skills__c,ParsedSkills__c
+        Skills__c,
+        ParsedSkills__c
       FROM Candidate_Details__c
       WHERE Id IN :candidateIds
     ]) {
       Set<String> candidateSkills = new Set<String>();
-      if(String.isNotBlank(candidate.Skills__c)){
+      if (String.isNotBlank(candidate.Skills__c)) {
         candidateSkills.addAll(candidate.Skills__c.split(';'));
       }
       Integer matchPercentage = calculateMatchPercentage(
@@ -123,13 +124,19 @@ public with sharing class JobApplicantController {
   @AuraEnabled(cacheable=true)
   public static List<Candidate_Details__c> getApplicantsList(string userId) {
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     try {
       List<Job_Applicants__c> applicantList = [
         SELECT CandidateId__c
         FROM Job_Applicants__c
-        WHERE Application_Status__c = 'Pending' AND Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)
+        WHERE
+          Application_Status__c = 'Pending'
+          AND Job_Id__c IN (
+            SELECT id
+            FROM Job__c
+            WHERE Company_Name__c = :companyname
+          )
         LIMIT 3
       ];
       List<Id> candidateIds = new List<Id>();
@@ -150,16 +157,26 @@ public with sharing class JobApplicantController {
   }
   @AuraEnabled(cacheable=true)
   public static integer getNumberOfJobsPosted(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-    return [SELECT COUNT() FROM Job__c WHERE Status__c = 'Completed' and Company_Name__c = :companyname];
+    return [
+      SELECT COUNT()
+      FROM Job__c
+      WHERE Status__c = 'Completed' AND Company_Name__c = :companyname
+    ];
   }
+
   @AuraEnabled(cacheable=true)
   public static integer getNumberOfApplicants(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-    return [SELECT COUNT() FROM Job_Applicants__c where Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)];
+    return [
+      SELECT COUNT()
+      FROM Job_Applicants__c
+      WHERE Job_Id__r.Company_Name__c = :companyName
+    ];
   }
+
   @AuraEnabled(cacheable=true)
   public static list<job__c> fetchJobDetails(string jobId) {
     list<Job__c> jobList = new List<Job__c>();
@@ -197,24 +214,27 @@ public with sharing class JobApplicantController {
     return jobList;
   }
   @AuraEnabled
-  public static void changeStatus(string value, list<Id> applicantId) {
-    list<Job_Applicants__c> applicantList = new List<Job_Applicants__c>();
+  public static void changeStatus(String value, List<Id> applicantId) {
+    List<Job_Applicants__c> applicantListToUpdate = new List<Job_Applicants__c>();
+
     try {
-      for (Job_Applicants__c applicant : [
-        SELECT Application_Status__c
+      List<Job_Applicants__c> applicants = [
+        SELECT Id, Application_Status__c
         FROM Job_Applicants__c
-        WHERE CandidateId__c = :applicantId
-      ]) {
+        WHERE CandidateId__c IN :applicantId
+      ];
+      for (Job_Applicants__c applicant : applicants) {
         applicant.Application_Status__c = value;
-        applicantList.add(applicant);
+        applicantListToUpdate.add(applicant);
+      }
+      if (!applicantListToUpdate.isEmpty()) {
+        update applicantListToUpdate;
       }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-    if (!applicantList.IsEmpty()) {
-      update applicantList;
-    }
   }
+
   @AuraEnabled(cacheable=true)
   public static string getApplicantStatus(string applicantId) {
     string status;
@@ -228,10 +248,14 @@ public with sharing class JobApplicantController {
     return status;
   }
 
-  // Method to calculate match percentage
-  private static Integer calculateMatchPercentage(Set<String> requiredSkills, Set<String> candidateSkills, String resumeParsedSkills) {
+  @TestVisible
+  private static Integer calculateMatchPercentage(
+    Set<String> requiredSkills,
+    Set<String> candidateSkills,
+    String resumeParsedSkills
+  ) {
     List<String> candidateSkillsLower = new List<String>();
-    if(String.isNotBlank(resumeParsedSkills)){
+    if (String.isNotBlank(resumeParsedSkills)) {
       resumeParsedSkills = resumeParsedSkills.deleteWhitespace().toLowerCase();
     }
     for (String skill : candidateSkills) {
@@ -244,16 +268,17 @@ public with sharing class JobApplicantController {
     Integer commonSkillsCount = 0;
     for (String skill : requiredSkillsLower) {
       Pattern pattern = Pattern.compile(Pattern.quote(skill));
-        Matcher matcher = pattern.matcher(candidateSkillsLower.toString() + resumeParsedSkills);
-        if (matcher.find()) {
-            commonSkillsCount++;
-            
-        }
+      Matcher matcher = pattern.matcher(
+        candidateSkillsLower.toString() + resumeParsedSkills
+      );
+      if (matcher.find()) {
+        commonSkillsCount++;
+      }
     }
     if (requiredSkillsLower.size() > 0) {
       Integer matchPercentage =
         (commonSkillsCount * 100) / requiredSkillsLower.size();
-      
+
       return matchPercentage;
     } else {
       return 0;

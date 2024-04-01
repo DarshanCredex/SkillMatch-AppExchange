@@ -2,14 +2,13 @@
  * @description       : to retrive the list of all the jobs posted by HR(posted as well as drafts)
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-11-2024
+ * @last modified on  : 03-29-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 
 public with sharing class GetPostedJobList {
   @AuraEnabled(cacheable=true)
   public static list<job__c> getPostedJobList(string userId) {
-    system.debug('start');
     user u = [select companyName, id from user where id = :userId];
     string companyName= u.CompanyName;
 
@@ -31,13 +30,10 @@ public with sharing class GetPostedJobList {
     ]) {
       postedJobList.add(job);
     }
-    system.debug('postedJobList------->' + postedJobList);
     return postedJobList;
   }
   @AuraEnabled(cacheable=true)
   public static list<job__c> getDraftedJobList(string userId) {
-    system.debug('start');
-
     user u = [select companyName, id from user where id = :userId];
     string companyName= u.CompanyName;
     list<job__c> draftedJobList = new List<job__c>();
@@ -58,7 +54,6 @@ public with sharing class GetPostedJobList {
     ]) {
       draftedJobList.add(job);
     }
-    system.debug('draftedJobList------->' + draftedJobList);
     return draftedJobList;
   }
 }
