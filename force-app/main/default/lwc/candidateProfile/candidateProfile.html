@@ -183,6 +183,7 @@
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
+        
     <template if:true={isResumeModalOpen}>
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
@@ -192,12 +193,11 @@
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
-                     <lightning-file-upload label="Attach files" accept={acceptedFormats} class="file-selector-large"
-                        record-id={candidateDetails.Id} onuploadfinished={handleUploadFinished}>   
-                    </lightning-file-upload> 
-                     <lightning-button variant="brand" label="Send to Vf" title="Call Child" onclick={handleClick}
-                        class="slds-m-left_x-small"></lightning-button>
-                    <iframe id="vfFrame" src="/apex/resumeparser" frameborder="0" scrolling="auto"></iframe>
+                    <template if:true={iframeLoading}>
+                        <div class="spinner"></div>
+                    </template>
+                    <!-- Hide iframe until loaded -->
+                    <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" height="100%" width="100%" onload={handleIframeLoad}></iframe>
                 </div>
             </div>
         </section>
