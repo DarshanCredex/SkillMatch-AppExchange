@@ -21,8 +21,7 @@
  */
 @isTest
 private class JobApplicantControllerTest {
-  @isTest
-  static void TestGetApplicantsList() {
+  private static user createDummyUser() {
     User dummyUser = new User(
       FirstName = 'Test',
       LastName = 'User',
@@ -38,7 +37,9 @@ private class JobApplicantControllerTest {
       .Id
     );
     insert dummyUser;
-
+    return dummyUser;
+  }
+  private static Candidate_Details__c createCandidateDetails() {
     Candidate_Details__c candidate = new Candidate_Details__c(
       About__c = 'About the candidate',
       City__c = 'City',
@@ -52,7 +53,10 @@ private class JobApplicantControllerTest {
       Job_Title__c = 'Software Engineer'
     );
     insert candidate;
+    return candidate;
+  }
 
+  private static Job__c createJob() {
     Job__c job = new Job__c(
       Title_of_position__c = 'Sales Manager',
       City__c = 'Gurgaon',
@@ -64,14 +68,28 @@ private class JobApplicantControllerTest {
       Company_Name__c = 'ABC'
     );
     insert job;
+    return job;
+  }
 
+  private static Job_Applicants__c createJobApplicant(
+    Id candidateId,
+    Id jobId
+  ) {
     Job_Applicants__c applicant = new Job_Applicants__c(
-      CandidateId__c = candidate.id,
-      Job_Id__c = job.id,
+      CandidateId__c = candidateId,
+      Job_Id__c = jobId,
       Application_Status__c = 'Pending'
     );
-
     insert applicant;
+    return applicant;
+  }
+
+  @isTest
+  static void TestGetApplicantsList() {
+    user dummyUser = createDummyUser();
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     List<Candidate_Details__c> result = JobApplicantController.getApplicantsList(
       dummyUser.id
@@ -82,107 +100,27 @@ private class JobApplicantControllerTest {
 
   @isTest
   static void TestGetNumberOfJobsPosted() {
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-
-    User dummyUser = new User(
-      FirstName = 'Test',
-      LastName = 'User',
-      Email = 'test@example.com',
-      Username = 'te1212121st@example.com',
-      Alias = 'testu',
-      EmailEncodingKey = 'UTF-8',
-      LanguageLocaleKey = 'en_US',
-      LocaleSidKey = 'en_US',
-      TimeZoneSidKey = 'America/Los_Angeles',
-      CompanyName = 'ABC',
-      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
-      .Id
-    );
-    insert dummyUser;
-
+    user dummyUser = createDummyUser();
+    Job__c job = createJob();
     integer result = JobApplicantController.getNumberOfJobsPosted(dummyUser.id);
-
     System.assertEquals(1, result);
   }
 
   @isTest
   static void TestGetNumberOfApplicants() {
-    User dummyUser = new User(
-      FirstName = 'Test',
-      LastName = 'User',
-      Email = 'test@example.com',
-      Username = 'te1212121st@example.com',
-      Alias = 'testu',
-      EmailEncodingKey = 'UTF-8',
-      LanguageLocaleKey = 'en_US',
-      LocaleSidKey = 'en_US',
-      TimeZoneSidKey = 'America/Los_Angeles',
-      CompanyName = 'ABC',
-      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
-      .Id
-    );
-    insert dummyUser;
-
-    Candidate_Details__c candidate = new Candidate_Details__c(
-      About__c = 'About the candidate',
-      City__c = 'City',
-      Country__c = 'Country',
-      Candidate_Email__c = 'candidate@example.com',
-      Gender__c = 'Male',
-      Name = 'John Doe',
-      Phone_Number__c = '1234567890',
-      Skills__c = 'Java, JavaScript',
-      Experience__c = 5,
-      Job_Title__c = 'Software Engineer'
-    );
-    insert candidate;
-
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = 'more than 5 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-
-    Job_Applicants__c applicant = new Job_Applicants__c(
-      Job_Id__c = job.id,
-      CandidateId__c = candidate.id,
-      Application_Status__c = 'Pending'
-    );
+    user dummyUser = createDummyUser();
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     integer result = JobApplicantController.getNumberOfApplicants(dummyUser.id);
 
-    System.assertEquals(0, result);
+    System.assertEquals(1, result);
   }
 
   @isTest
   static void TestFetchJobDetails() {
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = 'more than 5 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
+    Job__c job = createJob();
     list<job__c> result = JobApplicantController.fetchJobDetails(job.id);
     System.assertEquals(1, result.size());
     System.assertEquals('Information Technology', result[0].Industry__c);
@@ -190,39 +128,9 @@ private class JobApplicantControllerTest {
 
   @isTest
   static void TestChangeStatus() {
-    Candidate_Details__c candidate = new Candidate_Details__c(
-      About__c = 'About the candidate',
-      City__c = 'City',
-      Country__c = 'Country',
-      Candidate_Email__c = 'candidate@example.com',
-      Gender__c = 'Male',
-      Name = 'John Doe',
-      Phone_Number__c = '1234567890',
-      Skills__c = 'Java, JavaScript',
-      Experience__c = 5,
-      Job_Title__c = 'Software Engineer'
-    );
-    insert candidate;
-
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-
-    Job_Applicants__c applicant = new Job_Applicants__c(
-      CandidateId__c = candidate.id,
-      Job_Id__c = job.id,
-      Application_Status__c = 'Pending'
-    );
-
-    insert applicant;
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     JobApplicantController.changeStatus(
       'Rejected',
@@ -239,39 +147,9 @@ private class JobApplicantControllerTest {
   }
   @isTest
   static void TestGetApplicantStatus() {
-    Candidate_Details__c candidate = new Candidate_Details__c(
-      About__c = 'About the candidate',
-      City__c = 'City',
-      Country__c = 'Country',
-      Candidate_Email__c = 'candidate@example.com',
-      Gender__c = 'Male',
-      Name = 'John Doe',
-      Phone_Number__c = '1234567890',
-      Skills__c = 'Java, JavaScript',
-      Experience__c = 5,
-      Job_Title__c = 'Software Engineer'
-    );
-    insert candidate;
-
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-
-    Job_Applicants__c applicant = new Job_Applicants__c(
-      CandidateId__c = candidate.id,
-      Job_Id__c = job.id,
-      Application_Status__c = 'Pending'
-    );
-
-    insert applicant;
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     string result = JobApplicantController.getApplicantStatus(candidate.id);
 
@@ -291,41 +169,9 @@ private class JobApplicantControllerTest {
 
   @isTest
   static void TestFetchCandidateNames() {
-
-    Candidate_Details__c candidate = new Candidate_Details__c(
-      About__c = 'About the candidate',
-      City__c = 'City',
-      Country__c = 'Country',
-      Candidate_Email__c = 'candidate@example.com',
-      Gender__c = 'Male',
-      Name = 'John Doe',
-      Phone_Number__c = '1234567890',
-      Skills__c = 'apex, javascript, lwc',
-      Experience__c = 5,
-      Job_Title__c = 'Software Engineer',
-      ParsedSkills__c = 'apex, javascript, lwc'
-    );
-    insert candidate;
-
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-
-    Job_Applicants__c applicant = new Job_Applicants__c(
-      CandidateId__c = candidate.id,
-      Job_Id__c = job.id,
-      Application_Status__c = 'Pending'
-    );
-
-    insert applicant;
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     list<JobApplicantController.CandidateWrapper> result = JobApplicantController.fetchCandidateNames(
       job.id
