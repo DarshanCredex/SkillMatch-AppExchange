@@ -21,23 +21,30 @@
  */
 @isTest
 private class GetPostedJobListTest {
-  @isTest
-  static void TestGetPostedJobList() {
-
+  
+  // Test Data
+  private static User createDummyUser() {
     User dummyUser = new User(
-        FirstName = 'Test',
-        LastName = 'User',
-        Email = 'test@example.com',
-        Username = 'te1212121st@example.com',
-        Alias = 'testu',
-        EmailEncodingKey = 'UTF-8',
-        LanguageLocaleKey = 'en_US',
-        LocaleSidKey = 'en_US',
-        TimeZoneSidKey = 'America/Los_Angeles',
-        ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User'].Id 
+      FirstName = 'Test',
+      LastName = 'User',
+      Email = 'test@example.com',
+      Username = 'te1212121st@example.com',
+      Alias = 'testu',
+      EmailEncodingKey = 'UTF-8',
+      LanguageLocaleKey = 'en_US',
+      LocaleSidKey = 'en_US',
+      TimeZoneSidKey = 'America/Los_Angeles',
+      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
+      .Id
     );
     insert dummyUser;
+    return dummyUser;
+  }
 
+
+  @isTest
+  static void TestGetPostedJobList() {
+    User dummyUser = createDummyUser();
     Job__c job = new Job__c(
       Title_of_position__c = 'Sales Manager',
       City__c = 'Gurgaon',
@@ -55,21 +62,8 @@ private class GetPostedJobListTest {
   }
 
   @isTest
-  static void TestGetDraftedJobList(){
-    User dummyUser = new User(
-        FirstName = 'Tewwst',
-        LastName = 'Usewwr',
-        Email = 'test@example.com',
-        Username = 'te1212234dd2121st@example.com',
-        Alias = 'tewstu',
-        EmailEncodingKey = 'UTF-8',
-        LanguageLocaleKey = 'en_US',
-        LocaleSidKey = 'en_US',
-        TimeZoneSidKey = 'America/Los_Angeles',
-        ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User'].Id 
-    );
-    insert dummyUser;
-
+  static void TestGetDraftedJobList() {
+    User dummyUser = createDummyUser();
     Job__c job = new Job__c(
       Title_of_position__c = 'Sales Manager',
       City__c = 'Gurgaon',

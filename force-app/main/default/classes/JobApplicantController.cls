@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-01-2024
+ * @last modified on  : 04-02-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -174,7 +174,7 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfJobsPosted(string userId) {
+  public static integer getNumberOfJobsPosted(id userId) {
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     return [
@@ -185,7 +185,7 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfApplicants(string userId) {
+  public static integer getNumberOfApplicants(id userId) {
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     return [

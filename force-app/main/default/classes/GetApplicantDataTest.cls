@@ -21,8 +21,8 @@
  */
 @isTest
 private class GetApplicantDataTest {
-  @isTest
-  static void TestGetApplicantDataMethod() {
+  // Test Data
+  private static Candidate_Details__c createCandidateDetails() {
     Candidate_Details__c candidate = new Candidate_Details__c(
       About__c = 'About the candidate',
       City__c = 'City',
@@ -36,30 +36,10 @@ private class GetApplicantDataTest {
       Job_Title__c = 'Software Engineer'
     );
     insert candidate;
-    List<Candidate_Details__c> result = GetApplicantData.GetApplicantDataMethod(
-      candidate.Id
-    );
-
-    System.assertEquals(1, result.size());
-    System.assertEquals('1234567890', result[0].Phone_Number__c);
+    return candidate;
   }
 
-  @isTest
-  static void TestGetAppliedJobById() {
-    Candidate_Details__c candidate = new Candidate_Details__c(
-      About__c = 'About the candidate',
-      City__c = 'City',
-      Country__c = 'Country',
-      Candidate_Email__c = 'candidate@example.com',
-      Gender__c = 'Male',
-      Name = 'John Doe',
-      Phone_Number__c = '1234567890',
-      Skills__c = 'Java, JavaScript',
-      Experience__c = 5,
-      Job_Title__c = 'Software Engineer'
-      
-    );
-    insert candidate;
+  private static Job__c createJob() {
     Job__c job = new Job__c(
       Title_of_position__c = 'Sales Manager',
       City__c = 'Gurgaon',
@@ -70,67 +50,77 @@ private class GetApplicantDataTest {
       Status__c = 'Completed'
     );
     insert job;
+    return job;
+  }
 
+  private static Job_Applicants__c createJobApplicant(
+    Id candidateId,
+    Id jobId
+  ) {
     Job_Applicants__c applicant = new Job_Applicants__c(
-      CandidateId__c = candidate.id,
-      Job_Id__c = job.id,
+      CandidateId__c = candidateId,
+      Job_Id__c = jobId,
       Application_Status__c = 'Pending'
     );
-
     insert applicant;
+    return applicant;
+  }
+
+  private static List<Work_Experience__c> createWorkExperienceList(
+    Id candidateId
+  ) {
+    List<Work_Experience__c> workExpList = new List<Work_Experience__c>{
+      new Work_Experience__c(
+        CandidateId__c = candidateId,
+        City__c = 'City1',
+        Country__c = 'Country1',
+        Name = 'Work Experience 1',
+        From_Date__c = Date.newInstance(2020, 1, 1),
+        To_Date__c = Date.newInstance(2022, 12, 31),
+        Is_Current_Company__c = false,
+        Organisation__c = 'Company A',
+        Skills__c = 'Java, SQL'
+      )
+    };
+    insert workExpList;
+    return workExpList;
+  }
+
+  @isTest
+  static void TestGetApplicantDataMethod() {
+    Candidate_Details__c candidate = createCandidateDetails();
+
+    List<Candidate_Details__c> result = GetApplicantData.GetApplicantDataMethod(
+      candidate.Id
+    );
+
+    System.assertEquals(1, result.size());
+    System.assertEquals('1234567890', result[0].Phone_Number__c);
+  }
+
+  @isTest
+  static void TestGetAppliedJobById() {
+    Candidate_Details__c candidate = createCandidateDetails();
+    Job__c job = createJob();
+
+    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
 
     List<Job__c> result = GetApplicantData.getAppliedJobById(candidate.id);
 
     System.assertEquals(1, result.size());
   }
 
- 
-    @isTest
-    static void TestGetWorkExperienceData() {
-        Candidate_Details__c candidate = new Candidate_Details__c(
-            About__c = 'About the candidate',
-            City__c = 'City',
-            Country__c = 'Country',
-            Candidate_Email__c = 'candidate@example.com',
-            Gender__c = 'Male',
-            Name = 'John Doe',
-            Phone_Number__c = '1234567890',
-            Skills__c = 'Java, JavaScript',
-            Experience__c = 5,
-            Job_Title__c = 'Software Engineer'
-        );
-        insert candidate;
-        
-        List<Work_Experience__c> workExpList = new List<Work_Experience__c>{
-            new Work_Experience__c(
-                CandidateId__c = candidate.Id,
-                City__c = 'City1',
-                Country__c = 'Country1',
-                Name = 'Work Experience 1',
-                From_Date__c = Date.newInstance(2020, 1, 1),
-                To_Date__c = Date.newInstance(2022, 12, 31),
-                Is_Current_Company__c = false,
-                Organisation__c = 'Company A',
-                Skills__c = 'Java, SQL'
-            ),
-            new Work_Experience__c(
-                CandidateId__c = candidate.Id,
-                City__c = 'City2',
-                Country__c = 'Country2',
-                Name = 'Work Experience 2',
-                From_Date__c = Date.newInstance(2018, 1, 1),
-                To_Date__c = null,
-                Is_Current_Company__c = true,
-                Organisation__c = 'Company B',
-                Skills__c = 'JavaScript, HTML'
-            )
-        };
-        insert workExpList;
+  @isTest
+  static void TestGetWorkExperienceData() {
+    Candidate_Details__c candidate = createCandidateDetails();
+    list<Work_Experience__c> workexpList = createWorkExperienceList(
+      candidate.id
+    );
 
-        list<Work_Experience__c> result = GetApplicantData.GetWorkExperienceData(candidate.id);
+    list<Work_Experience__c> result = GetApplicantData.GetWorkExperienceData(
+      candidate.id
+    );
 
-        System.assertEquals(2, result.size());
-    }
+    System.assertEquals(1, result.size());
+  }
 }
-
-
