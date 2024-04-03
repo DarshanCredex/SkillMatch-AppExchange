@@ -17,6 +17,7 @@ export default class ViewQuestionsComponent extends LightningElement {
     if (sessionStorage.getItem("postedJobId")) {
       this.jobId = sessionStorage.getItem("postedJobId");
     }
+    refreshApex(this.wiredResult);
   }
 
   @wire(fetchQuestions, { jobId: "$jobId" })
