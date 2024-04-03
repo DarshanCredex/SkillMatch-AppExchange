@@ -11,15 +11,12 @@ export default class TestInstructionsComponent extends NavigationMixin(
 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("jobId");
-  }
-
-  @wire(getTestTimings, { jobId: "$jobId" })
-  wiredGetTestTimings({ data, error }) {
-    if (data) {
-      this.testTiming = data;
-    } else {
-      const err = error;
-    }
+    getTestTimings({ jobId: this.jobId }).then((result) => {
+      if (result) {
+        this.testTiming = result;
+        console.log("this.testTiming", this.testTiming);
+      }
+    });
   }
 
   handleStartTest() {
