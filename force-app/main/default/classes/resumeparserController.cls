@@ -31,9 +31,8 @@ public class resumeparserController {
                 }
                 try {
                     delete [SELECT Id FROM ContentDocument WHERE Id IN :contentDocumentIdsToDelete];
-                    System.debug('Old attachments deleted');
                 } catch(Exception e) {
-                    System.debug('Error deleting attachments: ' + e.getMessage());
+                    throw new AuraHandledException(e.getMessage());
                 }
             }
             
@@ -49,26 +48,22 @@ public class resumeparserController {
             newContentDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :newContentVersion.Id].ContentDocumentId;
             newContentDocLink.LinkedEntityId = candidateId.Id;
             insert newContentDocLink;
-            System.debug('New attachment created');
         } else {
-            System.debug('Candidate not found');
+                // Handle errors appropriately, e.g., display error message to user
         }
     }
     
     
     public void updateParsedSkillsVF() {
         try {
-            System.debug('parsedText' + parsedText);
             Candidate_Details__c candidateId = [SELECT Id, ParsedSkills__c FROM Candidate_Details__c WHERE User__c = :userId LIMIT 1];
             
             if(candidateId != null){
                 candidateId.ParsedSkills__c = parsedText;
                 update candidateId;
-                System.debug('Parsed skills updated successfully.');
             }
         } catch (Exception e) {
-            System.debug(e.getMessage());
-            // Handle errors appropriately, e.g., display error message to user
+            throw new AuraHandledException(e.getMessage());
         }
     }
     
