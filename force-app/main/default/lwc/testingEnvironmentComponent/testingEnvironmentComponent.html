@@ -37,7 +37,7 @@
               <div key={option.Id} class="option-component">
                 <p>
                   <input type="radio" name={question.Id} value={option.Answers__c}
-                    onchange={handleObjectiveOptionChange} data-id={question.Id}></input>
+                    onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
                 </p>
                 <p>{option.Answers__c}</p>
               </div>
@@ -87,7 +87,7 @@
             </template>
             <template lwc:elseif={showSubjective}>
               <lightning-button variant="brand" type="submit" label="Submit"
-                onclick={handleSubjectiveNext}></lightning-button>
+                onclick={handleFinalSubmit}></lightning-button>
             </template>
           </div>
         </footer>
