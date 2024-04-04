@@ -23,6 +23,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: white;
+    position: sticky;
+    top: 0;
+    padding: 1%;
 }
 
 .question-card h1 {

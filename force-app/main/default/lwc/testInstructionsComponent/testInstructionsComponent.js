@@ -29,4 +29,8 @@ export default class TestInstructionsComponent extends NavigationMixin(
     };
     this[NavigationMixin.Navigate](pageReference);
   }
+
+  handleObjectiveOptionChange(event) {
+    
+  }
 }
