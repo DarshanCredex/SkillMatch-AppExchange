@@ -4,7 +4,6 @@ import GetWorkExperienceData from "@salesforce/apex/GetApplicantData.GetWorkExpe
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
-import getResume from "@salesforce/apex/GetApplicantData.getResume";
 import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobById";
 import { NavigationMixin } from "lightning/navigation";
 
@@ -104,20 +103,5 @@ export default class ApplicantProfile extends NavigationMixin(
         this.IsAccepted = true;
       }
     });
-  }
-  handleResumePreview() {
-    getResume({ applicantId: this.applicantId })
-      .then((data) => {
-        if (data && data.length > 0) {
-          this.contentDocumentId = data[0].ContentDocumentId;
-          console.log("contentDocumentId------->", this.contentDocumentId);
-          // this.pdfUrl = `/servlet/servlet.FileDownload?file=a055h000021qUbTAAU`;
-        } else {
-          console.error("No content document found.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching resume:", error);
-      });
   }
 }
