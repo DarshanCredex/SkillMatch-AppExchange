@@ -1,0 +1,185 @@
+<apex:page controller="resumeparserController" standardStylesheets="false" showHeader="false" id="resumeParser" docType="html-5.0" >
+    <html>
+        <head>    
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script> 		
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.js"></script>
+            <style>
+                .uploadFileMainContainer{
+                    display: flex;
+                    flex-direction: column;
+                    width:100%;
+                }
+            .sub-uploadFileMainContainer{
+                display: flex;
+                flex-direction: row;
+                width:100%;     
+            }
+            .uploadfilecontainer{
+                font-family: sans-serif;
+                font-size: medium;
+                border: 1px dashed grey;
+                width: 70%;
+                margin-right: 40px;
+            }
+            input::file-selector-button {
+                background-color: #0070d2;
+                color: #fff;
+                padding: 0.5em;
+                font-weight: 400;
+                border: thin solid grey;
+                border-radius: 3px;
+            }
+            .slds-button {
+                display: inline-block;
+                font-size: 0.875rem; /* 14px */
+                font-weight: 400;
+                line-height: 1.5;
+                text-align: center;
+                text-decoration: none;
+                white-space: nowrap;
+                vertical-align: middle;
+                cursor: pointer;
+                user-select: none;
+                background-color: #0070d2;
+                border: 1px solid transparent;
+                color: #fff;
+                border-radius: 0.25rem; /* 4px */
+                padding: 0.5rem 1rem;
+                transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            }
+            .slds-button:hover {
+                background-color: #005fb2;
+            }
+            .Sslds-button span {
+                display: inline-block;
+                vertical-align: middle;
+            }
+            /* Icon inside the button */
+            .slds-button svg {
+                width: 1em;
+                height: 1em;
+                fill: currentColor;
+                vertical-align: middle;
+                padding-right: 0.5rem;
+            }
+            .uploadlabel{
+                font-weight:bold;
+                padding-bottom:2px;
+            }
+            </style>
+            </head>
+            
+            <body>
+                <apex:form id="uploadForm">
+                    <div class="uploadFileMainContainer">
+                        <label class="uploadlabel">Attach File</label>
+                        <div class="sub-uploadFileMainContainer">
+                            <input class="uploadfilecontainer" id="pdffile" name="pdffile" type="file" accept="{!acceptedFormats}" />
+                                <button class="slds-button slds-button_brand" id="btn" onclick="uploadFiles()">Upload</button>
+                                </div>    
+                                </div>
+                                <apex:actionFunction name="saveFileAF" action="{!saveFile}" oncomplete="uploadFiles();"  status="statusSaveTrip">
+                                    <apex:param name="base64File" value="" assignTo="{!base64}"/>
+                                        <apex:param name="fileName" value="" assignTo="{!fileName}"/>
+                                            </apex:actionFunction>
+                                        <apex:actionFunction name="updateParsedSkillsVF" action="{!updateParsedSkillsVF}" oncomplete="convert();"  >
+                                            <apex:param name="text" value="" assignTo="{!parsedText}" />
+                                                </apex:actionFunction>
+                                            <apex:actionFunction name="passUserIdToController" action="{!passUserId}" rerender="hiddenOutputPanel">
+                                                <apex:param name="userIdParam" assignTo="{!userId}" value=""/>
+                                                    </apex:actionFunction>
+                                                </apex:form>
+                                                </body> 
+                                                </html>
+                                                <script>
+                                                    var maxStringSize = 6000000;
+            var attachmentList;
+            var j;        
+            function uploadFiles(){
+                input = document.getElementById('pdffile');
+                attachmentList = input.files;
+                if(j == undefined) 
+                    j = 0;   
+                var file;
+                if(j < attachmentList.length)
+                {
+                    file = attachmentList[j];
+                    var name = file.name;
+                    var reader = new FileReader();  
+                    reader.onload = function(e) {  
+                        var attachmentbodybase64 = reader.result.replace(/^data:.+;base64,/, '');
+                        
+                        if(attachmentbodybase64.length > maxStringSize )
+                            alert("File size is too large to handle");
+                        else
+                        {
+                            j++;
+                            saveFileAF(attachmentbodybase64, name);
+                            convert();
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+                else
+                {
+                    
+                }
+                
+            }
+            
+            async function convert() {
+                var fr=new FileReader();
+                var pdff = new Pdf2TextClass();
+                fr.onload=function(){
+                    pdff.pdfToText(fr.result, function (text) {
+                        // document.getElementById('result').innerText += text;
+                        updateSkillField(text);
+                    });
+                };
+                fr.readAsArrayBuffer(document.getElementById('pdffile').files[0]);
+            }
+            function Pdf2TextClass() {
+                var self = this;
+                this.pdfToText = function (data, callbackAllDone) {
+                    pdfjsLib.getDocument(data).promise.then(function (pdf) {
+                        var full_text = "";
+                        var promises = [];
+                        for (var i = 1; i <= pdf.numPages; i++) {
+                            promises.push(pdf.getPage(i).then(function (page) {
+                                return page.getTextContent().then(function (textContent) {
+                                    var page_text = "";			
+                                    textContent.items.forEach(function (item) {
+                                        page_text += item.str + " ";
+                                    });
+                                    full_text += page_text + "\n\n";
+                                });
+                            }));
+                        }
+                        Promise.all(promises).then(function () {
+                            
+                            callbackAllDone(full_text);
+                        });
+                    });
+                };
+            }
+            function updateSkillField(text) {
+                updateParsedSkillsVF(text);  
+            }   
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+            var userId = getParameterByName('userId');            
+            function passUserIdToControllerJS() {
+                passUserIdToController(userId);
+            }           
+            passUserIdToControllerJS();
+            </script>
+            
+        </apex:page>
