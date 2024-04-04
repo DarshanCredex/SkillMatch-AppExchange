@@ -96,22 +96,18 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     this.assessmentButtonCss = "job-logo";
     this.selectedJob = this.appliedJob;
     this.isShortlisted = true;
-    console.log("selectedJob21-->", this.selectedJob);
     try {
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Shortlisted"
       );
-      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
-      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
-      console.error("Error in filtering shortlisted jobs --> ", e.message);
+      console.error("Error in filtering shortlisted jobs ------> ", e.message);
     } finally {
-      console.log("Selected Job after filter -->", this.selectedJob);
       if (this.selectedJob.jobWrapperList.length > 0) {
         this.errorMessage = false;
       } else {
@@ -120,6 +116,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+  
   handleTabChange3() {
     this.isLoading = true;
     this.selectedTab = "Pending";
@@ -133,12 +130,10 @@ export default class CandidateAppliedJobs extends NavigationMixin(
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Pending"
       );
-      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
-      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
       console.error("Error in filtering shortlisted jobs --> ", e.message);
@@ -152,6 +147,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+
   handleAssesmentButton(event) {
     const jobid = event.target.value;
     sessionStorage.setItem("jobId", jobid);

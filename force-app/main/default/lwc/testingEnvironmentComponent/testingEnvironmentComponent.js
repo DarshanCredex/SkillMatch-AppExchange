@@ -3,20 +3,22 @@
 import { LightningElement, wire, track } from "lwc";
 import fetchQuestions from "@salesforce/apex/testingEnvironmentController.fetchQuestions";
 import getTestTimings from "@salesforce/apex/testingEnvironmentController.getTestTimings";
+import Id from "@salesforce/user/Id";
+import getObjectiveResponse from "@salesforce/apex/testingEnvironmentController.getObjectiveResponse";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
   @track objectiveList = [];
   @track subjectiveList = [];
-  selectedOptions = {};
+  selectedOptions = [];
   selectedResponse = [];
-  selectedIdsubjective = {};
+  subjectiveResponseAndId = {};
   @track timeRemaining;
+  userId = Id;
 
   jobid;
   myVal = "";
-
-  indexObjective = 0;
 
   showSubjective = false;
   showObjective = true;
@@ -63,7 +65,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
         this.emptySubjective = true;
       }
     }
-    console.log("this.objectiveList---->", this.objectiveList);
   }
 
   startTimer() {
@@ -91,14 +92,16 @@ export default class TestingEnvironmentComponent extends LightningElement {
 
   handleObjectiveOptionChange(event) {
     const questionId = event.target.dataset.id;
-    const selectedOption = event.target.value;
-    this.selectedOptions[questionId] = selectedOption;
-    console.log("selected options------->", this.selectedOptions);
+    this.selectedOptions.push(questionId);
+    console.log(" this.selectedOptions", JSON.stringify(this.selectedOptions));
+    console.log("userId", this.userId);
+    console.log("jobid", this.jobid);
   }
 
   handleNext() {
     this.showWarningModal = true;
   }
+
   closeModal() {
     this.showWarningModal = false;
   }
@@ -108,18 +111,54 @@ export default class TestingEnvironmentComponent extends LightningElement {
     this.showObjective = false;
     this.showSubjective = true;
   }
-  handleSubjectiveNext() {
-    this.showWarningModal = false;
-    this.showSubjective = false;
-    this.showObjective = false;
-  }
+
   handleSubjectiveChange(event) {
+    console.log("inside changeeeeee");
     const value = this.template.querySelector(
       "lightning-input-rich-text"
     ).value;
     this.myVal = value;
-    this.selectedResponse.push(this.myVal);
     const id = event.target.dataset.id;
-    this.selectedIdsubjective.push(id);
+    this.subjectiveResponseAndId[id] = [this.myVal];
+    console.log("this.subjectiveResponseAndId", JSON.stringify(this.subjectiveResponseAndId));
+  }
+
+  handleFinalSubmit() {
+    console.log("subjective next");
+    this.getResponse();
+    this.showWarningModal = false;
+    this.showSubjective = false;
+    this.showObjective = false;
+  }
+
+  getResponse() {
+    console.log("get response");
+    getObjectiveResponse({
+      optionId: this.selectedOptions,
+      userId: this.userId,
+      jobId: this.jobid
+    })
+      .then(() => {
+        console.log("success");
+        this.showToast(
+          "Assessment Over",
+          "Your Response has been recorded",
+          "success"
+        );
+      })
+      .catch((error) => {
+        const err = error;
+        console.log("error------->", err);
+      });
+  }
+
+  showToast(title, message, variant) {
+    this.dispatchEvent(
+      new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant
+      })
+    );
   }
 }

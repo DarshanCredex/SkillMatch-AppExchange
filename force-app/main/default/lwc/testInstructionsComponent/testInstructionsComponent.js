@@ -6,6 +6,7 @@ import { NavigationMixin } from "lightning/navigation";
 export default class TestInstructionsComponent extends NavigationMixin(
   LightningElement
 ) {
+  
   testTiming;
   jobId;
 
@@ -14,7 +15,6 @@ export default class TestInstructionsComponent extends NavigationMixin(
     getTestTimings({ jobId: this.jobId }).then((result) => {
       if (result) {
         this.testTiming = result;
-        console.log("this.testTiming", this.testTiming);
       }
     });
   }
@@ -30,7 +30,4 @@ export default class TestInstructionsComponent extends NavigationMixin(
     this[NavigationMixin.Navigate](pageReference);
   }
 
-  handleObjectiveOptionChange(event) {
-    
-  }
 }
