@@ -8,9 +8,13 @@ export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
   @track objectiveList = [];
   @track subjectiveList = [];
+  selectedOptions = {};
+  selectedResponse = [];
+  selectedIdsubjective = {};
   @track timeRemaining;
 
   jobid;
+  myVal = "";
 
   indexObjective = 0;
 
@@ -18,6 +22,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
   showObjective = true;
   emptySubjective = false;
   emptyObjective = false;
+  showWarningModal = false;
 
   timerTimeout;
 
@@ -33,7 +38,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
       .then((result) => {
         if (result) {
           this.timeRemaining = result;
-          console.log("this.testTiming", this.timeRemaining);
           this.startTimer();
         }
       })
@@ -55,21 +59,11 @@ export default class TestingEnvironmentComponent extends LightningElement {
       this.subjectiveList = this.questionList.filter((item) => {
         return item.Type__c === "Subjective";
       });
-      if (this.subjectiveList.lenth === 0) {
+      if (this.subjectiveList.length === 0) {
         this.emptySubjective = true;
       }
     }
-  }
-
-  handleQuestionType(event) {
-    const buttonValue = event.target.value;
-    if (buttonValue === "Objectives") {
-      this.showObjective = true;
-      this.showSubjective = false;
-    } else if (buttonValue === "Subjectives") {
-      this.showSubjective = true;
-      this.showObjective = false;
-    }
+    console.log("this.objectiveList---->", this.objectiveList);
   }
 
   startTimer() {
@@ -93,5 +87,39 @@ export default class TestingEnvironmentComponent extends LightningElement {
         alert("Time is up!");
       }
     }, 1000);
+  }
+
+  handleObjectiveOptionChange(event) {
+    const questionId = event.target.dataset.id;
+    const selectedOption = event.target.value;
+    this.selectedOptions[questionId] = selectedOption;
+    console.log("selected options------->", this.selectedOptions);
+  }
+
+  handleNext() {
+    this.showWarningModal = true;
+  }
+  closeModal() {
+    this.showWarningModal = false;
+  }
+
+  handleNextSubjective() {
+    this.showWarningModal = false;
+    this.showObjective = false;
+    this.showSubjective = true;
+  }
+  handleSubjectiveNext() {
+    this.showWarningModal = false;
+    this.showSubjective = false;
+    this.showObjective = false;
+  }
+  handleSubjectiveChange(event) {
+    const value = this.template.querySelector(
+      "lightning-input-rich-text"
+    ).value;
+    this.myVal = value;
+    this.selectedResponse.push(this.myVal);
+    const id = event.target.dataset.id;
+    this.selectedIdsubjective.push(id);
   }
 }

@@ -2,7 +2,7 @@
   @description       : this component contains the questions of the test
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-03-2024
+  @last modified on  : 04-04-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -13,13 +13,11 @@
       </div>
 
       <div class="buttons">
-        <div>
-          <lightning-button variant="brand" label="Objectives" value="Objectives"
-            onclick={handleQuestionType}></lightning-button>
+        <div lwc:if={showObjective}>
+          <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
         </div>
-        <div>
-          <lightning-button variant="neutral" label="Subjectives" value="Subjectives"
-            onclick={handleQuestionType}></lightning-button>
+        <div lwc:elseif={showSubjective}>
+          <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
         </div>
       </div>
     </div>
@@ -39,7 +37,7 @@
               <div key={option.Id} class="option-component">
                 <p>
                   <input type="radio" name={question.Id} value={option.Answers__c}
-                    onchange={handleOptionChange}></input>
+                    onchange={handleObjectiveOptionChange} data-id={question.Id}></input>
                 </p>
                 <p>{option.Answers__c}</p>
               </div>
@@ -61,10 +59,40 @@
               <h1> {question.Question_Name__c}</h1>
             </div>
             <lightning-input-rich-text disabled-categories="INSERT_CONTENT" value={myVal}
-              onchange={handleChange}></lightning-input-rich-text>
+              onchange={handleSubjectiveChange} data-id={question.Id}></lightning-input-rich-text>
           </div>
         </template>
       </template>
     </template>
   </div>
+
+  <template lwc:if={showWarningModal}>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title"> WARNING</h2>
+          <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
+            class="slds-modal__close"></lightning-button-icon>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" style="text-align: center">
+          <h1>You cannot go back and edit your responses if you click next!!</h1>
+        </div>
+        <footer class="slds-modal__footer">
+          <div style="text-align: right;">
+            <lightning-button variant="destructive" label="Close" onclick={closeModal}
+              style="padding-right: 1%"></lightning-button>
+            <template lwc:if={showObjective}>
+              <lightning-button variant="brand" type="submit" label="Next"
+                onclick={handleNextSubjective}></lightning-button>
+            </template>
+            <template lwc:elseif={showSubjective}>
+              <lightning-button variant="brand" type="submit" label="Submit"
+                onclick={handleSubjectiveNext}></lightning-button>
+            </template>
+          </div>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
 </template>
