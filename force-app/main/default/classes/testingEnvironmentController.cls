@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-04-2024
+ * @last modified on  : 04-05-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -108,8 +108,9 @@ public with sharing class testingEnvironmentController {
   @AuraEnabled
   public static void getSubjectiveResponse(
     id userid,
-    Map<Id, String[]> subjectiveResponseAndId
+    Map<Id, String> subjectiveResponseAndId
   ) {
+    System.debug('subjectiveResponseAndId------->' + subjectiveResponseAndId);
     try {
       id candidateid = [
         SELECT id
@@ -121,9 +122,25 @@ public with sharing class testingEnvironmentController {
       id applicantid = [
         SELECT id
         FROM Job_applicants__c
-        WHERE CandidateId__c = :applicantid
+        WHERE CandidateId__c = :candidateid
       ][0]
       .id;
+
+      list<response__c> responseList = new List<response__c>();
+
+      for (Id questionId : subjectiveResponseAndId.keySet()) {
+        string res = subjectiveResponseAndId.get(questionId);
+        response__c response = new response__c(
+          Response_Value__c = res,
+          Job_Applicants__c = applicantid,
+          Question__c = questionId
+        );
+        responseList.add(response);
+      }
+
+      if (!responseList.isEmpty()) {
+        insert responseList;
+      }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
