@@ -39,10 +39,17 @@ export default class TestingEnvironmentComponent extends LightningElement {
     super();
     window.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
-        alert("WARNING!!! \nYOU CANNOT SWITCH TABS ELSE YOU WILL BE DEBARRED");
+        if (this.tabSwitchCount < 2) {
+          alert(
+            "WARNING!!! \nYOU CANNOT SWITCH TABS ELSE YOU WILL BE DEBARRED"
+          );
+        }
         this.tabSwitchCount++;
         if (this.tabSwitchCount >= 2) {
           this.getResponse();
+          alert(
+            "You switched tabs more than twice \nYour test is over and response has been recorded"
+          );
         }
       }
     });
@@ -55,7 +62,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
     window.addEventListener("beforeunload", (event) => {
       event.preventDefault();
       event.returnValue = "Do not reload";
-      alert("Cannot reload");
     });
 
     document.addEventListener(

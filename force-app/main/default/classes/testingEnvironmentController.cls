@@ -145,4 +145,45 @@ public with sharing class testingEnvironmentController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
+  @AuraEnabled(cacheable=true)
+  public static boolean checkIfAlreadyAttempted(id userid, id jobid) {
+    try {
+      id candidateId = [
+        SELECT id
+        FROM Candidate_Details__c
+        WHERE user__c = :userid
+      ][0]
+      .id;
+
+      id applicantId = [
+        SELECT id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId
+      ][0]
+      .id;
+
+      list<Question__c> questionIdList = [
+        SELECT id
+        FROM Question__c
+        WHERE Job__c = :jobid
+      ];
+
+      list<response__c> responseCount = [
+        SELECT id
+        FROM response__c
+        WHERE
+          Job_Applicants__c = :applicantId
+          AND Question__c IN :questionIdList
+      ];
+
+      if (!responseCount.isEmpty()) {
+        return true;
+      } else {
+       return false;
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }
