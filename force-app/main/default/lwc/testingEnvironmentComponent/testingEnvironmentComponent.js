@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-alert */
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { LightningElement, wire, track } from "lwc";
@@ -12,14 +13,17 @@ export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
   @track objectiveList = [];
   @track subjectiveList = [];
-  selectedOptions = [];
-  selectedResponse = [];
-  subjectiveResponseAndId = {};
+  @track selectedOptions = [];
   @track timeRemaining;
-  userId = Id;
 
+  subjectiveResponseAndId = {};
+
+  userId = Id;
   jobid;
+  tabSwitchCount = 0;
   myVal = "";
+  success;
+  error;
 
   showSubjective = false;
   showObjective = true;
@@ -31,6 +35,60 @@ export default class TestingEnvironmentComponent extends LightningElement {
 
   timerTimeout;
 
+  constructor() {
+    super();
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        alert("WARNING!!! \nYOU CANNOT SWITCH TABS ELSE YOU WILL BE DEBARRED");
+        this.tabSwitchCount++;
+        if (this.tabSwitchCount >= 2) {
+          this.getResponse();
+        }
+      }
+    });
+
+    this.template.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      alert("Right click not allowed");
+    });
+
+    window.addEventListener("beforeunload", (event) => {
+      event.preventDefault();
+      event.returnValue = "Do not reload";
+      alert("Cannot reload");
+    });
+
+    document.addEventListener(
+      "copy",
+      (event) => {
+        event.clipboardData.setData("text/plain", "*pasting is prevented*");
+        alert("copying/pasting is not allowed");
+        event.preventDefault();
+      },
+      false
+    );
+
+    window.addEventListener("keyup", (event) => {
+      if (
+        event.key === "F12" ||
+        event.key === "F11" ||
+        event.key === "F10" ||
+        event.key === "F9" ||
+        event.key === "F8" ||
+        event.key === "F7" ||
+        event.key === "F6" ||
+        event.key === "F5" ||
+        event.key === "F4" ||
+        event.key === "F3" ||
+        event.key === "F2" ||
+        event.key === "F1"
+      ) {
+        alert("FUNCTION KEYS DISABLED");
+        return false;
+      }
+    });
+  }
+
   get timerDisplay() {
     const minutes = Math.floor(this.timeRemaining / 60);
     const seconds = this.timeRemaining % 60;
@@ -39,6 +97,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
 
   connectedCallback() {
     this.jobid = sessionStorage.getItem("jobId");
+
     getTestTimings({ jobId: this.jobid })
       .then((result) => {
         if (result) {
@@ -50,7 +109,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
         console.error("Error retrieving test timings:", error);
       });
   }
-
   @wire(fetchQuestions, { jobId: "$jobid" })
   wiredFetchQuestions({ data }) {
     if (data) {
@@ -126,10 +184,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
 
   handleFinalSubmit() {
     this.getResponse();
-    this.showWarningModal = false;
-    this.showSubjective = false;
-    this.showObjective = false;
-    this.showMain = false;
   }
 
   getResponse() {
@@ -139,11 +193,10 @@ export default class TestingEnvironmentComponent extends LightningElement {
       jobId: this.jobid
     })
       .then(() => {
-        console.log("success");
+        this.success = true;
       })
       .catch((error) => {
-        const err = error;
-        console.log("error------->", err);
+        this.error = error;
       });
 
     getSubjectiveResponse({
@@ -151,16 +204,19 @@ export default class TestingEnvironmentComponent extends LightningElement {
       subjectiveResponseAndId: this.subjectiveResponseAndId
     })
       .then(() => {
-        console.log("successful in sending subjective response");
         this.showToast(
           "Assessment Over",
           "Your Response has been recorded",
           "success"
         );
         this.showFinalScreen = true;
+        this.showWarningModal = false;
+        this.showSubjective = false;
+        this.showObjective = false;
+        this.showMain = false;
       })
       .catch((error) => {
-        console.log("error----->", error);
+        this.error = error;
       });
   }
 
