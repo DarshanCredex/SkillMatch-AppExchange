@@ -2,69 +2,79 @@
   @description       : this component contains the questions of the test
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-04-2024
+  @last modified on  : 04-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-  <div class="main">
-    <div class="header">
-      <div class="timer">
-        <h1>Test timer - {timerDisplay}</h1>
-      </div>
+  <template lwc:if={showMain}>
+    <div class="main">
+      <div class="header">
+        <div class="timer">
+          <h1>Test timer - {timerDisplay}</h1>
+        </div>
 
-      <div class="buttons">
-        <div lwc:if={showObjective}>
-          <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
-        </div>
-        <div lwc:elseif={showSubjective}>
-          <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
+        <div class="buttons">
+          <div lwc:if={showObjective}>
+            <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
+          </div>
+          <div lwc:elseif={showSubjective}>
+            <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
+          </div>
         </div>
       </div>
-    </div>
-    <template lwc:if={showObjective}>
-      <template if:true={emptyObjective}>
-        <div class="empty-list">
-          <h1>No questions for this Type</h1>
-        </div>
-      </template>
-      <template if:false={emptyObjective}>
-        <template for:each={objectiveList} for:item="question" for:index="index">
-          <div key={question.Id} class="question-component" data-value={index}>
-            <div class="question-name">
-              <h1> {question.Question_Name__c}</h1>
-            </div>
-            <template for:each={question.Options__r} for:item="option">
-              <div key={option.Id} class="option-component">
-                <p>
-                  <input type="radio" name={question.Id} value={option.Answers__c}
-                    onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
-                </p>
-                <p>{option.Answers__c}</p>
+      <template lwc:if={showObjective}>
+        <template if:true={emptyObjective}>
+          <div class="empty-list">
+            <h1>No questions for this Type</h1>
+          </div>
+        </template>
+        <template if:false={emptyObjective}>
+          <template for:each={objectiveList} for:item="question" for:index="index">
+            <div key={question.Id} class="question-component" data-value={index}>
+              <div class="question-name">
+                <h1> {question.Question_Name__c}</h1>
               </div>
-            </template>
-          </div>
-        </template>
-      </template>
-    </template>
-    <template lwc:elseif={showSubjective}>
-      <template if:true={emptySubjective}>
-        <div class="empty-list">
-          <h1>No questions for this Type</h1>
-        </div>
-      </template>
-      <template if:false={emptySubjective}>
-        <template for:each={subjectiveList} for:item="question">
-          <div key={question.Id} class="question-component">
-            <div class="question-name">
-              <h1> {question.Question_Name__c}</h1>
+              <template for:each={question.Options__r} for:item="option">
+                <div key={option.Id} class="option-component">
+                  <p>
+                    <input type="radio" name={question.Id} value={option.Answers__c}
+                      onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
+                  </p>
+                  <p>{option.Answers__c}</p>
+                </div>
+              </template>
             </div>
-            <lightning-input-rich-text disabled-categories="INSERT_CONTENT" value={myVal}
-              onchange={handleSubjectiveChange} data-id={question.Id}></lightning-input-rich-text>
-          </div>
+          </template>
         </template>
       </template>
-    </template>
-  </div>
+      <template lwc:elseif={showSubjective}>
+        <template if:true={emptySubjective}>
+          <div class="empty-list">
+            <h1>No questions for this Type</h1>
+          </div>
+        </template>
+        <template if:false={emptySubjective}>
+          <template for:each={subjectiveList} for:item="question">
+            <div key={question.Id} class="question-component">
+              <div class="question-name">
+                <h1> {question.Question_Name__c}</h1>
+              </div>
+              <lightning-input-rich-text disabled-categories="INSERT_CONTENT" value={myVal}
+                onchange={handleSubjectiveChange} data-id={question.Id}></lightning-input-rich-text>
+            </div>
+          </template>
+        </template>
+      </template>
+    </div>
+  </template>
+
+  <!--Final screen-->
+  <template lwc:elseif={showFinalScreen}>
+    <div class="final-screen">
+      <h1>Your assessment is complete, your response has been recorded. You may close this tab</h1>
+    </div>
+  </template>
+
 
   <template lwc:if={showWarningModal}>
     <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
@@ -95,4 +105,5 @@
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </template>
+
 </template>

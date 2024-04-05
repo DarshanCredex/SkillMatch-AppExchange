@@ -111,3 +111,11 @@ lightning-input {
     justify-content: center;
     align-items: left;
 }
+.final-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-wrap: wrap;
+    font-size: 25px;
+}
