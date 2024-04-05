@@ -6,6 +6,7 @@ import getTestTimings from "@salesforce/apex/testingEnvironmentController.getTes
 import Id from "@salesforce/user/Id";
 import getObjectiveResponse from "@salesforce/apex/testingEnvironmentController.getObjectiveResponse";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import getSubjectiveResponse from "@salesforce/apex/testingEnvironmentController.getSubjectiveResponse";
 
 export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
@@ -119,8 +120,11 @@ export default class TestingEnvironmentComponent extends LightningElement {
     ).value;
     this.myVal = value;
     const id = event.target.dataset.id;
-    this.subjectiveResponseAndId[id] = [this.myVal];
-    console.log("this.subjectiveResponseAndId", JSON.stringify(this.subjectiveResponseAndId));
+    this.subjectiveResponseAndId[id] = this.myVal;
+    console.log(
+      "this.subjectiveResponseAndId",
+      JSON.stringify(this.subjectiveResponseAndId)
+    );
   }
 
   handleFinalSubmit() {
@@ -140,6 +144,18 @@ export default class TestingEnvironmentComponent extends LightningElement {
     })
       .then(() => {
         console.log("success");
+      })
+      .catch((error) => {
+        const err = error;
+        console.log("error------->", err);
+      });
+
+    getSubjectiveResponse({
+      userid: this.userId,
+      subjectiveResponseAndId: this.subjectiveResponseAndId
+    })
+      .then(() => {
+        console.log("successful in sending subjective response");
         this.showToast(
           "Assessment Over",
           "Your Response has been recorded",
@@ -147,8 +163,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
         );
       })
       .catch((error) => {
-        const err = error;
-        console.log("error------->", err);
+        console.log("error----->", error);
       });
   }
 
