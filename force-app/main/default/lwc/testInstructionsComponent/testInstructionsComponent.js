@@ -2,6 +2,8 @@
 import { LightningElement, wire } from "lwc";
 import getTestTimings from "@salesforce/apex/testingEnvironmentController.getTestTimings";
 import { NavigationMixin } from "lightning/navigation";
+import checkIfAlreadyAttempted from "@salesforce/apex/testingEnvironmentController.checkIfAlreadyAttempted";
+import Id from "@salesforce/user/Id";
 
 export default class TestInstructionsComponent extends NavigationMixin(
   LightningElement
@@ -9,6 +11,7 @@ export default class TestInstructionsComponent extends NavigationMixin(
   testTiming;
   jobId;
   disableButton = false;
+  userId = Id;
 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("jobId");
@@ -16,6 +19,12 @@ export default class TestInstructionsComponent extends NavigationMixin(
       if (result) {
         this.testTiming = result;
       }
+    });
+    checkIfAlreadyAttempted({
+      userid: this.userId,
+      jobid: this.jobId
+    }).then((result) => {
+      if (result === true) this.disableButton = true;
     });
   }
 
@@ -35,6 +44,5 @@ export default class TestInstructionsComponent extends NavigationMixin(
     }).then(() => {
       window.open(newUrl);
     });
-
   }
 }
