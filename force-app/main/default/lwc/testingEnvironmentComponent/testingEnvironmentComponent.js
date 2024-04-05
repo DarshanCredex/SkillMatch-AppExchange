@@ -26,6 +26,8 @@ export default class TestingEnvironmentComponent extends LightningElement {
   emptySubjective = false;
   emptyObjective = false;
   showWarningModal = false;
+  showFinalScreen = false;
+  showMain = true;
 
   timerTimeout;
 
@@ -87,6 +89,9 @@ export default class TestingEnvironmentComponent extends LightningElement {
       if (this.timeRemaining <= 0) {
         clearInterval(this.timerTimeout);
         alert("Time is up!");
+        this.getResponse();
+        this.showFinalScreen = true;
+        this.showMain = false;
       }
     }, 1000);
   }
@@ -94,9 +99,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
   handleObjectiveOptionChange(event) {
     const questionId = event.target.dataset.id;
     this.selectedOptions.push(questionId);
-    console.log(" this.selectedOptions", JSON.stringify(this.selectedOptions));
-    console.log("userId", this.userId);
-    console.log("jobid", this.jobid);
   }
 
   handleNext() {
@@ -114,29 +116,23 @@ export default class TestingEnvironmentComponent extends LightningElement {
   }
 
   handleSubjectiveChange(event) {
-    console.log("inside changeeeeee");
     const value = this.template.querySelector(
       "lightning-input-rich-text"
     ).value;
     this.myVal = value;
     const id = event.target.dataset.id;
     this.subjectiveResponseAndId[id] = this.myVal;
-    console.log(
-      "this.subjectiveResponseAndId",
-      JSON.stringify(this.subjectiveResponseAndId)
-    );
   }
 
   handleFinalSubmit() {
-    console.log("subjective next");
     this.getResponse();
     this.showWarningModal = false;
     this.showSubjective = false;
     this.showObjective = false;
+    this.showMain = false;
   }
 
   getResponse() {
-    console.log("get response");
     getObjectiveResponse({
       optionId: this.selectedOptions,
       userId: this.userId,
@@ -161,6 +157,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
           "Your Response has been recorded",
           "success"
         );
+        this.showFinalScreen = true;
       })
       .catch((error) => {
         console.log("error----->", error);
