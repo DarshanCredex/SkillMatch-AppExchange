@@ -6,9 +6,9 @@ import { NavigationMixin } from "lightning/navigation";
 export default class TestInstructionsComponent extends NavigationMixin(
   LightningElement
 ) {
-  
   testTiming;
   jobId;
+  disableButton = false;
 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("jobId");
@@ -21,13 +21,20 @@ export default class TestInstructionsComponent extends NavigationMixin(
 
   handleStartTest() {
     sessionStorage.setItem("jobId", this.jobId);
-    const pageReference = {
+    const currentURl = window.location.href;
+    const newUrl = currentURl.replace(
+      "/test-instructions",
+      "/testing-environment"
+    );
+
+    this[NavigationMixin.GenerateUrl]({
       type: "standard__webPage",
       attributes: {
-        url: "/testing-environment"
+        url: currentURl
       }
-    };
-    this[NavigationMixin.Navigate](pageReference);
-  }
+    }).then(() => {
+      window.open(newUrl);
+    });
 
+  }
 }
