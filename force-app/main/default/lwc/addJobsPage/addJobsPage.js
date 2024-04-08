@@ -25,7 +25,6 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   typeValue = "";
   industryValue = "";
   skills = "";
-  timing = "";
 
   showQuestionModal = false;
 
@@ -41,7 +40,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
     });
     TimingsPickListValues().then((result) => {
       this.timingValues = result;
-    });
+    })
   }
 
   handleExperienceChange(event) {
@@ -80,9 +79,6 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   handleSkillsChange(event) {
     this.skills = event.target.value;
   }
-  handleTimingChange(event) {
-    this.timing = event.target.value;
-  }
 
   postJobData() {
     postJob({
@@ -96,8 +92,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       typeValue: this.typeValue,
       industryValue: this.industryValue,
       summary: this.summary,
-      skills: this.skills,
-      timing: this.timing
+      skills: this.skills
     })
       .then(() => {
         console.log("true");
@@ -132,8 +127,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       typeValue: this.typeValue,
       industryValue: this.industryValue,
       summary: this.summary,
-      skills: this.skills,
-      timing: this.timing
+      skills: this.skills
     })
       .then(() => {
         console.log("true");
@@ -155,6 +149,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         );
       });
   }
+
 
   showToast(title, message, variant) {
     this.dispatchEvent(

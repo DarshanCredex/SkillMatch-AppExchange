@@ -116,7 +116,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
-  
   handleTabChange3() {
     this.isLoading = true;
     this.selectedTab = "Pending";
@@ -147,7 +146,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
-
   handleAssesmentButton(event) {
     const jobid = event.target.value;
     sessionStorage.setItem("jobId", jobid);

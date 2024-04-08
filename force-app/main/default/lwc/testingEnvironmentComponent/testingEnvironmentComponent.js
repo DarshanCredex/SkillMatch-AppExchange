@@ -62,6 +62,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
     window.addEventListener("beforeunload", (event) => {
       event.preventDefault();
       event.returnValue = "Do not reload";
+      alert("Cannot reload");
     });
 
     document.addEventListener(

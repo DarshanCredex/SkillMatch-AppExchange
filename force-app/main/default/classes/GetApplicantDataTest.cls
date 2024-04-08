@@ -21,7 +21,6 @@
  */
 @isTest
 private class GetApplicantDataTest {
-  // Test Data
   private static Candidate_Details__c createCandidateDetails() {
     Candidate_Details__c candidate = new Candidate_Details__c(
       About__c = 'About the candidate',

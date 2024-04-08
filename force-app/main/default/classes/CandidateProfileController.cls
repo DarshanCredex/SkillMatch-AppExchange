@@ -1,24 +1,5 @@
 public with sharing class CandidateProfileController {
-
-    @AuraEnabled
-    public static void attachFileToCandidate(Id userId, String fileName, String base64Data, String contentType) {
-    System.debug('userId-->'+userId);
-    System.debug('fileName-->'+fileName);
-    System.debug('base64Data-->'+base64Data);
-    System.debug('contentType-->'+contentType);    
-    try {
-            List<Candidate_Details__c> currentCandidate = [SELECT Id FROM Candidate_Details__c WHERE User__c = :userId];
-            Attachment attachment = new Attachment();
-            attachment.ParentId = currentCandidate[0].Id;
-            attachment.Name = fileName;
-            attachment.Body = EncodingUtil.base64Decode(base64Data);
-            attachment.ContentType = contentType;
-            insert attachment;
-        } catch (Exception e) {
-            throw new AuraHandledException('Error attaching file: ' + e.getMessage());
-        }
-    }
-
+    
     @AuraEnabled(cacheable=true)
     public static Candidate_Details__c getCandidateDetails(Id userId) {
         System.debug('userId---->'+userId);

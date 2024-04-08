@@ -1,12 +1,12 @@
 /**
- * @description       : get picklist values of job custom object field 
- * @author            : Sagar Medatwal
+ * @description       :
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             :
- * @last modified on  : 03-28-2024
+ * @last modified on  : 03-27-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobListController {
-  
+    @TestVisible
   public class JobWrapper {
     @AuraEnabled
     public Id jobId { get; set; }

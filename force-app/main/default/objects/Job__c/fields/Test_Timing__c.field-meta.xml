@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_Timing__c</fullName>
+    <description>This field is for getting the timing for the testing environment</description>
+    <externalId>false</externalId>
+    <label>Test Timing</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>15 mins</fullName>
+                <default>false</default>
+                <label>15 mins</label>
+            </value>
+            <value>
+                <fullName>30 mins</fullName>
+                <default>false</default>
+                <label>30 mins</label>
+            </value>
+            <value>
+                <fullName>45 mins</fullName>
+                <default>false</default>
+                <label>45 mins</label>
+            </value>
+            <value>
+                <fullName>60 mins</fullName>
+                <default>false</default>
+                <label>60 mins</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

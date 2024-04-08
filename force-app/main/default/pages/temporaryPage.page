@@ -1,0 +1,103 @@
+<apex:page >
+    <head>
+        <script>
+        /*window.addEventListener('visibilitychange', onbeforeunload);
+        function onbeforeunload(e) {
+            alert('warning');
+            console.log('>>>> pagehide called');
+            return false;
+        };
+        window.onblur = function() {
+            console.log("inside blur");
+            var flag = confirm("Please don't leave!  Click OK if you really want to leave.  I hope you click cancel and stay with me.");
+            if (flag) {
+                window.onblur = undefined;
+                alert("Ok you can leave now.  **sob**");
+                //The user is leaving.  You can do a little cleanup here if you need to.
+            }
+        }
+        window.onreload = function() {
+            return "Dude, are you sure you want to leave? Think of the kittens!";
+        }*/
+        </script>
+    </head>
+    
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Sample Section">
+                <apex:outputText value="This is a sample Visualforce page." />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+
+<!-- Include necessary CSS and JavaScript files -->
+<!-- Ensure that you have included the Swal library -->
+
+<!-- Your HTML content goes here -->
+
+<script>
+    // Prevent Tab switching
+    document.addEventListener("visibilitychange", visibility);
+    // Prevent Right Click
+    document.addEventListener('contextmenu', rightClick);
+    // Prevent Page Reload
+    window.addEventListener("beforeunload", pageReload);
+    // Prevent using Function keys
+    document.addEventListener("keydown", functionKeys);
+
+    var switchedTab = 0;
+
+    // Events
+    function visibility(event) {
+        if (document.hidden) {
+            switchedTab++;
+            event.preventDefault();
+            if (switchedTab <= 2) {
+                alert("Do not switch tabs otherwise paper will be submitted after two times");
+            }
+            if (switchedTab > 2) {
+                if (localStorage.getItem('examSubmitted') === 'true') {
+                    return;
+                }
+                // Call your submission function here
+                return;
+            }
+        } else {
+            event.preventDefault();
+        }
+    }
+
+    function rightClick(event) {
+        event.preventDefault();
+        alert("No right click allowed");
+    }
+
+    function pageReload(event) {
+        event.preventDefault();
+        event.returnValue = "Do not reload";
+    }
+
+    function functionKeys(e) {
+        const keys = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',];
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+            alert("Cannot open dev tools");
+            e.preventDefault();
+        }
+        if (e.ctrlKey && e.keyCode == 82) {
+            alert("Cannot refresh the page");
+            e.preventDefault();
+        }
+        if (e.ctrlKey && e.keyCode == 86) {
+            alert("Do not copy paste");
+            e.preventDefault();
+        }
+        keys.forEach((key) => {
+            if (e.key === key) {
+                alert("Cannot use function keys");
+                e.preventDefault();
+            }
+        });
+    }
+</script>
+
+</apex:page>

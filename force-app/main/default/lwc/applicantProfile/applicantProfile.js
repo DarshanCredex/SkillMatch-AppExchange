@@ -4,6 +4,7 @@ import GetWorkExperienceData from "@salesforce/apex/GetApplicantData.GetWorkExpe
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
+import getResume from "@salesforce/apex/GetApplicantData.getResume";
 import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobById";
 import { NavigationMixin } from "lightning/navigation";
 
@@ -104,4 +105,25 @@ export default class ApplicantProfile extends NavigationMixin(
       }
     });
   }
+  handleResumePreview() {
+    getResume({ applicantId: this.applicantId })
+        .then(result => {
+            // Filter out the CV attachment
+            const document = result.documents[0];
+
+            if (document) {
+              // Generate preview URL for the document
+              this.pdfUrl = '/sfc/servlet.shepherd/document/download/' + document.Id;
+              this.contentDocumentId = document.Id;
+          } else {
+              // If document is not found, display an error message or handle it accordingly
+              console.error('Document not found.');
+          }
+        })
+        .catch(error => {
+            console.error('Error fetching CV:', error);
+            
+        });
+}
+
 }

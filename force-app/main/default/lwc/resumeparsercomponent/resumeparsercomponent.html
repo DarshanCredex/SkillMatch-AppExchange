@@ -1,0 +1,23 @@
+<!-- <template>
+    <lightning-card title="PDF Parser">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading PDF"></lightning-spinner>
+        </template>
+        <template if:false={isLoading}>
+            <template if:true={error}>
+                <p class="error">Error: {error.message}</p>
+            </template>
+            <template if:false={error}>
+                <pre class="parsed-text">{parsedText}</pre>
+            </template>
+        </template>
+         <lightning-input label="PDF URL" value={pdfUrl} onchange={handleUrlChange}></lightning-input> 
+        <lightning-file-upload label="Upload PDF" onuploadfinished={handleFileChange} accept=".pdf"></lightning-file-upload>
+    </lightning-card>
+</template> 
+ -->
+ <template>
+    <input type="file" accept=".pdf" onchange={handleFileChange} />
+    <p>Extracted Text:</p>
+    <pre>{extractedText}</pre>
+    </template>

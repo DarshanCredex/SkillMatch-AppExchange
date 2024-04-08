@@ -3,7 +3,7 @@
     <fullName>Checkbox__c</fullName>
     <defaultValue>false</defaultValue>
     <externalId>false</externalId>
-    <label>Checkbox</label>
+    <label>Is Correct</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

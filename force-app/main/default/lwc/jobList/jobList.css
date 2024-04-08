@@ -1,12 +1,12 @@
-.main{
-    margin: 0 auto;
+.container{
     width: 100%;
-    max-height: 100vh;
+    height: 100vh;
 }
-
 .job-list-container {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden; 
+    height: max-content;
 }
 
 .job-filter-header {
@@ -15,7 +15,7 @@
     border-radius: 5px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    
+
     .job-search-box {
         border-radius: 0.625rem;
         line-height: 2.4375rem;
@@ -23,12 +23,10 @@
         width: auto;
     }
 
-
     .job-sort-text {
         font-size: 0.875rem;
         line-height: 1.125rem;
     }
-
 
     .job-sort-bar {
         display: flex;
@@ -43,14 +41,12 @@
 }
 
 .job-list-content {
+    height: 90vh;
     display: flex;
-    overflow: auto;
     gap: 1rem;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* height: 70vh; */
-    overflow: scroll;
 
     .job-filter-tab {
         display: flex;
@@ -72,10 +68,10 @@
     }
 
     .job-list {
-        
+        overflow-y: auto;
         width: 80%;
         border-radius: 5px;
-        
+
         .job-card:hover {
             cursor: pointer;
             background: aliceblue;
@@ -84,6 +80,7 @@
                 text-decoration-line: underline;
             }
         }
+
         .job-card {
             background-color: #fff;
             border-radius: 5px;
@@ -127,11 +124,13 @@
                         }
                     }
                 }
+
                 .job-logo {
                     height: 3.5rem;
                     width: 3.5rem;
                 }
             }
+
             .job-card-bottom {
                 display: flex;
                 justify-content: space-between;
@@ -178,31 +177,35 @@
     align-items: center;
     justify-content: center;
 }
-  
-  .no-jobs div h1 {
+
+.no-jobs div h1 {
     font-size: 30px;
-  }
-  
-  .no-jobs div img {
+}
+
+.no-jobs div img {
     width: 70%;
     height: auto;
     border: 0;
-  }
+}
 
 @media (max-width: 480px) {
     .job-card {
         flex-direction: row;
     }
+
     .job-list {
         width: 100% !important;
     }
+
     .job-information {
         flex-direction: column;
         gap: 0rem !important;
     }
+
     .job-logo {
         display: none !important;
     }
+
     .job-filter-tab {
         display: none !important;
     }
