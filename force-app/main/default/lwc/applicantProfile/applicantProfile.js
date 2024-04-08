@@ -106,18 +106,37 @@ export default class ApplicantProfile extends NavigationMixin(
     });
   }
   handleResumePreview() {
-    getResume({ applicantId: this.applicantId })
-      .then((data) => {
-        if (data && data.length > 0) {
-          this.contentDocumentId = data[0].ContentDocumentId;
-          console.log("contentDocumentId------->", this.contentDocumentId);
-          // this.pdfUrl = `/servlet/servlet.FileDownload?file=a055h000021qUbTAAU`;
-        } else {
-          console.error("No content document found.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching resume:", error);
-      });
-  }
+    this.downloadFiles();
+}
+
+downloadFiles() {
+    const anchor = document.createElement('a');
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    
+    this.filesList.forEach(file => {
+        anchor.href = file.url;
+        anchor.download = file.label;
+        anchor.click();
+    });
+
+    document.body.removeChild(anchor);
+}
+
+filesList = [];
+
+@wire(getResume, {applicantId: "$applicantId"})
+wiredResult({data, error}) { 
+    if(data) { 
+        this.filesList = Object.keys(data).map(item => ({
+            "label": data[item],
+            "value": item,
+            "url": `/sfc/servlet.shepherd/document/download/${item}`
+        }));
+    }
+    if(error) { 
+        console.log(error);
+    }
+}
+  
 }

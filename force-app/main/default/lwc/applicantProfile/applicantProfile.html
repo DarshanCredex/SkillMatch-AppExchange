@@ -6,6 +6,7 @@
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
+
     <template for:each={applicantDetails} for:item="applicant">
         <div key={applicant.Id} class="main">
             <div class="profile-details">
@@ -20,8 +21,8 @@
                             <p>{applicant.Job_Title__c}</p>
                         </div>
                         <div class="buttons">
-                            <!-- <lightning-button variant="Neutral" label="View CV"
-                                onclick={handleResumePreview}></lightning-button> -->
+                            <lightning-button variant="Neutral" label="Download CV" 
+                                onclick={handleResumePreview}></lightning-button>
                             <lightning-button value="Accepted" variant="brand" label="Shortlist" disabled={IsAccepted}
                                 onclick={handleShortlistButton}></lightning-button>
 
@@ -61,8 +62,5 @@
             </div>
         </div>
     </template>
-
-    <template if:true={contentDocumentId}>
-        <iframe src={pdfUrl} width="100%" height="500px" frameborder="0"></iframe>
-    </template>
+      
 </template>
