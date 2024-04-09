@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-05-2024
+ * @last modified on  : 04-09-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -34,26 +34,6 @@ public with sharing class testingEnvironmentController {
       throw new AuraHandledException(e.getMessage());
     }
   }
-  @AuraEnabled
-  public static void calculateObjectiveScore(list<id> optionId) {
-    Decimal score = 0;
-    try {
-      list<Options__c> optionsDetails = new List<Options__c>();
-      optionsDetails = [
-        SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
-        FROM Options__c
-        WHERE id IN :optionId
-      ];
-      for (Options__c option : optionsDetails) {
-        if (option.Checkbox__c == true) {
-          score = score + option.Question__r.Weightage__c;
-        }
-      }
-    } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
-    }
-  }
-
   @AuraEnabled
   public static void getObjectiveResponse(
     List<Id> optionId,
