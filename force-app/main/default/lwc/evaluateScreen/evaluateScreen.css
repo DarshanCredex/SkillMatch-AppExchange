@@ -1,0 +1,54 @@
+.main {
+    padding: 20px;
+}
+
+.buttons {
+    margin-bottom: 20px;
+}
+
+.buttons lightning-button {
+    margin-right: 10px;
+}
+
+.question-card {
+    margin-bottom: 20px;
+}
+
+.question-component {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.question-name h1 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.option-component {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.option-component h1 {
+    margin: 0 10px 0 0;
+}
+
+.candidate-response {
+    margin-top: 10px;
+}
+
+/* Adjustments for checkboxes */
+.option-component lightning-input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.5);
+}
+
+/* Styling for candidate response */
+.candidate-response p {
+    font-size: 16px;
+    margin: 5px 0;
+}
