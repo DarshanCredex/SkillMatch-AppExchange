@@ -126,10 +126,7 @@ public with sharing class QuestionsController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static string getResponsesAndQuestions(
-    Id jobId,
-    Id candidateId
-  ) {
+  public static string getResponsesAndQuestions(Id jobId, Id candidateId) {
     try {
       List<responseWrapper> result = new List<responseWrapper>();
 
@@ -183,6 +180,63 @@ public with sharing class QuestionsController {
         }
       }
       return JSON.serialize(result);
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+  @AuraEnabled
+  public static Decimal calculateObjectiveScore(list<id> questionId) {
+    List<Id> optionId = new List<Id>();
+
+    List<Question__c> questionsWithOptions = [
+      SELECT (SELECT Id FROM Options__r)
+      FROM Question__c
+      WHERE Id IN :questionId
+    ];
+
+    for (Question__c question : questionsWithOptions) {
+      for (Options__c option : question.Options__r) {
+        optionId.add(option.Id);
+      }
+    }
+    Decimal score = 0;
+    try {
+      list<Options__c> optionsDetails = new List<Options__c>();
+      optionsDetails = [
+        SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
+        FROM Options__c
+        WHERE id IN :optionId
+      ];
+      for (Options__c option : optionsDetails) {
+        if (option.Checkbox__c == true) {
+          score = score + option.Question__r.Weightage__c;
+        }
+      }
+      return score;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static void updateScore(integer score, id jobid, id candidateid) {
+    try {
+      id applicantid = [
+        SELECT Id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
+      ][0]
+      .id;
+
+      Job_Applicants__c applicant = [
+        SELECT Total_Score__c
+        FROM Job_Applicants__c
+        WHERE id = :applicantid
+      ];
+
+      applicant.Total_Score__c = score;
+
+      update applicant;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }

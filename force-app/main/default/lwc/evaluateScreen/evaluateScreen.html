@@ -26,11 +26,19 @@
               </div>
             </template>
             <div class="candidate-response">
-              <p>Candidate Response -</p>
+              <h1>Candidate Response -</h1>
               <p><lightning-formatted-rich-text value={question.candidateResponse}></lightning-formatted-rich-text></p>
             </div>
+            <lightning-input type="number" placeholder="Give marks" value={subjectiveMarks}
+              onchange={handleSubjectiveMarks} data-id="marksid"></lightning-input>
           </div>
         </template>
+      </div>
+      <div class="Evaluate-btn">
+        <lightning-button variant="success" label="Evaluate" onclick={handleSubjectiveEvaluate}></lightning-button>
+        <div>
+          <h1> Subjective Score - {totalMarks}</h1>
+        </div>
       </div>
     </template>
     <template lwc:elseif={showObjective}>
@@ -49,12 +57,17 @@
               </div>
             </template>
             <div class="candidate-response">
-              <p>Candidate Response - </p>
+              <h1>Candidate Response - </h1>
               <p><lightning-formatted-rich-text value={questionItem.candidateResponse}></lightning-formatted-rich-text>
               </p>
             </div>
           </div>
         </template>
+        <div class="Evaluate-btn">
+          <lightning-button variant="success" label="Evaluate Total score"
+            onclick={handleObjectiveEvaluate}></lightning-button>
+          <h1>Objective Score - {objectiveMarks}</h1>
+        </div>
       </div>
     </template>
   </div>

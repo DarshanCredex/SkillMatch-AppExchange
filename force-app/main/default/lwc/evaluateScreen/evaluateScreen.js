@@ -1,13 +1,22 @@
 import { LightningElement, track, wire } from "lwc";
 import getResponsesAndQuestions from "@salesforce/apex/QuestionsController.getResponsesAndQuestions";
-
+import calculateObjectiveScore from "@salesforce/apex/QuestionsController.calculateObjectiveScore";
+import updateScore from "@salesforce/apex/QuestionsController.updateScore";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class EvaluateScreen extends LightningElement {
   jobId;
   candidateId;
+  subjectiveMarks;
+  TotalSubjectiveMarks = [];
+  objectiveMarks;
+  questionIdList = [];
+  totalMarks = 0;
+  
 
   showSubjective = true;
   showObjective = false;
-  
+  showMarksSubjective = false;
+
   @track questionsList = [];
   @track subjectiveList = [];
   @track objectiveList = [];
@@ -64,5 +73,48 @@ export default class EvaluateScreen extends LightningElement {
         ([key, value]) => ({ key, value })
       )
     }));
+  }
+  handleSubjectiveMarks() {
+    this.subjectiveMarks = parseInt(
+      this.template.querySelector('lightning-input[data-id="marksid"]').value,
+      10
+    );
+    this.TotalSubjectiveMarks.push(this.subjectiveMarks);
+  }
+
+  handleSubjectiveEvaluate() {
+    this.TotalSubjectiveMarks.forEach((item) => {
+      this.totalMarks += item;
+    });
+  }
+
+  handleObjectiveEvaluate() {
+    this.objectiveList.forEach((item) => {
+      this.questionIdList.push(item.questionId);
+    });
+    calculateObjectiveScore({ questionId: this.questionIdList }).then(
+      (result) => {
+        this.objectiveMarks = parseInt(result, 10);
+      }
+    );
+
+    updateScore({
+      score: this.objectiveMarks + this.subjectiveMarks,
+      jobid: this.jobId,
+      candidateid: this.candidateId
+    }).then(() => {
+      console.log("done");
+      this.showToast("Success", "Score added to the database", "success");
+    });
+  }
+
+  showToast(title, message, variant) {
+    this.dispatchEvent(
+      new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant
+      })
+    );
   }
 }

@@ -41,14 +41,17 @@
     margin-top: 10px;
 }
 
-/* Adjustments for checkboxes */
 .option-component lightning-input[type="checkbox"] {
     margin-right: 10px;
     transform: scale(1.5);
 }
 
-/* Styling for candidate response */
+
 .candidate-response p {
     font-size: 16px;
+    margin: 5px 0;
+}
+.candidate-response h1{
+    font-size: 17px;
     margin: 5px 0;
 }
