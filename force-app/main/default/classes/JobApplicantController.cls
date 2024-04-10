@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-02-2024
+ * @last modified on  : 04-10-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -37,10 +37,14 @@ public with sharing class JobApplicantController {
     public boolean isAccepted { get; set; }
     @AuraEnabled
     public string Status { get; set; }
+    @AuraEnabled
+    public string AssesmentStatus { get; set; }
+
     public CandidateWrapper(
       Candidate_Details__c candidate,
       Integer matchPercentage,
-      String Status
+      String Status,
+      String AssesmentStatus
     ) {
       this.matchPercentage = matchPercentage;
       this.About = candidate.About__c;
@@ -57,6 +61,7 @@ public with sharing class JobApplicantController {
       this.Id = candidate.Id;
       this.isAccepted = false;
       this.Status = Status;
+      this.AssesmentStatus = assesmentStatus;
     }
   }
   @AuraEnabled(cacheable=true)
@@ -115,8 +120,16 @@ public with sharing class JobApplicantController {
         candidate.ParsedSkills__c
       );
       string Status = getApplicantStatus(candidate.Id);
+      System.debug('status assessment--->' + Status);
+      string assessmentStatus = getAssessmentStatus(candidate.Id);
+
       candidateRecords.add(
-        new CandidateWrapper(candidate, matchPercentage, status)
+        new CandidateWrapper(
+          candidate,
+          matchPercentage,
+          status,
+          assessmentStatus
+        )
       );
     }
     return candidateRecords;
@@ -246,6 +259,37 @@ public with sharing class JobApplicantController {
       status = applicant.Application_Status__c;
     }
     return status;
+  }
+
+  public static string getAssessmentStatus(string applicantId) {
+    string status;
+    for (Job_Applicants__c applicant : [
+      SELECT Assesment_Status__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantId
+    ]) {
+      status = applicant.Assesment_Status__c;
+    }
+    return status;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static decimal getScore(id jobid, id candidateid) {
+    Decimal score;
+    id applicantid = [
+      SELECT id
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :candidateid AND Job_Id__c = :jobid
+    ][0]
+    .id;
+    for (Job_Applicants__c applicant : [
+      SELECT Total_Score__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantid
+    ]) {
+      score = applicant.Total_Score__c;
+    }
+    return score;
   }
 
   @TestVisible

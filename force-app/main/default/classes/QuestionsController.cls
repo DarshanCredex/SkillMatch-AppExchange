@@ -188,34 +188,6 @@ public with sharing class QuestionsController {
       throw new AuraHandledException(e.getMessage());
     }
   }
-  // @AuraEnabled
-  // public static Decimal calculateObjectiveScore(list<id> optionId) {
-
-
-  //   for (Question__c question : questionsWithOptions) {
-  //     for (Options__c option : question.Options__r) {
-  //       optionId.add(option.Id);
-  //     }
-  //   }
-  //   Decimal score = 0;
-  //   try {
-  //     list<Options__c> optionsDetails = new List<Options__c>();
-  //     optionsDetails = [
-  //       SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
-  //       FROM Options__c
-  //       WHERE id IN :optionId
-  //     ];
-  //     for (Options__c option : optionsDetails) {
-  //       if (option.Checkbox__c == true) {
-  //         score = score + option.Question__r.Weightage__c;
-  //       }
-  //     }
-  //     return score;
-  //   } catch (Exception e) {
-  //     throw new AuraHandledException(e.getMessage());
-  //   }
-  // }
-
   @AuraEnabled
   public static void updateScore(integer score, id jobid, id candidateid) {
     try {
@@ -227,12 +199,13 @@ public with sharing class QuestionsController {
       .id;
 
       Job_Applicants__c applicant = [
-        SELECT Total_Score__c
+        SELECT Total_Score__c, Assesment_Status__c
         FROM Job_Applicants__c
         WHERE id = :applicantid
       ];
 
       applicant.Total_Score__c = score;
+      applicant.Assesment_Status__c = 'Evaluated';
 
       update applicant;
     } catch (Exception e) {
