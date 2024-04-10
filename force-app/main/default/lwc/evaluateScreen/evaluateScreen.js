@@ -1,6 +1,5 @@
 import { LightningElement, track, wire } from "lwc";
 import getResponsesAndQuestions from "@salesforce/apex/QuestionsController.getResponsesAndQuestions";
-import calculateObjectiveScore from "@salesforce/apex/QuestionsController.calculateObjectiveScore";
 import updateScore from "@salesforce/apex/QuestionsController.updateScore";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class EvaluateScreen extends LightningElement {
@@ -8,10 +7,11 @@ export default class EvaluateScreen extends LightningElement {
   candidateId;
   subjectiveMarks;
   TotalSubjectiveMarks = [];
-  objectiveMarks;
+  objectiveMarks = 0;
   questionIdList = [];
   totalMarks = 0;
-  
+  subjectiveWeightage = 0;
+  objectiveWeightage = 0;
 
   showSubjective = true;
   showObjective = false;
@@ -30,7 +30,7 @@ export default class EvaluateScreen extends LightningElement {
     jobId: "$jobId",
     candidateId: "$candidateId"
   })
-  wiredGetResponsesAndQuestions({ error, data }) {
+  wiredGetResponsesAndQuestions({ data }) {
     if (data) {
       this.questionsList = data;
       const response = JSON.parse(data);
@@ -38,9 +38,9 @@ export default class EvaluateScreen extends LightningElement {
         (item) => item.type === "Subjective"
       );
       this.objectiveList = response.filter((item) => item.type === "Objective");
-    } else {
-      console.error("error fetching list----->", error);
     }
+    this.calculateWeightage();
+    this.calculateObjectiveScore();
   }
 
   get SubjectiveKeyValuePairs() {
@@ -74,6 +74,20 @@ export default class EvaluateScreen extends LightningElement {
       )
     }));
   }
+
+  calculateObjectiveScore() {
+    for (const data of this.objectiveList) {
+      const candidateResponse = data.candidateResponse;
+      const actualResponse = data.actualResponse;
+
+      for (const [key, value] of Object.entries(actualResponse)) {
+        if (value && candidateResponse === key) {
+          this.objectiveMarks += parseInt(data.weightage, 10);
+          break;
+        }
+      }
+    }
+  }
   handleSubjectiveMarks() {
     this.subjectiveMarks = parseInt(
       this.template.querySelector('lightning-input[data-id="marksid"]').value,
@@ -89,22 +103,21 @@ export default class EvaluateScreen extends LightningElement {
   }
 
   handleObjectiveEvaluate() {
-    this.objectiveList.forEach((item) => {
-      this.questionIdList.push(item.questionId);
-    });
-    calculateObjectiveScore({ questionId: this.questionIdList }).then(
-      (result) => {
-        this.objectiveMarks = parseInt(result, 10);
-      }
-    );
-
     updateScore({
       score: this.objectiveMarks + this.subjectiveMarks,
       jobid: this.jobId,
       candidateid: this.candidateId
     }).then(() => {
-      console.log("done");
       this.showToast("Success", "Score added to the database", "success");
+    });
+  }
+
+  calculateWeightage() {
+    this.subjectiveList.forEach((item) => {
+      this.subjectiveWeightage += item.weightage;
+    });
+    this.objectiveList.forEach((item) => {
+      this.objectiveWeightage += item.weightage;
     });
   }
 

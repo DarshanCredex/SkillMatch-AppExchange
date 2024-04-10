@@ -2,7 +2,7 @@
   @description       : a screen component to evaluate candidate's subjective score
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-09-2024
+  @last modified on  : 04-10-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -37,7 +37,7 @@
       <div class="Evaluate-btn">
         <lightning-button variant="success" label="Evaluate" onclick={handleSubjectiveEvaluate}></lightning-button>
         <div>
-          <h1> Subjective Score - {totalMarks}</h1>
+          <h1> Subjective Score - {totalMarks}/{subjectiveWeightage}</h1>
         </div>
       </div>
     </template>
@@ -64,9 +64,9 @@
           </div>
         </template>
         <div class="Evaluate-btn">
+          <h1>Objective Score - {objectiveMarks}/{objectiveWeightage}</h1>
           <lightning-button variant="success" label="Evaluate Total score"
             onclick={handleObjectiveEvaluate}></lightning-button>
-          <h1>Objective Score - {objectiveMarks}</h1>
         </div>
       </div>
     </template>

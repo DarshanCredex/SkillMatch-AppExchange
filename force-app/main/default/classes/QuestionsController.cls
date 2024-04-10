@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-09-2024
+ * @last modified on  : 04-10-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -17,6 +17,8 @@ public with sharing class QuestionsController {
     public Id questionId { get; set; }
     @AuraEnabled
     public string type { get; set; }
+    @AuraEnabled
+    public decimal weightage { get; set; }
 
     public responseWrapper() {
       actualResponse = new Map<string, boolean>();
@@ -145,6 +147,7 @@ public with sharing class QuestionsController {
             Id,
             Type__c,
             Question_Name__c,
+            Weightage__c,
             (SELECT Id, Answers__c, Checkbox__c FROM Options__r),
             (
               SELECT Id, Response_Value__c
@@ -160,6 +163,7 @@ public with sharing class QuestionsController {
           wrapper.question = ques.Question_Name__c;
           wrapper.questionId = ques.Id;
           wrapper.type = ques.Type__c;
+          wrapper.weightage = ques.Weightage__c;
 
           Map<String, Boolean> optionsMap = new Map<String, Boolean>();
           for (Options__c option : ques.Options__r) {
@@ -184,39 +188,33 @@ public with sharing class QuestionsController {
       throw new AuraHandledException(e.getMessage());
     }
   }
-  @AuraEnabled
-  public static Decimal calculateObjectiveScore(list<id> questionId) {
-    List<Id> optionId = new List<Id>();
+  // @AuraEnabled
+  // public static Decimal calculateObjectiveScore(list<id> optionId) {
 
-    List<Question__c> questionsWithOptions = [
-      SELECT (SELECT Id FROM Options__r)
-      FROM Question__c
-      WHERE Id IN :questionId
-    ];
 
-    for (Question__c question : questionsWithOptions) {
-      for (Options__c option : question.Options__r) {
-        optionId.add(option.Id);
-      }
-    }
-    Decimal score = 0;
-    try {
-      list<Options__c> optionsDetails = new List<Options__c>();
-      optionsDetails = [
-        SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
-        FROM Options__c
-        WHERE id IN :optionId
-      ];
-      for (Options__c option : optionsDetails) {
-        if (option.Checkbox__c == true) {
-          score = score + option.Question__r.Weightage__c;
-        }
-      }
-      return score;
-    } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
-    }
-  }
+  //   for (Question__c question : questionsWithOptions) {
+  //     for (Options__c option : question.Options__r) {
+  //       optionId.add(option.Id);
+  //     }
+  //   }
+  //   Decimal score = 0;
+  //   try {
+  //     list<Options__c> optionsDetails = new List<Options__c>();
+  //     optionsDetails = [
+  //       SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
+  //       FROM Options__c
+  //       WHERE id IN :optionId
+  //     ];
+  //     for (Options__c option : optionsDetails) {
+  //       if (option.Checkbox__c == true) {
+  //         score = score + option.Question__r.Weightage__c;
+  //       }
+  //     }
+  //     return score;
+  //   } catch (Exception e) {
+  //     throw new AuraHandledException(e.getMessage());
+  //   }
+  // }
 
   @AuraEnabled
   public static void updateScore(integer score, id jobid, id candidateid) {
