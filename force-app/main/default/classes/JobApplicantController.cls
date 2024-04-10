@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-12-2024
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -49,9 +49,14 @@ public with sharing class JobApplicantController {
     @AuraEnabled
     public string AssesmentStatus { get; set; }
 
+    @AuraEnabled
+    public string AssesmentStatus { get; set; }
+
     public CandidateWrapper(
       Candidate_Details__c candidate,
       Integer matchPercentage,
+      String Status,
+      String AssesmentStatus
       String Status,
       String AssesmentStatus
     ) {
@@ -133,6 +138,12 @@ public with sharing class JobApplicantController {
       string assessmentStatus = getAssessmentStatus(candidate.Id);
 
       candidateRecords.add(
+        new CandidateWrapper(
+          candidate,
+          matchPercentage,
+          status,
+          assessmentStatus
+        )
         new CandidateWrapper(
           candidate,
           matchPercentage,
