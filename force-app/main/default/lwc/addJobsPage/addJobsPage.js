@@ -6,6 +6,8 @@ import postJob from "@salesforce/apex/jobObjectController.postJob";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
 import { NavigationMixin } from "lightning/navigation";
+import Id from "@salesforce/user/Id";
+import getCompanyName from "@salesforce/apex/jobObjectController.getCompanyName";
 
 export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValues = [];
@@ -16,13 +18,14 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   summary = "";
   description = "";
   salaryRange = "";
-  companyName = "";
   country = "";
   city = "";
   experienceValue = "";
   typeValue = "";
   industryValue = "";
   skills = "";
+  userCompanyName;
+  userId = Id;
 
   showQuestionModal = false;
 
@@ -42,6 +45,12 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
     IndustryPickListValues().then((result) => {
       this.industryValues = result;
       console.log("this.industryValues", JSON.stringify(this.industryValues));
+    });
+    TimingsPickListValues().then((result) => {
+      this.timingValues = result;
+    });
+    getCompanyName({ userId: this.userId }).then((result) => {
+      this.userCompanyName = result;
     });
   }
 
@@ -70,9 +79,6 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   handleSalaryChange(event) {
     this.salaryRange = event.target.value;
   }
-  handleCompanyName(event) {
-    this.companyName = event.target.value;
-  }
   handleCityChange(event) {
     this.city = event.target.value;
   }
@@ -91,7 +97,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       jobTitle: this.jobTitle,
       description: this.description,
       salaryRange: this.salaryRange,
-      companyName: this.companyName,
+      companyName: this.userCompanyName,
       city: this.city,
       country: this.country,
       experienceValue: this.experienceValue,
@@ -126,7 +132,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       jobTitle: this.jobTitle,
       description: this.description,
       salaryRange: this.salaryRange,
-      companyName: this.companyName,
+      companyName: this.userCompanyName,
       city: this.city,
       country: this.country,
       experienceValue: this.experienceValue,
@@ -155,6 +161,8 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         );
       });
   }
+
+
   showToast(title, message, variant) {
     this.dispatchEvent(
       new ShowToastEvent({
