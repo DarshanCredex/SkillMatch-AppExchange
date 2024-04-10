@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-27-2024
+ * @last modified on  : 04-10-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -165,7 +165,19 @@ public with sharing class jobObjectController {
   @AuraEnabled(cacheable=true)
   public static string getTestTimings(Id jobId) {
     try {
-      return [SELECT Test_Timing__c FROM Job__c WHERE id = :jobId LIMIT 1][0].Test_Timing__c;
+      return [SELECT Test_Timing__c FROM Job__c WHERE id = :jobId LIMIT 1][0]
+      .Test_Timing__c;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static string getCompanyName(id userId) {
+    try {
+      user u = [SELECT companyName, id FROM user WHERE id = :userId];
+      string companyName = u.CompanyName;
+      return companyName;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
