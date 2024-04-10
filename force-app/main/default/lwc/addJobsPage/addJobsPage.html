@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-26-2024
+  @last modified on  : 04-10-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -17,15 +17,18 @@
           <h1>About Job</h1>
           <lightning-input type="text" label="Job Title" value={jobTitle}
             onchange={handleJobTitleChange}></lightning-input>
-          <lightning-input type="text" label="Summary" value={summary} onchange={handleSummaryChange}></lightning-input>
-          <lightning-input type="text" label="Description" value={description}
+          <lightning-input type="text" label="Company Overview" value={summary}
+            onchange={handleSummaryChange}></lightning-input>
+          <lightning-input type="text" label="Job Description" value={description}
             onchange={handleDescriptionChange}></lightning-input>
-          <lightning-input type="text" label="Salary Range" value={salaryRange}
-            onchange={handleSalaryChange}></lightning-input>
+          <lightning-helptext content="Enter only the salary in numbers without any currency sign"></lightning-helptext>
+          <lightning-input type="text" label="Salary" value={salaryRange} onchange={handleSalaryChange}>
+          </lightning-input>
           <lightning-input type="text" label="Company Name" value={companyName}
             onchange={handleCompanyName}></lightning-input>
-          <lightning-input type="text" label="Skills Required" value={skills}
-            onchange={handleSkillsChange}></lightning-input>
+          <lightning-helptext content="Enter comma seperated values"></lightning-helptext>
+          <lightning-input type="text" label="Skills Required" value={skills} onchange={handleSkillsChange}>
+          </lightning-input>
         </div>
         <div class="location">
           <h1>Location</h1>
@@ -65,13 +68,13 @@
       <hr />
       <div class="test-timing">
         <h1>Test Timings</h1>
-          <label for="timings">Test Timing</label>
-          <select id="timing" onchange={handleTimingChange}>
-            <option value="" disabled selected>Select Industry</option>
-            <template for:each={timingValues} for:item="timing">
-              <option key={timing} value={industrytiming}>{timing}</option>
-            </template>
-          </select>
+        <label for="timings">Test Timing</label>
+        <select id="timing" onchange={handleTimingChange}>
+          <option value="" disabled selected>Select Industry</option>
+          <template for:each={timingValues} for:item="timing">
+            <option key={timing} value={industrytiming}>{timing}</option>
+          </template>
+        </select>
       </div>
     </div>
     <hr>
