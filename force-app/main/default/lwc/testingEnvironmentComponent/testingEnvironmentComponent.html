@@ -9,17 +9,21 @@
   <template lwc:if={showMain}>
     <div class="main">
       <div class="header">
-        <div class="timer">
+        <div style="display: flex;flex-direction: column;">
+          <div class="timer">
           <h1>Test timer - {timerDisplay}</h1>
-        </div>
-
-        <div class="buttons">
+          </div>
+          <div class="buttons">
           <div lwc:if={showObjective}>
             <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
           </div>
           <div lwc:elseif={showSubjective}>
             <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
           </div>
+          </div>
+        </div>
+        <div>
+          <lightning-progress-bar value={progress} size="large"></lightning-progress-bar>
         </div>
       </div>
       <template lwc:if={showObjective}>
