@@ -22,19 +22,6 @@ export default class TestInstructionsComponent extends NavigationMixin(
         this.testTiming = result;
       }
     });
-    // getAssesmentStatus({ userid: this.userId, jobid: this.jobId })
-    //   .then((result) => {
-    //     const status = result;
-    //     console.log("status------>", status);
-    //     if (status === "Pending") {
-    //       this.disableButton = false;
-    //     } else {
-    //       this.disableButton = true;
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("error------>", error);
-    //   });
   }
 
   @wire(getAssesmentStatus, { userid: "$userId", jobid: "$jobId" })

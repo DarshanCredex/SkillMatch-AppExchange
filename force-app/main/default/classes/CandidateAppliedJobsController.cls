@@ -42,11 +42,14 @@ public with sharing class CandidateAppliedJobsController {
     public String status { get; set; }
     @AuraEnabled
     public boolean questionsPresent { get; set; }
+    @AuraEnabled
+    public boolean assesmentStatus { get; set; }
 
     public JobListWrapper(
       Job__c job,
       String jobStatus,
-      boolean questionsPresent
+      boolean questionsPresent,
+      boolean assesmentStatus
     ) {
       this.jobId = job.Id;
       this.daysAgo = calculateDaysAgo(job.CreatedDate);
@@ -58,6 +61,7 @@ public with sharing class CandidateAppliedJobsController {
       this.country = job.Country__c;
       this.status = jobStatus;
       this.questionsPresent = questionsPresent;
+      this.assesmentStatus = assesmentStatus;
     }
 
     private Integer calculateDaysAgo(Datetime createdDate) {
@@ -138,8 +142,21 @@ public with sharing class CandidateAppliedJobsController {
       ];
       boolean questionPresent = (questionsCount > 0);
       String jobStatus = jobStatusMap.get(job.Id);
-      System.debug('questionPresent----->'+questionPresent);
-      wrappedJobs.add(new JobListWrapper(job, jobStatus, questionPresent));
+      boolean assesmentStatus;
+      string status = testingEnvironmentController.getAssesmentStatus(
+        userId,
+        job.Id
+      );
+      if (status == 'Pending') {
+        assesmentStatus = false;
+      } else {
+        assesmentStatus = true;
+      }
+
+      System.debug('questionPresent----->' + questionPresent);
+      wrappedJobs.add(
+        new JobListWrapper(job, jobStatus, questionPresent, assesmentStatus)
+      );
     }
     if (!wrappedJobs.isEmpty()) {
       wrappedAppliedJobs.jobWrapperList.addAll(wrappedJobs);

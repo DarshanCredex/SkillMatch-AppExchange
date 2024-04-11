@@ -5,9 +5,7 @@ import getAppliedJobs from "@salesforce/apex/CandidateAppliedJobsController.getA
 import { NavigationMixin } from "lightning/navigation";
 import UserId from "@salesforce/user/Id";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-export default class CandidateAppliedJobs extends NavigationMixin(
-  LightningElement
-) {
+export default class CandidateAppliedJobs extends NavigationMixin(LightningElement) {
   companyLogo = alternateCompanyLogo;
   isShortlisted = false;
   assessmentButtonCss = "job-logo";
@@ -25,6 +23,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @track selectedTab = "Applied";
   @track errorMessage = false;
   showAssesmentButton = false;
+  disableAssesmentButton = false;
 
   handleSearchTitleChange(event) {
     this.searchTitle = event.target.value;
@@ -87,7 +86,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     this.addPendingCss = "information";
     this.isShortlisted = false;
     this.selectedJob = this.appliedJob;
-    console.log("selectedJob-->", this.selectedJob);
     if (this.selectedJob.jobWrapperList.length > 0) {
       this.errorMessage = false;
     } else {
