@@ -1,9 +1,10 @@
-import { LightningElement } from "lwc";
+import { LightningElement, wire } from "lwc";
 import getTestTimings from "@salesforce/apex/testingEnvironmentController.getTestTimings";
 import { NavigationMixin } from "lightning/navigation";
 import getAssesmentStatus from "@salesforce/apex/testingEnvironmentController.getAssesmentStatus";
 import Id from "@salesforce/user/Id";
 import changeAssesmentStatus from "@salesforce/apex/testingEnvironmentController.changeAssesmentStatus";
+import { refreshApex } from "@salesforce/apex";
 
 export default class TestInstructionsComponent extends NavigationMixin(
   LightningElement
@@ -21,25 +22,40 @@ export default class TestInstructionsComponent extends NavigationMixin(
         this.testTiming = result;
       }
     });
-    getAssesmentStatus({ userid: this.userId, jobid: this.jobId })
-      .then((result) => {
-        const status = result;
-        console.log("status------>", status);
-        if (status === "Pending") {
-          this.disableButton = false;
-        } else {
-          this.disableButton = true;
-        }
-      })
-      .catch((error) => {
-        console.error("error------>", error);
-      });
+    // getAssesmentStatus({ userid: this.userId, jobid: this.jobId })
+    //   .then((result) => {
+    //     const status = result;
+    //     console.log("status------>", status);
+    //     if (status === "Pending") {
+    //       this.disableButton = false;
+    //     } else {
+    //       this.disableButton = true;
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("error------>", error);
+    //   });
   }
-  handleStartTest() {
 
-    changeAssesmentStatus({ userid: this.userId, jobid: this.jobId })
+  @wire(getAssesmentStatus, { userid: "$userId", jobid: "$jobId" })
+  wiredGetAssesmentStatus(result) {
+    this.AssesmentStatusOfApplicant = result;
+    if (result.data) {
+      const status = result.data;
+      console.log("status------>", status);
+      if (status === "Pending") {
+        this.disableButton = false;
+      } else {
+        this.disableButton = true;
+      }
+    }
+  }
+
+  handleStartTest() {
+    changeAssesmentStatus({ userId: this.userId, jobId: this.jobId })
       .then(() => {
         console.log("status changed");
+        refreshApex(this.AssesmentStatusOfApplicant);
       })
       .catch((error) => {
         console.error("error-------->", error);

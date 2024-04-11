@@ -15,7 +15,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
   @track subjectiveList = [];
   @track selectedOptions = [];
   @track timeRemaining;
-
   subjectiveResponseAndId = {};
 
   userId = Id;
@@ -32,67 +31,72 @@ export default class TestingEnvironmentComponent extends LightningElement {
   showWarningModal = false;
   showFinalScreen = false;
   showMain = true;
-
+  progress = 100;
+  progressPercentage;
   timerTimeout;
 
   constructor() {
     super();
-    window.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        if (this.tabSwitchCount < 2) {
-          alert(
-            "WARNING!!! \nYOU CANNOT SWITCH TABS ELSE YOU WILL BE DEBARRED"
-          );
+    if (!this.showFinalScreen) {
+      window.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+          if (this.tabSwitchCount < 2) {
+            alert(
+              "WARNING!!! \nDo not switch tabs otherwise paper will be submitted after two times"
+            );
+          }
+          this.tabSwitchCount++;
+          if (this.tabSwitchCount >= 2) {
+            this.getResponse();
+            alert(
+              "You switched tabs more than twice \nYour test is over and response has been recorded"
+            );
+          }
         }
-        this.tabSwitchCount++;
-        if (this.tabSwitchCount >= 2) {
-          this.getResponse();
-          alert(
-            "You switched tabs more than twice \nYour test is over and response has been recorded"
-          );
-        }
-      }
-    });
+      });
 
-    this.template.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-      alert("Right click not allowed");
-    });
-
-    window.addEventListener("beforeunload", (event) => {
-      event.preventDefault();
-      event.returnValue = "Do not reload";
-    });
-
-    document.addEventListener(
-      "copy",
-      (event) => {
-        event.clipboardData.setData("text/plain", "*pasting is prevented*");
-        alert("copying/pasting is not allowed");
+      this.template.addEventListener("contextmenu", (event) => {
         event.preventDefault();
-      },
-      false
-    );
+        alert("No right click allowed");
+      });
 
-    window.addEventListener("keyup", (event) => {
-      if (
-        event.key === "F12" ||
-        event.key === "F11" ||
-        event.key === "F10" ||
-        event.key === "F9" ||
-        event.key === "F8" ||
-        event.key === "F7" ||
-        event.key === "F6" ||
-        event.key === "F5" ||
-        event.key === "F4" ||
-        event.key === "F3" ||
-        event.key === "F2" ||
-        event.key === "F1"
-      ) {
-        alert("FUNCTION KEYS DISABLED");
-        return false;
-      }
-    });
+      window.addEventListener("beforeunload", (event) => {
+        event.preventDefault();
+        //event.returnValue = "Do not reload";
+        alert("Do not reload");
+        this.getResponse();
+      });
+
+      document.addEventListener(
+        "copy",
+        (event) => {
+          event.clipboardData.setData("text/plain", "*pasting is prevented*");
+          alert("Do not copy paste");
+          event.preventDefault();
+        },
+        false
+      );
+
+      window.addEventListener("keyup", (event) => {
+        if (
+          event.key === "F12" ||
+          event.key === "F11" ||
+          event.key === "F10" ||
+          event.key === "F9" ||
+          event.key === "F8" ||
+          event.key === "F7" ||
+          event.key === "F6" ||
+          event.key === "F5" ||
+          event.key === "F4" ||
+          event.key === "F3" ||
+          event.key === "F2" ||
+          event.key === "F1"
+        ) {
+          alert("Cannot use function keys");
+          return false;
+        }
+      });
+    }
   }
 
   get timerDisplay() {
@@ -109,6 +113,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
         if (result) {
           this.timeRemaining = result;
           this.startTimer();
+          this.startProgressBar();
         }
       })
       .catch((error) => {
@@ -159,6 +164,8 @@ export default class TestingEnvironmentComponent extends LightningElement {
       }
     }, 1000);
   }
+
+  startProgressBar() {}
 
   handleObjectiveOptionChange(event) {
     const questionId = event.target.dataset.id;

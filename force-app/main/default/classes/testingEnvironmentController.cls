@@ -130,13 +130,14 @@ public with sharing class testingEnvironmentController {
   @AuraEnabled
   public static void changeAssesmentStatus(Id userId, Id jobId) {
     try {
-      Job_Applicants__c applicant = [
+      List<Job_Applicants__c> applicants = [
         SELECT Id, Assesment_Status__c
         FROM Job_Applicants__c
         WHERE CandidateId__r.User__c = :userId AND Job_Id__c = :jobId
         LIMIT 1
       ];
-      if (applicant != null) {
+      if (!applicants.isEmpty()) {
+        Job_Applicants__c applicant = applicants[0];
         applicant.Assesment_Status__c = 'Given';
         update applicant;
       } else {
