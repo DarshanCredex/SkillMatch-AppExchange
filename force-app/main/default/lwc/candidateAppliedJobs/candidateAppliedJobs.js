@@ -24,7 +24,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @track userId = UserId;
   @track selectedTab = "Applied";
   @track errorMessage = false;
-  showAssesmentButton = true;
+  showAssesmentButton = false;
 
   handleSearchTitleChange(event) {
     this.searchTitle = event.target.value;
@@ -46,10 +46,10 @@ export default class CandidateAppliedJobs extends NavigationMixin(
       this.appliedJob = data;
 
       this.appliedJob.jobWrapperList.forEach((item) => {
-        if (item.questionPresent) {
-          this.showAssesmentButton = false;
-        } else {
+        if (item.questionPresent === true) {
           this.showAssesmentButton = true;
+        } else {
+          this.showAssesmentButton = false;
         }
       });
       if (this.selectedTab === "Pending") {
