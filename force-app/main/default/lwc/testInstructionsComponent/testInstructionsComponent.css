@@ -23,6 +23,12 @@
     .sub-headline ol li {
         margin-bottom: 10px;
     }
+
+    .instruction-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
     .start-test{
         display: flex;
         justify-content: center;
