@@ -1,8 +1,8 @@
 <!--
-  @description       : 
-  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @description       : applied jobs component of candidate portal 
+  @author            : Sagar Medatwal
   @group             : 
-  @last modified on  : 03-27-2024
+  @last modified on  : 04-11-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <!--
@@ -51,7 +51,7 @@
                 <template if:true={selectedJob}>
                     <template for:each={selectedJob.jobWrapperList} for:item="job">
                         <div id={job.jobId} key={job.jobId} class="job-card">
-                            <div  class="job-card-top">
+                            <div class="job-card-top">
                                 <div id={job.jobId} onclick={handleJobDetail} class="job-card-top-left">
                                     <div class="job-header">
                                         <h3>{job.title}</h3>
@@ -78,8 +78,9 @@
                                 <div class={assessmentButtonCss}>
                                     <template lwc:if={isShortlisted}>
                                         <div style="align-content:center;">
-                                            <lightning-button variant="brand-outline" label="Take Assesment"
-                                                onclick={handleAssesmentButton} value={job.jobId}></lightning-button>
+                                            <lightning-button variant="brand-outline" disabled={showAssesmentButton}
+                                                label="Take Assesment" onclick={handleAssesmentButton}
+                                                value={job.jobId}></lightning-button>
                                         </div>
                                     </template>
                                     <img alt="Company logo" src={companyLogo} />

@@ -1,11 +1,10 @@
+/* eslint-disable array-callback-return */
 import { LightningElement, api, track, wire } from "lwc";
-
 import alternateCompanyLogo from "@salesforce/resourceUrl/Alternate_Company_Logo";
 import getAppliedJobs from "@salesforce/apex/CandidateAppliedJobsController.getAppliedJobs";
 import { NavigationMixin } from "lightning/navigation";
 import UserId from "@salesforce/user/Id";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-
 export default class CandidateAppliedJobs extends NavigationMixin(
   LightningElement
 ) {
@@ -25,6 +24,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @track userId = UserId;
   @track selectedTab = "Applied";
   @track errorMessage = false;
+  showAssesmentButton = true;
 
   handleSearchTitleChange(event) {
     this.searchTitle = event.target.value;
@@ -39,11 +39,19 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     searchCompany: "$searchCompany",
     userId: "$userId"
   })
-  appliedJobList({ data, error }) {
+  wiredAppliedJobList({ data, error }) {
     if (data) {
       this.isLoading = true;
       console.log("Received data-->", data);
       this.appliedJob = data;
+
+      this.appliedJob.jobWrapperList.forEach((item) => {
+        if (item.questionPresent) {
+          this.showAssesmentButton = false;
+        } else {
+          this.showAssesmentButton = true;
+        }
+      });
       if (this.selectedTab === "Pending") {
         this.handleTabChange3();
       } else if (this.selectedTab === "Shortlisted") {
