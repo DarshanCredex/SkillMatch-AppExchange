@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-09-2024
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -34,6 +34,7 @@ public with sharing class testingEnvironmentController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+  
   @AuraEnabled
   public static void getObjectiveResponse(
     List<Id> optionId,
@@ -126,44 +127,54 @@ public with sharing class testingEnvironmentController {
     }
   }
 
-  @AuraEnabled(cacheable=true)
-  public static boolean checkIfAlreadyAttempted(id userid, id jobid) {
+  @AuraEnabled
+  public static void changeAssesmentStatus(Id userId, Id jobId) {
     try {
-      id candidateId = [
-        SELECT id
-        FROM Candidate_Details__c
-        WHERE user__c = :userid
-      ][0]
-      .id;
-
-      id applicantId = [
-        SELECT id
+      Job_Applicants__c applicant = [
+        SELECT Id, Assesment_Status__c
         FROM Job_Applicants__c
-        WHERE CandidateId__c = :candidateId
-      ][0]
-      .id;
-
-      list<Question__c> questionIdList = [
-        SELECT id
-        FROM Question__c
-        WHERE Job__c = :jobid
+        WHERE CandidateId__r.User__c = :userId AND Job_Id__c = :jobId
+        LIMIT 1
       ];
-
-      list<response__c> responseCount = [
-        SELECT id
-        FROM response__c
-        WHERE
-          Job_Applicants__c = :applicantId
-          AND Question__c IN :questionIdList
-      ];
-
-      if (!responseCount.isEmpty()) {
-        return true;
+      if (applicant != null) {
+        applicant.Assesment_Status__c = 'Given';
+        update applicant;
       } else {
-       return false;
+        throw new AuraHandledException(
+          'Applicant not found for the provided user ID and job ID.'
+        );
       }
     } catch (Exception e) {
+      System.debug('Exception in changeAssesmentStatus: ' + e.getMessage());
       throw new AuraHandledException(e.getMessage());
     }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static String getAssesmentStatus(Id userid, Id jobid) {
+    String assessmentStatus = '';
+    try {
+      Id candidateId = [
+        SELECT Id
+        FROM Candidate_Details__c
+        WHERE User__c = :userid
+        LIMIT 1
+      ][0]
+      .Id;
+      Job_Applicants__c applicant = [
+        SELECT Assesment_Status__c
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobid
+        LIMIT 1
+      ];
+      if (applicant != null) {
+        assessmentStatus = applicant.Assesment_Status__c;
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(
+        'Error fetching assessment status: ' + e.getMessage()
+      );
+    }
+    return assessmentStatus;
   }
 }
