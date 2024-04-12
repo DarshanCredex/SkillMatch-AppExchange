@@ -8,6 +8,7 @@
 public with sharing class jobObjectController {
   @AuraEnabled
   public static void postJob(
+    string value,
     string jobTitle,
     string description,
     Decimal salaryRange,
@@ -37,7 +38,7 @@ public with sharing class jobObjectController {
       newJob.Company_Name__c = companyName;
       newJob.Type__c = typeValue;
       newJob.City__c = city;
-      newJob.Status__c = 'Completed';
+      newJob.Status__c = value;
       newJob.Skills_Required__c = skills;
 
       jobRecordsList.add(newJob);

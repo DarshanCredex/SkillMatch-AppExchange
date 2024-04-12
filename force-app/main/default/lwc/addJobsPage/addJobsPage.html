@@ -15,24 +15,29 @@
       <div class="job-content">
         <div class="about-job">
           <h1>About Job</h1>
-          <lightning-input type="text" label="Job Title" value={jobTitle}
+          <lightning-input type="text" label="Job Title" value={jobTitle} data-id="jobTitle"
             onchange={handleJobTitleChange}></lightning-input>
-          <lightning-input type="text" label="Company Overview" value={summary}
-            onchange={handleSummaryChange}></lightning-input>
-          <lightning-input type="text" label="Job Description" value={description}
-            onchange={handleDescriptionChange}></lightning-input>
+          <lightning-input type="text" label="Company Overview" value={summary} onchange={handleSummaryChange}
+            data-id="summary"></lightning-input>
+          <lightning-input type="text" label="Job Description" value={description} onchange={handleDescriptionChange}
+            data-id="description"></lightning-input>
           <lightning-helptext content="Enter only the salary in numbers without any currency sign"></lightning-helptext>
-          <lightning-input type="text" label="Salary" value={salaryRange} onchange={handleSalaryChange}>
+          <lightning-input type="text" label="Salary" value={salaryRange} data-id="salaryRange"
+            onchange={handleSalaryChange}>
           </lightning-input>
-          <lightning-input type="text" label="Company Name" value={userCompanyName} disabled=""></lightning-input>
+          <lightning-input type="text" label="Company Name" value={userCompanyName} data-id="userCompanyName"
+            disabled=""></lightning-input>
           <lightning-helptext content="Enter comma seperated values"></lightning-helptext>
-          <lightning-input type="text" label="Skills Required" value={skills} onchange={handleSkillsChange}>
+          <lightning-input type="text" label="Skills Required" value={skills} data-id="skills"
+            onchange={handleSkillsChange}>
           </lightning-input>
         </div>
         <div class="location">
           <h1>Location</h1>
-          <lightning-input type="text" label="Country" value={country} onchange={handleCountryChange}></lightning-input>
-          <lightning-input type="text" label="City" value={city} onchange={handleCityChange}></lightning-input>
+          <lightning-input type="text" label="Country" value={country} data-id="country"
+            onchange={handleCountryChange}></lightning-input>
+          <lightning-input type="text" label="City" value={city} data-id="city"
+            onchange={handleCityChange}></lightning-input>
         </div>
       </div>
       <hr />
@@ -71,7 +76,7 @@
         <select id="timing" onchange={handleTimingChange}>
           <option value="" disabled selected>Select Test Timings</option>
           <template for:each={timingValues} for:item="timing">
-            <option key={timing} value={industrytiming}>{timing}</option>
+            <option key={timing} value={timing}>{timing}</option>
           </template>
         </select>
       </div>
@@ -79,11 +84,11 @@
     <hr>
     <div class="buttons">
       <div class="draft">
-        <lightning-button variant="neutral" label="Save To Draft" style="text-align: center"
-          onclick={saveToDraft}></lightning-button>
+        <lightning-button variant="neutral" label="Save To Draft" style="text-align: center" onclick={postJobData}
+          value="Draft"></lightning-button>
       </div>
       <div class="post">
-        <lightning-button variant="brand" label="Post Now" onclick={postJobData}></lightning-button>
+        <lightning-button variant="brand" value="Post" label="Post Now" onclick={postJobData}></lightning-button>
       </div>
     </div>
   </div>
