@@ -1,5 +1,11 @@
-public class resumeparserController {
-    public String userId { get; set; }
+public with sharing class resumeparserController {
+    public String userId;
+    public String getuserId(){
+        return userId;
+    }
+    public void setuserId(String userId){
+        this.userId = userId;
+    }
     public String acceptedFormats { get; set; } 
     public String parsedText { get; set; }
     public List<String> acceptedFormats() {
@@ -13,16 +19,16 @@ public class resumeparserController {
         this.base64 = base64;
     }
     public String fileName {get; set;}
-    public void passUserId() {  
-    }
-    
-    public void saveFile(){
+    public Boolean uploadSuccess { get; set; }
+    public void passUserId() {
         Candidate_Details__c candidateId = [SELECT Id FROM Candidate_Details__c WHERE User__c = :userId LIMIT 1];
-        
+        //perform multiple resume handling operation in this block 
+    }
+    public void saveFile(){
+        Candidate_Details__c candidateId = [SELECT Id FROM Candidate_Details__c WHERE User__c = :userId LIMIT 1];    
         if(candidateId != null){
             // Query for existing ContentDocumentLinks related to the candidate
-            List<ContentDocumentLink> existingContentDocLinks = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :candidateId.Id];
-            
+            List<ContentDocumentLink> existingContentDocLinks = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :candidateId.Id Limit 50000];
             if(!existingContentDocLinks.isEmpty()){
                 // Delete existing attachments
                 List<Id> contentDocumentIdsToDelete = new List<Id>();
@@ -35,11 +41,10 @@ public class resumeparserController {
                     throw new AuraHandledException(e.getMessage());
                 }
             }
-            
             // Create new attachment
-            ContentVersion newContentVersion = new ContentVersion();
-            newContentVersion.Title = fileName;
-            newContentVersion.VersionData = EncodingUtil.base64decode(base64);
+            ContentVersion newContentVersion = new ContentVersion();																	
+            newContentVersion.Title = this.fileName;
+            newContentVersion.VersionData = EncodingUtil.base64decode(this.base64);
             newContentVersion.PathOnClient = fileName;
             insert newContentVersion;
             
@@ -48,21 +53,20 @@ public class resumeparserController {
             newContentDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :newContentVersion.Id].ContentDocumentId;
             newContentDocLink.LinkedEntityId = candidateId.Id;
             insert newContentDocLink;
+            uploadSuccess = true;
         } else {
-                // Handle errors appropriately, e.g., display error message to user
+            // System.debug('Candidate not found');
         }
     }
-    
-    
     public void updateParsedSkillsVF() {
         try {
             Candidate_Details__c candidateId = [SELECT Id, ParsedSkills__c FROM Candidate_Details__c WHERE User__c = :userId LIMIT 1];
-            
             if(candidateId != null){
                 candidateId.ParsedSkills__c = parsedText;
                 update candidateId;
             }
         } catch (Exception e) {
+            // Handle errors appropriately, e.g., display error message to user
             throw new AuraHandledException(e.getMessage());
         }
     }
