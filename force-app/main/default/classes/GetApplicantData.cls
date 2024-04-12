@@ -79,74 +79,22 @@ public with sharing class GetApplicantData {
       throw new AuraHandledException(e.getMessage());
     }
   }
-  @AuraEnabled(cacheable=true)
-  public static ApplicantDetailsWrapper getResume(Id applicantId) {
-    ApplicantDetailsWrapper wrapper = new ApplicantDetailsWrapper();
-    List<ContentDocumentLink> documentLinks = [
-      SELECT ContentDocumentId, LinkedEntityId
-      FROM ContentDocumentLink
-      WHERE LinkedEntityId = :applicantId
-    ];
-
-    Set<Id> documentIds = new Set<Id>();
-    for (ContentDocumentLink link : documentLinks) {
-      documentIds.add(link.ContentDocumentId);
-    }
-
-    List<ContentDocument> documents = [
-      SELECT Id, Title, FileType, ContentSize, LatestPublishedVersionId
-      FROM ContentDocument
-      WHERE Id IN :documentIds
-    ];
-
-    for (ContentDocument document : documents) {
-      wrapper.documents.add(
-        new ContentDocumentWrapper(
-          document.Id,
-          document.Title,
-          document.FileType,
-          document.ContentSize,
-          document.LatestPublishedVersionId
-        )
-      );
-    }
-    system.debug('wrapper------------------>' + wrapper);
-    return wrapper;
-  }
-
-  public class ApplicantDetailsWrapper {
-    @AuraEnabled
-    public List<ContentDocumentWrapper> documents { get; set; }
-
-    public ApplicantDetailsWrapper() {
-      documents = new List<ContentDocumentWrapper>();
-    }
-  }
-
-  public class ContentDocumentWrapper {
-    @AuraEnabled
-    public Id Id { get; set; }
-    @AuraEnabled
-    public String Title { get; set; }
-    @AuraEnabled
-    public String FileType { get; set; }
-    @AuraEnabled
-    public Integer ContentSize { get; set; }
-    @AuraEnabled
-    public Id LatestPublishedVersionId { get; set; }
-
-    public ContentDocumentWrapper(
-      Id Id,
-      String Title,
-      String FileType,
-      Integer ContentSize,
-      Id LatestPublishedVersionId
-    ) {
-      this.Id = Id;
-      this.Title = Title;
-      this.FileType = FileType;
-      this.ContentSize = ContentSize;
-      this.LatestPublishedVersionId = LatestPublishedVersionId;
-    }
-  }
+ @AuraEnabled(cacheable=true)
+        public static Map<ID, String> getResume(String applicantId) {
+            // Get record file IDs    
+             list<Candidate_Details__c> candidateDetails = [SELECT Id FROM Candidate_Details__c WHERE id = :applicantId limit 1];    
+            List<ContentDocumentLink> files = [SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :candidateDetails[0].Id];
+            List<ID> fileIDs = new List<ID>();
+            for (ContentDocumentLink docLink : files) {
+                fileIDs.add(docLink.ContentDocumentId);
+            }
+     
+            List<ContentVersion> docs = [SELECT ContentDocumentId, FileExtension, Title 
+                FROM ContentVersion WHERE ContentDocumentId IN : fileIDs];
+            Map<ID, String> mapIdTitle = new Map<ID, String>();
+            for (ContentVersion docLink : docs) {
+                mapIdTitle.put(docLink.ContentDocumentId, docLink.Title);
+            }
+            return mapIdTitle;
+        } 
 }

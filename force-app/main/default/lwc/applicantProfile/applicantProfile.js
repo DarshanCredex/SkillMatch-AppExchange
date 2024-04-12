@@ -8,9 +8,7 @@ import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobBy
 import { NavigationMixin } from "lightning/navigation";
 import Id from "@salesforce/user/Id";
 
-export default class ApplicantProfile extends NavigationMixin(
-  LightningElement
-) {
+export default class ApplicantProfile extends NavigationMixin(LightningElement) {
   applicantId;
   applicantDetails = [];
   workExpDetails = [];
@@ -121,25 +119,37 @@ export default class ApplicantProfile extends NavigationMixin(
       }
     });
   }
-
   handleResumePreview() {
-    console.log("inside handle resu,me");
-    console.log("applicant id---->", this.applicantId);
-    getResume({ applicantId: this.applicantId })
-      .then((result) => {
-        console.log("result----->", result);
-        const document = result.documents[0];
+    this.downloadFiles();
+  }
 
-        if (document) {
-          this.pdfUrl =
-            "/sfc/servlet.shepherd/document/download/" + document.Id;
-          this.contentDocumentId = document.Id;
-        } else {
-          console.error("Document not found.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching CV:", error);
-      });
+  downloadFiles() {
+    const anchor = document.createElement("a");
+    anchor.style.display = "none";
+    document.body.appendChild(anchor);
+
+    this.filesList.forEach((file) => {
+      anchor.href = file.url;
+      anchor.download = file.label;
+      anchor.click();
+    });
+
+    document.body.removeChild(anchor);
+  }
+
+  filesList = [];
+
+  @wire(getResume, { applicantId: "$applicantId" })
+  wiredResult({ data, error }) {
+    if (data) {
+      this.filesList = Object.keys(data).map((item) => ({
+        label: data[item],
+        value: item,
+        url: `/sfc/servlet.shepherd/document/download/${item}`
+      }));
+    }
+    if (error) {
+      console.log(error);
+    }
   }
 }
