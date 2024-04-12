@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-11-2024
+  @last modified on  : 04-12-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -37,17 +37,23 @@
           </div>
           <hr>
           <template if:true={showApplicants}>
-            <template for:each={applicantsList} for:item="applicant">
-              <div class="applicant-box" key={applicant.Id} data-candidateid={applicant.Id}
+            <template for:each={formattedApplicants} for:item="applicant" for:index="index">
+              <div class="applicant-box" key={applicant.id} data-candidateid={applicant.id} data-jobid={applicant.jobId}
                 onclick={navigateToApplicantPage}>
-                <h1 class="applicants-name">{applicant.Name}</h1>
+                <h1 class="applicants-name">{applicant.name}</h1>
                 <div class="applicantDetails">
-                  <p> <lightning-icon icon-name="utility:email" alternative-text="Connected" size="xx-small"
-                      variant="brand"></lightning-icon> {applicant.Candidate_Email__c}</p>
-                  <p class="location"> <lightning-icon icon-name="utility:checkin" alternative-text="Connected"
-                      size="xx-small" variant="brand"></lightning-icon>
-                    {applicant.City__c}, {applicant.Country__c}</p>
-                  <p>{applicantExperience__c}</p>
+                  <p>
+                    <lightning-icon icon-name="utility:email" alternative-text="Email" size="xx-small"
+                      variant="brand"></lightning-icon>
+                    {applicant.email}
+                  </p>
+                  <p class="location">
+                    <lightning-icon icon-name="utility:checkin" alternative-text="Location" size="xx-small"
+                      variant="brand"></lightning-icon>
+                    {applicant.city}, {applicant.country}
+                  </p>
+                  <p>Experience: {applicant.experience} years</p>
+                  <p>Applied for - {applicant.jobName}</p>
                 </div>
               </div>
             </template>
@@ -55,9 +61,9 @@
           <template if:false={showApplicants}>
             <div class="no-applicants">
               <h1>No Applicants Pending</h1>
-            <div class="img">
-              <img src={empty_box} alt="na">
-            </div>
+              <div class="img">
+                <img src={empty_box} alt="na">
+              </div>
             </div>
           </template>
         </div>

@@ -6,11 +6,12 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
 import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobById";
 import { NavigationMixin } from "lightning/navigation";
+import Id from "@salesforce/user/Id";
 
 export default class ApplicantProfile extends NavigationMixin(
   LightningElement
 ) {
-  applicantId = sessionStorage.getItem("candidateid");
+  applicantId;
   applicantDetails = [];
   workExpDetails = [];
   status;
@@ -21,6 +22,15 @@ export default class ApplicantProfile extends NavigationMixin(
   value;
   contentDocumentId;
   pdfUrl;
+  jobId;
+  userId = Id;
+
+  connectedCallback() {
+    this.jobId = sessionStorage.getItem("uniquejobId");
+    this.applicantId = sessionStorage.getItem("candidateid");
+    console.log("this.jobId------->", this.jobId);
+    console.log("userid-------->", this.userId);
+  }
 
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
   wiredGetApplicantDataMethod({ error, data }) {
@@ -40,13 +50,13 @@ export default class ApplicantProfile extends NavigationMixin(
     this.applicantStatus();
   }
 
-  @wire(getAppliedJobById, { candidateId: "$applicantId" })
+  @wire(getAppliedJobById, { jobId: "$jobId", userId: "$userId" })
   wiredGetAppliedJobById({ error, data }) {
     if (data) {
       this.appliedJob = data;
-      console.log("this.appliedJob", this.appliedJob);
+      console.log("this.appliedJob----->", this.appliedJob);
     } else {
-      console.log("error------->", error);
+      console.log("error in fetching applied jobs------->", error);
     }
   }
   @wire(GetWorkExperienceData, { applicantId: "$applicantId" })
@@ -62,23 +72,27 @@ export default class ApplicantProfile extends NavigationMixin(
 
   handleShortlistButton(event) {
     this.value = event.target.value;
-    changeStatus({ value: this.value, applicantId: this.applicantId }).then(
-      () => {
-        console.log("true");
-        this.showToast("Success", "Candidate Shortlisted", "success");
-      }
-    );
+    changeStatus({
+      value: this.value,
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then(() => {
+      console.log("true");
+      this.showToast("Success", "Candidate Shortlisted", "success");
+    });
     this.IsAccepted = true;
     this.IsRejected = false;
   }
   handleRejectedButton(event) {
     this.value = event.target.value;
-    changeStatus({ value: this.value, applicantId: this.applicantId }).then(
-      () => {
-        console.log("true");
-        this.showToast("Rejected", "Candidate rejected", "Error");
-      }
-    );
+    changeStatus({
+      value: this.value,
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then(() => {
+      console.log("true");
+      this.showToast("Rejected", "Candidate rejected", "Error");
+    });
     this.IsRejected = true;
     this.IsAccepted = true;
   }
@@ -93,7 +107,10 @@ export default class ApplicantProfile extends NavigationMixin(
   }
 
   applicantStatus() {
-    getApplicantStatus({ applicantId: this.applicantId }).then((data) => {
+    getApplicantStatus({
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then((data) => {
       this.status = data;
       if (this.status === "Accepted") {
         this.IsAccepted = true;
@@ -103,5 +120,26 @@ export default class ApplicantProfile extends NavigationMixin(
         this.IsAccepted = true;
       }
     });
+  }
+
+  handleResumePreview() {
+    console.log("inside handle resu,me");
+    console.log("applicant id---->", this.applicantId);
+    getResume({ applicantId: this.applicantId })
+      .then((result) => {
+        console.log("result----->", result);
+        const document = result.documents[0];
+
+        if (document) {
+          this.pdfUrl =
+            "/sfc/servlet.shepherd/document/download/" + document.Id;
+          this.contentDocumentId = document.Id;
+        } else {
+          console.error("Document not found.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching CV:", error);
+      });
   }
 }

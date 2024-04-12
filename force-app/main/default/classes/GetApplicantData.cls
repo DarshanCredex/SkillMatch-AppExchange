@@ -1,10 +1,10 @@
 /**
- * @description       : This class is used for fetching the applcant data and work experience
- * @author            : Rudransh Shukla
- * @group             :
- * @last modified on  : 03-29-2024
- * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
- **/
+* @description       : This class is used for fetching the applcant data and work experience
+* @author            : Rudransh Shukla
+* @group             :
+* @last modified on  : 04-15-2024
+* @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
 public with sharing class GetApplicantData {
   @AuraEnabled(cacheable=true)
   public static list<Candidate_Details__c> GetApplicantDataMethod(
@@ -61,32 +61,92 @@ public with sharing class GetApplicantData {
     return workExpList;
   }
 
-  @AuraEnabled(cacheable = true)
-  public static List<Job__c> getAppliedJobById(String candidateId) {
-    List<Job__c> appliedJobs = new List<Job__c>();
+  @AuraEnabled(cacheable=true)
+  public static list<Job__c> getAppliedJobById(
+    id jobId,
+    id userId
+  ) {
+    user u = [SELECT companyName, id FROM user WHERE id = :userId];
+    string companyName = u.CompanyName;
     try {
-      List<Job_Applicants__c> jobApplicants = [
-        SELECT Job_Id__c
-        FROM Job_Applicants__c
-        WHERE CandidateId__c = :candidateId
-        LIMIT 1
-      ];
-
-      Set<Id> jobIds = new Set<Id>();
-      for (Job_Applicants__c jobApplicant : jobApplicants) {
-        jobIds.add(jobApplicant.Job_Id__c);
-      }
-
-      appliedJobs = [
+      return [
         SELECT Title_of_position__c
         FROM Job__c
-        WHERE Id IN :jobIds
+        WHERE Company_Name__c = :companyName AND id = :jobid
         LIMIT 1
       ];
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-    return appliedJobs;
+  }
+  @AuraEnabled(cacheable=true)
+  public static ApplicantDetailsWrapper getResume(Id applicantId) {
+    ApplicantDetailsWrapper wrapper = new ApplicantDetailsWrapper();
+    List<ContentDocumentLink> documentLinks = [
+      SELECT ContentDocumentId, LinkedEntityId
+      FROM ContentDocumentLink
+      WHERE LinkedEntityId = :applicantId
+    ];
+
+    Set<Id> documentIds = new Set<Id>();
+    for (ContentDocumentLink link : documentLinks) {
+      documentIds.add(link.ContentDocumentId);
+    }
+
+    List<ContentDocument> documents = [
+      SELECT Id, Title, FileType, ContentSize, LatestPublishedVersionId
+      FROM ContentDocument
+      WHERE Id IN :documentIds
+    ];
+
+    for (ContentDocument document : documents) {
+      wrapper.documents.add(
+        new ContentDocumentWrapper(
+          document.Id,
+          document.Title,
+          document.FileType,
+          document.ContentSize,
+          document.LatestPublishedVersionId
+        )
+      );
+    }
+    system.debug('wrapper------------------>' + wrapper);
+    return wrapper;
   }
 
+  public class ApplicantDetailsWrapper {
+    @AuraEnabled
+    public List<ContentDocumentWrapper> documents { get; set; }
+
+    public ApplicantDetailsWrapper() {
+      documents = new List<ContentDocumentWrapper>();
+    }
+  }
+
+  public class ContentDocumentWrapper {
+    @AuraEnabled
+    public Id Id { get; set; }
+    @AuraEnabled
+    public String Title { get; set; }
+    @AuraEnabled
+    public String FileType { get; set; }
+    @AuraEnabled
+    public Integer ContentSize { get; set; }
+    @AuraEnabled
+    public Id LatestPublishedVersionId { get; set; }
+
+    public ContentDocumentWrapper(
+      Id Id,
+      String Title,
+      String FileType,
+      Integer ContentSize,
+      Id LatestPublishedVersionId
+    ) {
+      this.Id = Id;
+      this.Title = Title;
+      this.FileType = FileType;
+      this.ContentSize = ContentSize;
+      this.LatestPublishedVersionId = LatestPublishedVersionId;
+    }
+  }
 }
