@@ -192,7 +192,8 @@ export default class ApplicantListPage extends NavigationMixin(
     const valueOfButton = event.target.value;
     changeStatus({
       value: valueOfButton,
-      applicantId: this.selectedIdList
+      applicantId: this.selectedIdList,
+      jobId: this.jobId
     })
       .then(() => {
         if (valueOfButton === "Accepted") {

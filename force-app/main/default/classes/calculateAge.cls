@@ -2,11 +2,11 @@
  * @description       : this class contains a method used to calculate the age group of applicant using dob
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-05-2024
+ * @last modified on  : 04-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class calculateAge {
-  
+  @AuraEnabled
   public static String calculateAgeMethod(Date dateOfBirth) {
     if (dateOfBirth == null) {
       return null;
