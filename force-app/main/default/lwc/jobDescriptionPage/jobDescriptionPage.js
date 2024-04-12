@@ -197,7 +197,21 @@ export default class JobDescriptionPage extends NavigationMixin(
     this.getOptionsInput();
     if (!this.questionName || !this.type) {
       this.showToast("Error", "Fields cannot be empty", "error");
-    } else {
+      } else if (this.type === "Objective" && 
+        ((!this.optionA && this.checkbox_1) || 
+        (!this.optionB && this.checkbox_2) || 
+        (!this.optionC && this.checkbox_3) || 
+        (!this.optionD && this.checkbox_4))) {
+    this.showToast("Error", "Options cannot be blank if the checkbox is checked", "error");
+    }
+    else if (this.type === "Objective" &&
+        ((this.checkbox_1 && (this.checkbox_2 || this.checkbox_3 || this.checkbox_4)) ||
+            (this.checkbox_2 && (this.checkbox_1 || this.checkbox_3 || this.checkbox_4)) ||
+            (this.checkbox_3 && (this.checkbox_1 || this.checkbox_2 || this.checkbox_4)) ||
+            (this.checkbox_4 && (this.checkbox_1 || this.checkbox_2 || this.checkbox_3)))) {
+        this.showToast("Error", "Only one checkbox can be checked for each Question", "error");
+    }
+     else {
       insertQuestionAndOptions({
         questionName: this.questionName,
         weightage: this.weightage,

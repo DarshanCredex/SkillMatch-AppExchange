@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-10-2024
+ * @last modified on  : 04-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -65,39 +65,49 @@ public with sharing class QuestionsController {
       Id questionId = question.Id;
       list<Options__c> optionsList = new List<Options__c>();
       if (question.Type__c == 'Objective') {
-        Options__c option_A = new Options__c();
-        Options__c option_B = new Options__c();
-        Options__c option_C = new Options__c();
-        Options__c option_D = new Options__c();
-
-        option_A.Answers__c = optionA;
-        option_A.Checkbox__c = checkbox_1;
-        option_A.Question__c = questionId;
-
-        option_B.Answers__c = optionB;
-        option_B.Checkbox__c = checkbox_2;
-        option_B.Question__c = questionId;
-
-        option_C.Answers__c = optionC;
-        option_C.Checkbox__c = checkbox_3;
-        option_C.Question__c = questionId;
-
-        option_D.Answers__c = optionD;
-        option_D.Checkbox__c = checkbox_4;
-        option_D.Question__c = questionId;
-
-        optionsList.add(option_A);
-        optionsList.add(option_B);
-        optionsList.add(option_C);
-        optionsList.add(option_D);
-      } else if (question.Type__c == 'Subjective') {
-        Options__c option = new Options__c();
-        option.Answers__c = answer;
-        option.Question__c = questionId;
-        optionsList.add(option);
+        if (String.isNotBlank(optionA)) {
+          optionsList.add(
+            new Options__c(
+              Answers__c = optionA,
+              Checkbox__c = checkbox_1,
+              Question__c = questionId
+            )
+          );
+        }
+        if (String.isNotBlank(optionB)) {
+          optionsList.add(
+            new Options__c(
+              Answers__c = optionB,
+              Checkbox__c = checkbox_2,
+              Question__c = questionId
+            )
+          );
+        }
+        if (String.isNotBlank(optionC)) {
+          optionsList.add(
+            new Options__c(
+              Answers__c = optionC,
+              Checkbox__c = checkbox_3,
+              Question__c = questionId
+            )
+          );
+        }
+        if (String.isNotBlank(optionD)) {
+          optionsList.add(
+            new Options__c(
+              Answers__c = optionD,
+              Checkbox__c = checkbox_4,
+              Question__c = questionId
+            )
+          );
+        }
+      } else if (type == 'Subjective' && String.isNotBlank(answer)) {
+        optionsList.add(
+          new Options__c(Answers__c = answer, Question__c = questionId)
+        );
       }
 
-      if (!optionsList.IsEmpty()) {
+      if (!optionsList.isEmpty()) {
         insert optionsList;
       }
     } catch (Exception e) {
