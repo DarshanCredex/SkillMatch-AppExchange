@@ -5,7 +5,6 @@ import IndustryPickListValues from "@salesforce/apex/JobPicklistController.Indus
 import TimingsPickListValues from "@salesforce/apex/JobPicklistController.TimingsPickListValues";
 import postJob from "@salesforce/apex/jobObjectController.postJob";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import saveToDraft from "@salesforce/apex/jobObjectController.saveToDraft";
 import { NavigationMixin } from "lightning/navigation";
 import Id from "@salesforce/user/Id";
 import getCompanyName from "@salesforce/apex/jobObjectController.getCompanyName";
@@ -25,6 +24,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   experienceValue = "";
   typeValue = "";
   industryValue = "";
+  timingValue = "";
   skills = "";
   userCompanyName;
   userId = Id;
@@ -61,30 +61,38 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
     this.industryValue = event.target.value;
   }
 
-  handleJobTitleChange(event) {
-    this.jobTitle = event.target.value;
-  }
-  handleDescriptionChange(event) {
-    this.description = event.target.value;
-  }
-  handleSalaryChange(event) {
-    this.salaryRange = event.target.value;
-  }
-  handleCityChange(event) {
-    this.city = event.target.value;
-  }
-  handleCountryChange(event) {
-    this.country = event.target.value;
-  }
-  handleSummaryChange(event) {
-    this.summary = event.target.value;
-  }
-  handleSkillsChange(event) {
-    this.skills = event.target.value;
+  handleTimingChange(event) {
+    this.timingValue = event.target.value;
+    console.log("this.timingValue", this.timingValue);
   }
 
-  postJobData() {
+  getInput() {
+    this.jobTitle = this.template.querySelector(
+      'lightning-input[data-id="jobTitle"]'
+    );
+    this.summary = this.template.querySelector(
+      'lightning-input[data-id="summary"]'
+    );
+    this.description = this.template.querySelector(
+      'lightning-input[data-id="description"]'
+    );
+    this.salaryRange = this.template.querySelector(
+      'lightning-input[data-id="salaryRange"]'
+    );
+    this.city = this.template.querySelector('lightning-input[data-id="city"]');
+    this.country = this.template.querySelector(
+      'lightning-input[data-id="country"]'
+    );
+    this.skills = this.emplate.querySelector(
+      'lightning-input[data-id="skills"]'
+    );
+  }
+
+  postJobData(event) {
+    this.getInput();
+    const value = event.target.value;
     postJob({
+      value: value,
       jobTitle: this.jobTitle,
       description: this.description,
       salaryRange: this.salaryRange,
@@ -95,46 +103,17 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       typeValue: this.typeValue,
       industryValue: this.industryValue,
       summary: this.summary,
-      skills: this.skills
+      skills: this.skills,
+      timing: this.timingValue
     })
       .then(() => {
         console.log("true");
-        this.showToast("Success", "Job posted successfully", "success");
-        const pageReference = {
-          type: "standard__webPage",
-          attributes: {
-            url: "/manage-jobs"
-          }
-        };
-        this[NavigationMixin.Navigate](pageReference);
-      })
-      .catch((error) => {
-        console.error("Error posting job:", error);
-        this.showToast(
-          "Error",
-          "Some Error occured, please try again",
-          "error"
-        );
-      });
-  }
+        if (value === "Completed") {
+          this.showToast("Success", "Job posted successfully", "success");
+        } else if (value === "Draft") {
+          this.showToast("Success", "Draft Saved successfully", "success");
+        }
 
-  saveToDraft() {
-    saveToDraft({
-      jobTitle: this.jobTitle,
-      description: this.description,
-      salaryRange: this.salaryRange,
-      companyName: this.userCompanyName,
-      city: this.city,
-      country: this.country,
-      experienceValue: this.experienceValue,
-      typeValue: this.typeValue,
-      industryValue: this.industryValue,
-      summary: this.summary,
-      skills: this.skills
-    })
-      .then(() => {
-        console.log("true");
-        this.showToast("Success", "Draft saved successfully", "success");
         const pageReference = {
           type: "standard__webPage",
           attributes: {
@@ -144,7 +123,7 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
         this[NavigationMixin.Navigate](pageReference);
       })
       .catch((error) => {
-        console.error("Error saving draft:", error);
+        console.error("Error saving job:", error);
         this.showToast(
           "Error",
           "Some Error occured, please try again",
