@@ -9,7 +9,9 @@ import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobBy
 import { NavigationMixin } from "lightning/navigation";
 import Id from "@salesforce/user/Id";
 
-export default class ApplicantProfile extends NavigationMixin(LightningElement) {
+export default class ApplicantProfile extends NavigationMixin(
+  LightningElement
+) {
   applicantId;
   applicantDetails = [];
   workExpDetails = [];
@@ -27,8 +29,6 @@ export default class ApplicantProfile extends NavigationMixin(LightningElement) 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("uniquejobId");
     this.applicantId = sessionStorage.getItem("candidateid");
-    console.log("this.jobId------->", this.jobId);
-    console.log("userid-------->", this.userId);
   }
 
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
@@ -38,12 +38,9 @@ export default class ApplicantProfile extends NavigationMixin(LightningElement) 
     }
     if (data) {
       this.applicantDetails = data;
-      console.log("applicantId------>", this.applicantId);
-      console.log("this.applicantDetails", this.applicantDetails);
 
       if (this.applicantDetails && this.applicantDetails.Skills__c) {
         this.skills = [...this.applicantDetails.Skills__c.split(",")];
-        console.log("this.skills", this.skills);
       }
     }
     this.applicantStatus();
@@ -53,7 +50,6 @@ export default class ApplicantProfile extends NavigationMixin(LightningElement) 
   wiredGetAppliedJobById({ error, data }) {
     if (data) {
       this.appliedJob = data;
-      console.log("this.appliedJob----->", this.appliedJob);
     } else {
       console.log("error in fetching applied jobs------->", error);
     }
@@ -65,7 +61,6 @@ export default class ApplicantProfile extends NavigationMixin(LightningElement) 
     }
     if (data) {
       this.workExpDetails = data;
-      console.log("this.workExpDetails", this.workExpDetails);
     }
   }
 
