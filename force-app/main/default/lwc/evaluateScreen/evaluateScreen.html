@@ -2,7 +2,7 @@
   @description       : a screen component to evaluate candidate's subjective score
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-10-2024
+  @last modified on  : 04-12-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -22,7 +22,8 @@
             </div>
             <template for:each={SubjectiveKeyValuePairs} for:item="item">
               <div key={item.key} class="option-component">
-                <p>Actual Response - {item.key}</p>
+                <p>Actual Response - <lightning-formatted-rich-text value={item.key}></lightning-formatted-rich-text>
+                </p>
               </div>
             </template>
             <div class="candidate-response">
@@ -58,8 +59,7 @@
             </template>
             <div class="candidate-response">
               <h1>Candidate Response - </h1>
-              <p><lightning-formatted-rich-text value={questionItem.candidateResponse}></lightning-formatted-rich-text>
-              </p>
+              <lightning-formatted-rich-text value={questionItem.candidateResponse}></lightning-formatted-rich-text>
             </div>
           </div>
         </template>
