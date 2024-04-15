@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-12-2024
+  @last modified on  : 04-15-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -15,29 +15,22 @@
       <div class="job-content">
         <div class="about-job">
           <h1>About Job</h1>
-          <lightning-input type="text" label="Job Title" value={jobTitle} data-id="jobTitle"
-            onchange={handleJobTitleChange}></lightning-input>
-          <lightning-input type="text" label="Company Overview" value={summary} onchange={handleSummaryChange}
-            data-id="summary"></lightning-input>
-          <lightning-input type="text" label="Job Description" value={description} onchange={handleDescriptionChange}
-            data-id="description"></lightning-input>
+          <lightning-input type="text" label="Job Title" value={jobTitle} data-id="jobTitle"></lightning-input>
+          <lightning-input type="text" label="Company Overview" value={summary} data-id="summary"></lightning-input>
+          <lightning-input type="text" label="Job Description" value={description} data-id="description"></lightning-input>
           <lightning-helptext content="Enter only the salary in numbers without any currency sign"></lightning-helptext>
-          <lightning-input type="text" label="Salary" value={salaryRange} data-id="salaryRange"
-            onchange={handleSalaryChange}>
+          <lightning-input type="text" label="Salary" value={salaryRange} data-id="salaryRange">
           </lightning-input>
           <lightning-input type="text" label="Company Name" value={userCompanyName} data-id="userCompanyName"
             disabled=""></lightning-input>
           <lightning-helptext content="Enter comma seperated values"></lightning-helptext>
-          <lightning-input type="text" label="Skills Required" value={skills} data-id="skills"
-            onchange={handleSkillsChange}>
+          <lightning-input type="text" label="Skills Required" value={skills} data-id="skills">
           </lightning-input>
         </div>
         <div class="location">
           <h1>Location</h1>
-          <lightning-input type="text" label="Country" value={country} data-id="country"
-            onchange={handleCountryChange}></lightning-input>
-          <lightning-input type="text" label="City" value={city} data-id="city"
-            onchange={handleCityChange}></lightning-input>
+          <lightning-input type="text" label="Country" value={country} data-id="country"></lightning-input>
+          <lightning-input type="text" label="City" value={city} data-id="city"></lightning-input>
         </div>
       </div>
       <hr />
@@ -88,7 +81,7 @@
           value="Draft"></lightning-button>
       </div>
       <div class="post">
-        <lightning-button variant="brand" value="Post" label="Post Now" onclick={postJobData}></lightning-button>
+        <lightning-button variant="brand" value="Completed" label="Post Now" onclick={postJobData}></lightning-button>
       </div>
     </div>
   </div>

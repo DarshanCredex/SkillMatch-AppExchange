@@ -67,25 +67,34 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   }
 
   getInput() {
-    this.jobTitle = this.template.querySelector(
+    const jobTitleInput = this.template.querySelector(
       'lightning-input[data-id="jobTitle"]'
     );
-    this.summary = this.template.querySelector(
+    const summaryInput = this.template.querySelector(
       'lightning-input[data-id="summary"]'
     );
-    this.description = this.template.querySelector(
+    const descriptionInput = this.template.querySelector(
       'lightning-input[data-id="description"]'
     );
-    this.salaryRange = this.template.querySelector(
+    const salaryRangeInput = this.template.querySelector(
       'lightning-input[data-id="salaryRange"]'
     );
-    this.city = this.template.querySelector('lightning-input[data-id="city"]');
-    this.country = this.template.querySelector(
+    const cityInput = this.template.querySelector(
+      'lightning-input[data-id="city"]'
+    );
+    const countryInput = this.template.querySelector(
       'lightning-input[data-id="country"]'
     );
-    this.skills = this.emplate.querySelector(
+    const skillsInput = this.template.querySelector(
       'lightning-input[data-id="skills"]'
     );
+    this.jobTitle = jobTitleInput.value || "";
+    this.summary = summaryInput.value || "";
+    this.description = descriptionInput.value || "";
+    this.salaryRange = salaryRangeInput.value || "";
+    this.city = cityInput.value || "";
+    this.country = countryInput.value || "";
+    this.skills = skillsInput.value || "";
   }
 
   postJobData(event) {
