@@ -237,7 +237,10 @@
                     <lightning-record-edit-form data-id="updateProfileForm" object-api-name="Candidate_Details__c"
                         record-id={candidateDetails.Id} onsuccess={handleSuccess}>
                         <lightning-input-field field-name="About__c"></lightning-input-field>
+                        <div style="display: flex">
                         <lightning-input-field field-name="Candidate_Email__c" disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name="Gender__c" ></lightning-input-field>
+                        </div>
                         <div style="display: flex">
                             <lightning-input-field field-name="Date_of_birth__c"></lightning-input-field>
                             <lightning-input-field field-name="Phone_Number__c"></lightning-input-field>
