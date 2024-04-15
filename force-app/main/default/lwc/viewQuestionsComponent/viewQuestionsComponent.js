@@ -3,17 +3,22 @@ import fetchQuestions from "@salesforce/apex/QuestionsController.fetchQuestions"
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
+import getTestTimings from "@salesforce/apex/jobObjectController.getTestTimings";
 
 export default class ViewQuestionsComponent extends LightningElement {
   questionsList = [];
+
   jobId;
   error;
+  recordId;
+  optionId;
   wiredResult;
+  testTimings;
+
   showEditQuestionsModal = false;
   showEditOptionModal = false;
   showQuestionsList = false;
-  recordId;
-  optionId;
+
   emptyBox = emptyBox;
 
   connectedCallback() {
@@ -36,6 +41,13 @@ export default class ViewQuestionsComponent extends LightningElement {
     }
   }
 
+  @wire(getTestTimings, { jobId: "$jobId" })
+  wiredGetTestTimings(result) {
+    if (result.data) {
+      this.testTimings = result.data;
+      console.log("this.testTimings----->", this.testTimings);
+    }
+  }
   handleEditQuestion(event) {
     this.showEditQuestionsModal = true;
     this.recordId = event.currentTarget.dataset.questionid;
