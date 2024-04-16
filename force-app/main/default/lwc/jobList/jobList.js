@@ -13,7 +13,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   typeValues = [];
   experienceValues = [];
   industryValues = [];
-  @track sortValue = "date";
   @track selectedTypeValues = [];
   @track selectedExperienceValues = [];
   @track selectedIndustryValues = [];
@@ -55,8 +54,8 @@ export default class JobList extends NavigationMixin(LightningElement) {
 
   get sortOptions() {
     return [
-      { label: "Date", value: "date" },
-      { label: "Clear filter", value: "clear" }
+      { label: "None", value: "clear" },
+      { label: "Date", value: "date" }
     ];
   }
 
@@ -77,14 +76,11 @@ export default class JobList extends NavigationMixin(LightningElement) {
       } else {
         this.errorMessage = true;
       }
-    } else {
-      console.error(error);
     }
   }
 
   handleSortOptions(event) {
     const value = event.target.value;
-
     if (value === "clear") {
       this.filterJobListData = [...this.jobListdata];
     } else if (value === "date") {
@@ -171,14 +167,13 @@ export default class JobList extends NavigationMixin(LightningElement) {
 
   handleJobDetail(event) {
     let jobId = event.currentTarget.id;
-    jobId = jobId.split("-")[0];
-    this[NavigationMixin.GenerateUrl]({
+    jobId = jobId.split("-");
+    const pageReference = {
       type: "standard__webPage",
       attributes: {
-        url: "/s/job-detail?id=" + jobId
+        url: "//s/job-detail?id=" + jobId
       }
-    }).then((generatedUrl) => {
-      window.open(generatedUrl);
-    });
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }
