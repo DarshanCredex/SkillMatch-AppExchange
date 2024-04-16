@@ -13,7 +13,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
   typeValues = [];
   experienceValues = [];
   industryValues = [];
-  // @track sortValue = "date";
+  @track sortValue = "date";
   @track selectedTypeValues = [];
   @track selectedExperienceValues = [];
   @track selectedIndustryValues = [];
@@ -101,6 +101,49 @@ export default class JobList extends NavigationMixin(LightningElement) {
       );
     } else {
       console.error("filterJobListData is not an array");
+    }
+  }
+
+  handleTypeChange(event) {
+    const selectedType = event.target.value;
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selectedTypeValues = [...this.selectedTypeValues, selectedType];
+    } else {
+      this.selectedTypeValues = this.selectedTypeValues.filter(
+        (item) => item !== selectedType
+      );
+    }
+  }
+
+  handleExperienceChange(event) {
+    const selectedExperience = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      this.selectedExperienceValues = [
+        ...this.selectedExperienceValues,
+        selectedExperience
+      ];
+    } else {
+      this.selectedExperienceValues = this.selectedExperienceValues.filter(
+        (item) => item !== selectedExperience
+      );
+    }
+  }
+
+  handleIndustryChange(event) {
+    const selectedIndustry = event.target.value;
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selectedIndustryValues = [
+        ...this.selectedIndustryValues,
+        selectedIndustry
+      ];
+    } else {
+      this.selectedIndustryValues = this.selectedIndustryValues.filter(
+        (item) => item !== selectedIndustry
+      );
     }
   }
 
