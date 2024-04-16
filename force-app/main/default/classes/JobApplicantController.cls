@@ -2,10 +2,19 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-28-2024
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
+  public class applicantWrapper {
+    @AuraEnabled
+    public List<Candidate_Details__c> candidateDetails { get; set; }
+    @AuraEnabled
+    public string jobName { get; set; }
+    @AuraEnabled
+    public id jobId { get; set; }
+  }
+
   public class CandidateWrapper {
     @AuraEnabled
     public Integer matchPercentage { get; set; }
@@ -62,10 +71,10 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<CandidateWrapper> fetchCandidateNames(string jobId) {
-    
+  public static List<CandidateWrapper> fetchCandidateNames(id jobId) {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
+
 
     // Required Skills of job
     List<Job__c> jobs = [
@@ -76,7 +85,9 @@ public with sharing class JobApplicantController {
     List<String> requiredSkills = new List<String>();
 
     for (Job__c job : jobs) {
-      requiredSkills.add(job.Skills_Required__c);
+      if (String.isNotBlank(job.Skills_Required__c)) {
+        requiredSkills.addAll(job.Skills_Required__c.split(','));
+      }
     }
 
     for (Job_Applicants__c applicant : [
@@ -105,15 +116,23 @@ public with sharing class JobApplicantController {
         Name,
         OwnerId,
         Phone_Number__c,
-        Skills__c
+        Skills__c,
+        ParsedSkills__c
       FROM Candidate_Details__c
       WHERE Id IN :candidateIds
     ]) {
+      Set<String> candidateSkills = new Set<String>();
+      if (String.isNotBlank(candidate.Skills__c)) {
+        candidateSkills.addAll(candidate.Skills__c.split(';'));
+      }
       Integer matchPercentage = calculateMatchPercentage(
         requiredSkills,
         candidate.Skills__c.split(';')
       );
-      string Status = getApplicantStatus(candidate.Id);
+      string Status = getApplicantStatus(candidate.Id, jobId);
+      System.debug('status assessment--->' + Status);
+      string assessmentStatus = getAssessmentStatus(candidate.Id);
+
       candidateRecords.add(
         new CandidateWrapper(candidate, matchPercentage, status)
       );
@@ -124,22 +143,32 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<Candidate_Details__c> getApplicantsList(string userId) {
+  public static List<applicantWrapper> getApplicantsList(id userId) {
+     List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
-    user u = [select companyName from user where id = :userId limit 1];
+    string jobName = '';
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
 
     try {
       List<Job_Applicants__c> applicantList = [
-        SELECT CandidateId__c
+        SELECT CandidateId__c, Job_Id__c
         FROM Job_Applicants__c
-        WHERE Application_Status__c = 'Pending' AND Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)
+        WHERE
+          Application_Status__c = 'Pending'
+          AND Job_Id__c IN (
+            SELECT id
+            FROM Job__c
+            WHERE Company_Name__c = :companyname
+          )
         LIMIT 3
       ];
 
       List<Id> candidateIds = new List<Id>();
+      List<Id> jobIds = new List<Id>();
       for (Job_Applicants__c applicant : applicantList) {
         candidateIds.add(applicant.CandidateId__c);
+        jobIds.add(applicant.Job_Id__c);
       }
 
       if (!candidateIds.isEmpty()) {
@@ -149,28 +178,75 @@ public with sharing class JobApplicantController {
           WHERE Id IN :candidateIds
         ];
       }
+
+      Map<Id, Candidate_Details__c> candidateMap = new Map<Id, Candidate_Details__c>(
+        [
+          SELECT
+            Id,
+            Name,
+            Candidate_Email__c,
+            City__c,
+            Country__c,
+            Experience__c,
+            About__c,
+            Skills__c,
+            Phone_Number__c
+          FROM Candidate_Details__c
+          WHERE Id IN :candidateIds
+        ]
+      );
+
+      Map<Id, Job__c> jobMap = new Map<Id, Job__c>(
+        [
+          SELECT Id, Title_of_position__c
+          FROM Job__c
+          WHERE Id IN :jobIds
+        ]
+      );
+
+      for (Job_Applicants__c applicant : applicantList) {
+        Candidate_Details__c candidate = candidateMap.get(
+          applicant.CandidateId__c
+        );
+        Job__c job = jobMap.get(applicant.Job_Id__c);
+
+        applicantWrapper wrapper = new applicantWrapper();
+        wrapper.candidateDetails = new List<Candidate_Details__c>();
+        wrapper.candidateDetails.add(candidate);
+        wrapper.jobName = job.Title_of_position__c;
+        wrapper.jobId = job.Id;
+
+        appliedCandidateWrapperList.add(wrapper);
+      }
+      System.debug('appliedCandidateWrapperList-------->'+appliedCandidateWrapperList);
+      return appliedCandidateWrapperList;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-
-    System.debug(
-      'appliedCandidateDetailsList------>' + appliedCandidateDetailsList
-    );
-    return appliedCandidateDetailsList;
   }
 
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfJobsPosted(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+  public static integer getNumberOfJobsPosted(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-    return [SELECT COUNT() FROM Job__c WHERE Status__c = 'Completed' and Company_Name__c = :companyname];
+    return [
+      SELECT COUNT()
+      FROM Job__c
+      WHERE Status__c = 'Completed' AND Company_Name__c = :companyname
+    ];
   }
+
   @AuraEnabled(cacheable=true)
-  public static integer getNumberOfApplicants(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+  public static integer getNumberOfApplicants(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-    return [SELECT COUNT() FROM Job_Applicants__c where Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)];
+    return [
+      SELECT COUNT()
+      FROM Job_Applicants__c
+      WHERE Job_Id__r.Company_Name__c = :companyName
+    ];
   }
+
   @AuraEnabled(cacheable=true)
   public static list<job__c> fetchJobDetails(string jobId) {
     system.debug('jobId---->' + jobId);
@@ -211,52 +287,85 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled
-  public static void changeStatus(string value, list<Id> applicantId) {
-    system.debug('applicantId---->' + applicantId);
-    system.debug('value---->' + value);
+  public static void changeStatus(
+    String value,
+    List<Id> applicantId,
+    id jobId
+  ) {
+    List<Job_Applicants__c> applicantListToUpdate = new List<Job_Applicants__c>();
 
-    list<Job_Applicants__c> applicantList = new List<Job_Applicants__c>();
     try {
-      for (Job_Applicants__c applicant : [
-        SELECT Application_Status__c
+      List<Job_Applicants__c> applicants = [
+        SELECT Id, Application_Status__c
         FROM Job_Applicants__c
-        WHERE CandidateId__c = :applicantId
-      ]) {
+        WHERE CandidateId__c IN :applicantId AND Job_Id__c = :jobId
+      ];
+      for (Job_Applicants__c applicant : applicants) {
         applicant.Application_Status__c = value;
-        System.debug(
-          'applicant.Application_Status__c' + applicant.Application_Status__c
-        );
-        applicantList.add(applicant);
+        applicantListToUpdate.add(applicant);
+      }
+      if (!applicantListToUpdate.isEmpty()) {
+        update applicantListToUpdate;
       }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-
-    if (!applicantList.IsEmpty()) {
-      update applicantList;
-    }
   }
+
   @AuraEnabled(cacheable=true)
-  public static string getApplicantStatus(string applicantId) {
+  public static string getApplicantStatus(id applicantId, id jobId) {
     string status;
     for (Job_Applicants__c applicant : [
       SELECT Application_Status__c
       FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantId
+      WHERE CandidateId__c = :applicantId AND Job_Id__c = :jobId
     ]) {
       status = applicant.Application_Status__c;
     }
     return status;
   }
 
-  // Method to calculate match percentage
+  public static string getAssessmentStatus(id applicantId) {
+    string status;
+    for (Job_Applicants__c applicant : [
+      SELECT Assesment_Status__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantId
+    ]) {
+      status = applicant.Assesment_Status__c;
+    }
+    return status;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static decimal getScore(id jobid, id candidateid) {
+    Decimal score;
+    id applicantid = [
+      SELECT id
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :candidateid AND Job_Id__c = :jobid
+    ][0]
+    .id;
+    for (Job_Applicants__c applicant : [
+      SELECT Total_Score__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantid
+    ]) {
+      score = applicant.Total_Score__c;
+    }
+    return score;
+  }
+
+  @TestVisible
   private static Integer calculateMatchPercentage(
-    List<String> requiredSkills,
-    List<String> candidateSkills
+    Set<String> requiredSkills,
+    Set<String> candidateSkills,
+    String resumeParsedSkills
   ) {
-    system.debug('12requiredSkills------->' + requiredSkills);
-    System.debug('12candidateSkills------->' + candidateSkills);
     List<String> candidateSkillsLower = new List<String>();
+    if (String.isNotBlank(resumeParsedSkills)) {
+      resumeParsedSkills = resumeParsedSkills.deleteWhitespace().toLowerCase();
+    }
     for (String skill : candidateSkills) {
       candidateSkillsLower.add(skill.normalizeSpace().toLowerCase());
     }
@@ -271,15 +380,18 @@ public with sharing class JobApplicantController {
 
     Integer commonSkillsCount = 0;
     for (String skill : requiredSkillsLower) {
-      if (candidateSkillsLower.contains(skill)) {
+      Pattern pattern = Pattern.compile(Pattern.quote(skill));
+      Matcher matcher = pattern.matcher(
+        candidateSkillsLower.toString() + resumeParsedSkills
+      );
+      if (matcher.find()) {
         commonSkillsCount++;
-        System.debug('commonSkillsCount---->' + commonSkillsCount);
       }
     }
     if (requiredSkillsLower.size() > 0) {
       Integer matchPercentage =
         (commonSkillsCount * 100) / requiredSkillsLower.size();
-      System.debug('matchPercentage------>' + matchPercentage);
+
       return matchPercentage;
     } else {
       return 0;
