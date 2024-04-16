@@ -1,10 +1,12 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import fetchCandidateDetails from '@salesforce/apex/CandidateProfileController.getCandidateDetails';
+import getResume from '@salesforce/apex/CandidateProfileController.getResume';
 import UserId from '@salesforce/user/Id';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
-import getData from '@salesforce/apex/resumeparserController.getData';
+//import getData from '@salesforce/apex/resumeparserController.getData';
+
 export default class CandidateProfile extends NavigationMixin(LightningElement) {
 @track isExpModalOpen = false;
 @track isEditModalOpen = false;
@@ -12,48 +14,72 @@ export default class CandidateProfile extends NavigationMixin(LightningElement) 
 @track isToDateDisabled = false;
 @track isEditExpModalOpen = false;
 @track userId = UserId;
+@track candidateTitle;
 @track candidateDetails;
 @track candidateSkills;
 @api recordId;
 candidateDetailsWire;
+resumeDetailWire;
 @track experienceToUpdate;
 @track experienceToUpdate;
 @api isLoading = false;
 @api isLoadingFullScreen = false
 uploadedFile;
-@track iframeLoading = true;
+@track iframeLoading = false;
+filesList = []; 
 
 connectedCallback() {
-    
     this.isLoadingFullScreen = true;
     refreshApex(this.candidateDetailsWire);
+    window.addEventListener("message", this.handleMessage.bind(this), false);
 }
 
+    disconnectedCallback() {
+        window.removeEventListener("message", this.handleMessage.bind(this), false);
+    }
+
+handleMessage(event) {
+    const message = event.data;
+    if (message === "closeModal") {
+        // close the modal here
+        this.isResumeModalOpen = false;
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'Resume uploaded successfully',
+                variant: 'success'
+            })
+        );
+    }
+}
+
+/*handleMessage(event) {
+    if (event.data.name === 'sample-event-name') {
+        this.isResumeModalOpen = false;
+        /*if (event.data.payload === true) {
+            this.closeResumeModal();
+        } else {
+            console.log('File upload unsuccessful');
+        }
+    }
+}*/
 @wire(fetchCandidateDetails, { userId: '$userId' }) list(result) {
     this.candidateDetailsWire = result;
     if (result.data) {
         this.candidateDetails = result.data;
-        
-        this.candidateSkills = [...this.candidateDetails.Skills__c.split(',')];
-       // console.log('this.candidateSkills--->', JSON.stringify(this.candidateSkills));
+       // console.log('this.candidateDetails--->', JSON.stringify(this.candidateDetails)); 
+        if(this.candidateDetails.Skills__c != undefined){
+            this.candidateSkills = [...this.candidateDetails.Skills__c.split(',')];
+        }
+        if(this.candidateDetails.Work_Experience__r != undefined){
+            this.candidateTitle = this.candidateDetails.Work_Experience__r[0].Name;
+        }
     } else if (result.error) {
         console.log("Error received in wire-----", result.error);
     }
     this.isLoadingFullScreen = false;
 }
 
-/*fetchCandidate() {
-    fetchCandidateDetails({ userId: this.userId })
-        .then(result => {
-            console.log('result--->', result);
-            this.candidateDetails = result;
-            this.isLoadingFullScreen = false;
-        })
-        .catch(error => {
-            console.error('Error:', error.message);
-            this.isLoadingFullScreen = false;
-        });
-}*/
 
 handleCurrentCompanyChange(event) {
     this.isToDateDisabled = event.detail.checked;
@@ -65,28 +91,68 @@ handleAdd() {
 }
 get iframeSrc() {
     // Construct the URL for the VF page with the UserId passed as a query parameter
+    //console.log('useridfromlwc----->', this.userId);
     return `/apex/resumeparser?userId=${this.userId}`;
 }
 handleIframeLoad() {
     // This function is called when the iframe finishes loading
     this.iframeLoading = false;
         this.iframeSrc();
-    getData({ userId: this.userId})
+     getData({ userId: this.userId})
+    .then(result => {
+        if (result.uploadSuccess) {
+            console.log('result--->', result);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+    
 }
-
 handleResume() {
-    this.isLoading = true;
     this.isResumeModalOpen = true;
     this.isLoading = false;
     this.iframeLoading = true;
+    refreshApex(this.resumeDetailWire);
+    
+}
+downloadFiles() {
+    const anchor = document.createElement('a');
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    
+    this.filesList.forEach(file => {
+        anchor.href = file.url;
+        anchor.download = file.label;
+        anchor.click();
+    });
+
+    document.body.removeChild(anchor);
 }
 
+@wire(getResume, {userId: '$userId'})
+wiredResult(result) { 
+    this.resumeDetailWire = result;
+   // console.log('resumeDetailWire------->',this.resumeDetailWire);
+    if(result.data) { 
+        this.filesList = Object.keys(result.data).map(item => ({
+            "label": result.data[item],
+            "value": item,
+            "url": `/sfc/servlet.shepherd/document/download/${item}`
+        }));        
+    }
+    else if(result.error) { 
+        console.error('error' , result.error);
+    }
+}
 handleEdit() {
     this.isEditModalOpen = true;
     //this.fetchCandidateDetails();
 }
 
 closeResumeModal() {
+    console.log("inside----->" + this.isResumeModalOpen);
+    refreshApex(this.resumeDetailWire);
     this.isResumeModalOpen = false;
 }
 
@@ -94,6 +160,7 @@ closeModal() {
     this.isExpModalOpen = false;
     this.isToDateDisabled = false;
     this.isLoading = false;
+  
 }
 
 closeEditModal() {

@@ -5,7 +5,7 @@
  * @last modified on  : 03-11-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
-public with sharing class recruiterSignUpController {
+public without sharing class recruiterSignUpController {
   public String firstName { get; set; }
   public String lastName { get; set; }
   public String email { get; set; }
@@ -49,10 +49,10 @@ public with sharing class recruiterSignUpController {
       ApexPages.addMessage(msg);
       return null;
     }
-    Id profileId = [SELECT Id FROM Profile WHERE Name = 'Recruiter' LIMIT 1].Id;
-
+    Id recruiterprofileId = [SELECT Id FROM Profile WHERE Name = 'Recruiter' LIMIT 1].Id;
+  	String profileId = recruiterprofileId;
     String accountId = '0015h00001cwIQIAA2';
-    System.debug(email);
+    System.debug('profileId' + profileId);
     String userName = email;
     system.debug(email + 'Username');
     
