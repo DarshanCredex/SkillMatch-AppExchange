@@ -13,7 +13,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   typeValues = [];
   experienceValues = [];
   industryValues = [];
-  @track sortValue = "date";
   @track selectedTypeValues = [];
   @track selectedExperienceValues = [];
   @track selectedIndustryValues = [];
@@ -21,17 +20,12 @@ export default class JobList extends NavigationMixin(LightningElement) {
   @track searchTitle = "";
   @track isLoading = false;
   @track errorMessage = false;
-  @track jobListdata;
+  @track jobListdata = [];
+  @track filterJobListData = [];
 
   connectedCallback() {
     this.searchTitle = sessionStorage.getItem("searchText") || "";
-    console.log(
-      "unique value from session storage------->",
-      sessionStorage.getItem("uniqueValue")
-    );
     sessionStorage.clear();
-    console.log("searchTitle-->", this.searchLocation);
-    console.log("searchLocation-->", this.searchLocation);
 
     getTypePicklistValues()
       .then((result) => {
@@ -40,6 +34,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
       .catch((error) => {
         console.error("Error fetching type picklist values:", error);
       });
+
     getExperiencePicklistValues()
       .then((result) => {
         this.experienceValues = result;
@@ -47,6 +42,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
       .catch((error) => {
         console.error("Error fetching experience picklist values:", error);
       });
+
     getIndustryPicklistValues()
       .then((result) => {
         this.industryValues = result;
@@ -55,6 +51,14 @@ export default class JobList extends NavigationMixin(LightningElement) {
         console.error("Error fetching industry picklist values:", error);
       });
   }
+
+  get sortOptions() {
+    return [
+      { label: "None", value: "clear" },
+      { label: "Date", value: "date" }
+    ];
+  }
+
   @wire(getJobs, {
     searchTitle: "$searchTitle",
     searchLocation: "$searchLocation",
@@ -64,7 +68,9 @@ export default class JobList extends NavigationMixin(LightningElement) {
   })
   jobList({ data }) {
     if (data) {
+      console.log("joblist--->", data);
       this.jobListdata = data;
+      this.filterJobListData = [...this.jobListdata];
       if (this.jobListdata.length > 0) {
         this.errorMessage = false;
       } else {
@@ -72,11 +78,26 @@ export default class JobList extends NavigationMixin(LightningElement) {
       }
     }
   }
-  get sortOptions() {
-    return [
-      { label: "Date", value: "date" },
-      { label: "Closet", value: "closet" }
-    ];
+
+  handleSortOptions(event) {
+    const value = event.target.value;
+    if (value === "clear") {
+      this.filterJobListData = [...this.jobListdata];
+    } else if (value === "date") {
+      this.handleSortList();
+    }
+  }
+
+  handleSortList() {
+    if (Array.isArray(this.filterJobListData)) {
+      this.filterJobListData.sort((a, b) => a.daysAgo - b.daysAgo);
+      console.log(
+        "this.filterJobListData---> (sorted)",
+        JSON.stringify(this.filterJobListData)
+      );
+    } else {
+      console.error("filterJobListData is not an array");
+    }
   }
 
   handleTypeChange(event) {
@@ -150,9 +171,9 @@ export default class JobList extends NavigationMixin(LightningElement) {
     const pageReference = {
       type: "standard__webPage",
       attributes: {
-        url: "/job-detail?id=" + jobId[0]
+        url: "//s/job-detail?id=" + jobId
       }
-    }
+    };
     this[NavigationMixin.Navigate](pageReference);
   }
 }
