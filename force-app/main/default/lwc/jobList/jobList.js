@@ -55,8 +55,8 @@ export default class JobList extends NavigationMixin(LightningElement) {
 
   get sortOptions() {
     return [
-      { label: "Clear filter", value: "clear" },
       { label: "Date", value: "date" },
+      { label: "Clear filter", value: "clear" }
     ];
   }
 
