@@ -2,7 +2,7 @@
   @description       : 
   @author            : Sagar Medatwal
   @group             : 
-  @last modified on  : 03-07-2024
+  @last modified on  : 04-16-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -21,9 +21,11 @@
                     </div>
                     <div class="job-sort-bar">
                         <div class="job-sort-text">Sort By</div>
-                        <div><lightning-combobox class="job-sort-by" name="Sort by" label="Status"
-                                variant="label-hidden" value={sortValue} options={sortOptions}
-                                onchange={handleChange}></lightning-combobox></div>
+                        <div>
+                            <lightning-combobox class="job-sort-by" name="Sort by" label="Status" variant="label-hidden"
+                                value={sortValue} options={sortOptions} onchange={handleSortOptions}>
+                            </lightning-combobox>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,7 +60,7 @@
                         <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </template>
                     <template if:true={jobListdata}>
-                        <template for:each={jobListdata} for:item="job">
+                        <template for:each={filterJobListData} for:item="job">
                             <div onclick={handleJobDetail} id={job.jobId} key={job.jobId} class="job-card">
                                 <div class="job-card-top">
                                     <div class="job-card-top-left">
