@@ -2,10 +2,29 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-26-2024
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
+  public class responseWrapper {
+    @AuraEnabled
+    public string candidateResponse { get; set; }
+    @AuraEnabled
+    public string question { get; set; }
+    @AuraEnabled
+    public Map<string, boolean> actualResponse { get; set; }
+    @AuraEnabled
+    public Id questionId { get; set; }
+    @AuraEnabled
+    public string type { get; set; }
+    @AuraEnabled
+    public decimal weightage { get; set; }
+
+    public responseWrapper() {
+      actualResponse = new Map<string, boolean>();
+    }
+  }
+
   @AuraEnabled(cacheable=true)
   public static list<string> questionTypeValue() {
     String fieldName = 'Type__c';
@@ -103,6 +122,119 @@ public with sharing class QuestionsController {
       ];
 
       return questionsList;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static string getResponsesAndQuestions(Id jobId, Id candidateId) {
+    try {
+      List<responseWrapper> result = new List<responseWrapper>();
+
+      List<Job_Applicants__c> jobApplicantsList = [
+        SELECT Id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
+        LIMIT 1
+      ];
+
+      if (!jobApplicantsList.isEmpty()) {
+        Id applicantId = jobApplicantsList[0].Id;
+
+        List<Question__c> questionList = [
+          SELECT
+            Id,
+            Type__c,
+            Question_Name__c,
+            Weightage__c,
+            (SELECT Id, Answers__c, Checkbox__c FROM Options__r),
+            (
+              SELECT Id, Response_Value__c
+              FROM Responses__r
+              WHERE Job_Applicants__c = :applicantId
+            )
+          FROM Question__c
+          WHERE Job__c = :jobId
+        ];
+
+        for (Question__c ques : questionList) {
+          responseWrapper wrapper = new responseWrapper();
+          wrapper.question = ques.Question_Name__c;
+          wrapper.questionId = ques.Id;
+          wrapper.type = ques.Type__c;
+          wrapper.weightage = ques.Weightage__c;
+
+          Map<String, Boolean> optionsMap = new Map<String, Boolean>();
+          for (Options__c option : ques.Options__r) {
+            if (option.Answers__c != null) {
+              optionsMap.put(option.Answers__c, false);
+            }
+            if (option.Checkbox__c != null) {
+              optionsMap.put(option.Answers__c, option.Checkbox__c);
+            }
+          }
+
+          wrapper.actualResponse = optionsMap;
+          if (!ques.Responses__r.isEmpty()) {
+            wrapper.candidateResponse = ques.Responses__r[0].Response_Value__c;
+          }
+
+          result.add(wrapper);
+        }
+      }
+      return JSON.serialize(result);
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+  // @AuraEnabled
+  // public static Decimal calculateObjectiveScore(list<id> optionId) {
+
+
+  //   for (Question__c question : questionsWithOptions) {
+  //     for (Options__c option : question.Options__r) {
+  //       optionId.add(option.Id);
+  //     }
+  //   }
+  //   Decimal score = 0;
+  //   try {
+  //     list<Options__c> optionsDetails = new List<Options__c>();
+  //     optionsDetails = [
+  //       SELECT Answers__c, Question__c, Checkbox__c, Question__r.Weightage__c
+  //       FROM Options__c
+  //       WHERE id IN :optionId
+  //     ];
+  //     for (Options__c option : optionsDetails) {
+  //       if (option.Checkbox__c == true) {
+  //         score = score + option.Question__r.Weightage__c;
+  //       }
+  //     }
+  //     return score;
+  //   } catch (Exception e) {
+  //     throw new AuraHandledException(e.getMessage());
+  //   }
+  // }
+
+  @AuraEnabled
+  public static void updateScore(integer score, id jobid, id candidateid) {
+    try {
+      id applicantid = [
+        SELECT Id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
+      ][0]
+      .id;
+
+      Job_Applicants__c applicant = [
+        SELECT Total_Score__c
+        FROM Job_Applicants__c
+        WHERE id = :applicantid
+      ];
+
+      applicant.Total_Score__c = score;
+
+      update applicant;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }

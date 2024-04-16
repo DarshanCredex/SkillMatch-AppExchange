@@ -117,12 +117,11 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @wire(getApplicantsList, { userId: "$userId" })
   wiredGetApplicantsList({ error, data }) {
     if (data) {
+      console.log("this.applicantsList------>", data);
       this.applicantsList = data;
-      if(this.applicantsList.length > 0){
+      if (this.applicantsList.length > 0) {
         this.showApplicants = true;
       }
-      console.log(this.showApplicants);
-
     } else {
       console.log("error------->", error);
     }
@@ -130,12 +129,12 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   @wire(getDraftJobList, { userId: "$userId" })
   wiredGetDraftJobList({ error, data }) {
     if (data) {
-        this.draftJobList = data;
-        this.showDrafts = true;
+      this.draftJobList = data;
+      this.showDrafts = true;
     } else if (error) {
-        console.error("Error fetching draft job list", error);
+      console.error("Error fetching draft job list", error);
     }
-}
+  }
 
   @wire(getNumberOfApplicants, { userId: "$userId" })
   wiredGetNumebrOfApplicants({ error, data }) {
@@ -155,7 +154,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     }
   }
 
-  @wire(getApplicantDataset, {userId:"$userId"})
+  @wire(getApplicantDataset, { userId: "$userId" })
   applicants({ error, data }) {
     if (data) {
       this.applicantChartDataset = data;
@@ -176,7 +175,7 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
     }
   }
 
-  @wire(numberOfApplicantsShortlistedAndRejected , {userId:"$userId"})
+  @wire(numberOfApplicantsShortlistedAndRejected, { userId: "$userId" })
   wiredNumberOfApplicantsShortlistedAndRejected({ error, data }) {
     if (error) {
       console.error("error rejected applicant----->", error.message);
@@ -236,8 +235,11 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
 
   navigateToApplicantPage(event) {
     const candidateId = event.currentTarget.dataset.candidateid;
+    const jobId = event.currentTarget.dataset.jobid;
     console.log("candidateId(sender)----->", candidateId);
+    console.log("jobId(sender)----->", jobId);
     sessionStorage.setItem("candidateid", candidateId);
+    sessionStorage.setItem("uniquejobId", jobId);
     const pageReference = {
       type: "standard__webPage",
       attributes: {
@@ -245,5 +247,23 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
       }
     };
     this[NavigationMixin.Navigate](pageReference);
+  }
+
+  get formattedApplicants() {
+    if (!this.applicantsList) {
+      return [];
+    }
+    return this.applicantsList.map((applicant) => {
+      return {
+        id: applicant.candidateDetails[0].Id,
+        name: applicant.candidateDetails[0].Name,
+        email: applicant.candidateDetails[0].Candidate_Email__c,
+        city: applicant.candidateDetails[0].City__c,
+        country: applicant.candidateDetails[0].Country__c,
+        experience: applicant.candidateDetails[0].Experience__c,
+        jobName: applicant.jobName,
+        jobId: applicant.jobId
+      };
+    });
   }
 }

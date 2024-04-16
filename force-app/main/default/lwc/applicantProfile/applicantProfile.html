@@ -2,7 +2,7 @@
   @description       : applicant details page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-21-2024
+  @last modified on  : 04-15-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -20,8 +20,8 @@
                             <p>{applicant.Job_Title__c}</p>
                         </div>
                         <div class="buttons">
-                            <!-- <lightning-button variant="Neutral" label="View CV"
-                                onclick={handleResumePreview}></lightning-button> -->
+                            <lightning-button variant="Neutral" label="Download CV"
+                                onclick={handleResumePreview}></lightning-button>
                             <lightning-button value="Accepted" variant="brand" label="Shortlist" disabled={IsAccepted}
                                 onclick={handleShortlistButton}></lightning-button>
 
@@ -60,9 +60,5 @@
                 </template>
             </div>
         </div>
-    </template>
-
-    <template if:true={contentDocumentId}>
-        <iframe src={pdfUrl} width="100%" height="500px" frameborder="0"></iframe>
     </template>
 </template>

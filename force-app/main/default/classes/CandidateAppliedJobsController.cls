@@ -1,20 +1,21 @@
 /**
- * @description       :
- * @author            : Sagar Medatwal
- * @group             :
- * @last modified on  : 03-15-2024
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
- **/
-public without sharing class CandidateAppliedJobsController {
-  public class JobWrapper {
-    @AuraEnabled
-    public Integer appliedCount { get; set; }
-    @AuraEnabled
-    public Integer shortListedCount { get; set; }
-    @AuraEnabled
-    public Integer pendingCount { get; set; }
-    @AuraEnabled
-    public List<JobListWrapper> jobWrapperList { get; set; }
+**/
+public with sharing class CandidateAppliedJobsController {
+    
+    public class JobWrapper {
+        @AuraEnabled
+        public Integer appliedCount { get; set; }
+        @AuraEnabled
+        public Integer shortListedCount { get; set; }
+        @AuraEnabled
+        public Integer pendingCount { get; set; }
+        @AuraEnabled
+        public List<JobListWrapper> jobWrapperList { get; set; }
 
     public JobWrapper() {
       jobWrapperList = new List<JobListWrapper>();
@@ -40,8 +41,17 @@ public without sharing class CandidateAppliedJobsController {
     public String country { get; set; }
     @AuraEnabled
     public String status { get; set; }
+    @AuraEnabled
+    public boolean questionsPresent { get; set; }
+    @AuraEnabled
+    public boolean assesmentStatus { get; set; }
 
-    public JobListWrapper(Job__c job, String jobStatus) {
+    public JobListWrapper(
+      Job__c job,
+      String jobStatus,
+      boolean questionsPresent,
+      boolean assesmentStatus
+    ) {
       this.jobId = job.Id;
       this.daysAgo = calculateDaysAgo(job.CreatedDate);
       this.title = job.Title_of_position__c;
@@ -51,6 +61,8 @@ public without sharing class CandidateAppliedJobsController {
       this.city = job.City__c;
       this.country = job.Country__c;
       this.status = jobStatus;
+      this.questionsPresent = questionsPresent;
+      this.assesmentStatus = assesmentStatus;
     }
 
     private Integer calculateDaysAgo(Datetime createdDate) {
@@ -65,7 +77,7 @@ public without sharing class CandidateAppliedJobsController {
   public static JobWrapper getAppliedJobs(
     String searchTitle,
     String searchCompany,
-    string email,
+    Id userId,
     String statusFilter
   ) {
     List<Candidate_Details__c> candidateDetails = [
@@ -73,7 +85,7 @@ public without sharing class CandidateAppliedJobsController {
         Id,
         (SELECT Id, Application_Status__c, Job_Id__c FROM Job_Applicants__r)
       FROM Candidate_Details__c
-      WHERE Candidate_Email__c = :email
+      WHERE User__c = :userId
       LIMIT 1
     ];
     Set<Id> candidateApplicationId = new Set<Id>();
@@ -108,7 +120,6 @@ public without sharing class CandidateAppliedJobsController {
     List<String> dynamicConditions = new List<String>();
     searchTitle = '%' + searchTitle + '%';
     searchCompany = '%' + searchCompany + '%';
-
     if (String.isNotBlank(searchTitle)) {
       dynamicConditions.add('Title_of_position__c LIKE :searchTitle');
     }
@@ -125,8 +136,28 @@ public without sharing class CandidateAppliedJobsController {
 
     List<JobListWrapper> wrappedJobs = new List<JobListWrapper>();
     for (Job__c job : jobs) {
+      integer questionsCount = [
+        SELECT COUNT()
+        FROM Question__c
+        WHERE job__c = :job.id
+      ];
+      boolean questionPresent = (questionsCount > 0);
       String jobStatus = jobStatusMap.get(job.Id);
-      wrappedJobs.add(new JobListWrapper(job, jobStatus));
+      boolean assesmentStatus;
+      string status = testingEnvironmentController.getAssesmentStatus(
+        userId,
+        job.Id
+      );
+      if (status == 'Pending') {
+        assesmentStatus = false;
+      } else {
+        assesmentStatus = true;
+      }
+
+      System.debug('questionPresent----->' + questionPresent);
+      wrappedJobs.add(
+        new JobListWrapper(job, jobStatus, questionPresent, assesmentStatus)
+      );
     }
     if (!wrappedJobs.isEmpty()) {
       wrappedAppliedJobs.jobWrapperList.addAll(wrappedJobs);

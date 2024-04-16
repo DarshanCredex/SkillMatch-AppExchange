@@ -2,10 +2,19 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-02-2024
+ * @last modified on  : 04-15-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
+  public class applicantWrapper {
+    @AuraEnabled
+    public List<Candidate_Details__c> candidateDetails { get; set; }
+    @AuraEnabled
+    public string jobName { get; set; }
+    @AuraEnabled
+    public id jobId { get; set; }
+  }
+
   public class CandidateWrapper {
     @AuraEnabled
     public Integer matchPercentage { get; set; }
@@ -62,8 +71,7 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<CandidateWrapper> fetchCandidateNames(string jobId) {
-    
+  public static List<CandidateWrapper> fetchCandidateNames(id jobId) {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
 
@@ -121,7 +129,10 @@ public with sharing class JobApplicantController {
         requiredSkills,
         candidate.Skills__c.split(';')
       );
-      string Status = getApplicantStatus(candidate.Id);
+      string Status = getApplicantStatus(candidate.Id, jobId);
+      System.debug('status assessment--->' + Status);
+      string assessmentStatus = getAssessmentStatus(candidate.Id);
+
       candidateRecords.add(
         new CandidateWrapper(candidate, matchPercentage, status)
       );
@@ -132,14 +143,16 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<Candidate_Details__c> getApplicantsList(string userId) {
+  public static List<applicantWrapper> getApplicantsList(id userId) {
+     List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
+    string jobName = '';
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
 
     try {
       List<Job_Applicants__c> applicantList = [
-        SELECT CandidateId__c
+        SELECT CandidateId__c, Job_Id__c
         FROM Job_Applicants__c
         WHERE
           Application_Status__c = 'Pending'
@@ -152,8 +165,10 @@ public with sharing class JobApplicantController {
       ];
 
       List<Id> candidateIds = new List<Id>();
+      List<Id> jobIds = new List<Id>();
       for (Job_Applicants__c applicant : applicantList) {
         candidateIds.add(applicant.CandidateId__c);
+        jobIds.add(applicant.Job_Id__c);
       }
 
       if (!candidateIds.isEmpty()) {
@@ -163,14 +178,51 @@ public with sharing class JobApplicantController {
           WHERE Id IN :candidateIds
         ];
       }
+
+      Map<Id, Candidate_Details__c> candidateMap = new Map<Id, Candidate_Details__c>(
+        [
+          SELECT
+            Id,
+            Name,
+            Candidate_Email__c,
+            City__c,
+            Country__c,
+            Experience__c,
+            About__c,
+            Skills__c,
+            Phone_Number__c
+          FROM Candidate_Details__c
+          WHERE Id IN :candidateIds
+        ]
+      );
+
+      Map<Id, Job__c> jobMap = new Map<Id, Job__c>(
+        [
+          SELECT Id, Title_of_position__c
+          FROM Job__c
+          WHERE Id IN :jobIds
+        ]
+      );
+
+      for (Job_Applicants__c applicant : applicantList) {
+        Candidate_Details__c candidate = candidateMap.get(
+          applicant.CandidateId__c
+        );
+        Job__c job = jobMap.get(applicant.Job_Id__c);
+
+        applicantWrapper wrapper = new applicantWrapper();
+        wrapper.candidateDetails = new List<Candidate_Details__c>();
+        wrapper.candidateDetails.add(candidate);
+        wrapper.jobName = job.Title_of_position__c;
+        wrapper.jobId = job.Id;
+
+        appliedCandidateWrapperList.add(wrapper);
+      }
+      System.debug('appliedCandidateWrapperList-------->'+appliedCandidateWrapperList);
+      return appliedCandidateWrapperList;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-
-    System.debug(
-      'appliedCandidateDetailsList------>' + appliedCandidateDetailsList
-    );
-    return appliedCandidateDetailsList;
   }
 
   @AuraEnabled(cacheable=true)
@@ -235,14 +287,18 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled
-  public static void changeStatus(String value, List<Id> applicantId) {
+  public static void changeStatus(
+    String value,
+    List<Id> applicantId,
+    id jobId
+  ) {
     List<Job_Applicants__c> applicantListToUpdate = new List<Job_Applicants__c>();
 
     try {
       List<Job_Applicants__c> applicants = [
         SELECT Id, Application_Status__c
         FROM Job_Applicants__c
-        WHERE CandidateId__c IN :applicantId
+        WHERE CandidateId__c IN :applicantId AND Job_Id__c = :jobId
       ];
       for (Job_Applicants__c applicant : applicants) {
         applicant.Application_Status__c = value;
@@ -257,16 +313,47 @@ public with sharing class JobApplicantController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static string getApplicantStatus(string applicantId) {
+  public static string getApplicantStatus(id applicantId, id jobId) {
     string status;
     for (Job_Applicants__c applicant : [
       SELECT Application_Status__c
       FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantId
+      WHERE CandidateId__c = :applicantId AND Job_Id__c = :jobId
     ]) {
       status = applicant.Application_Status__c;
     }
     return status;
+  }
+
+  public static string getAssessmentStatus(id applicantId) {
+    string status;
+    for (Job_Applicants__c applicant : [
+      SELECT Assesment_Status__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantId
+    ]) {
+      status = applicant.Assesment_Status__c;
+    }
+    return status;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static decimal getScore(id jobid, id candidateid) {
+    Decimal score;
+    id applicantid = [
+      SELECT id
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :candidateid AND Job_Id__c = :jobid
+    ][0]
+    .id;
+    for (Job_Applicants__c applicant : [
+      SELECT Total_Score__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__c = :applicantid
+    ]) {
+      score = applicant.Total_Score__c;
+    }
+    return score;
   }
 
   @TestVisible

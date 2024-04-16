@@ -6,11 +6,12 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getApplicantStatus from "@salesforce/apex/JobApplicantController.getApplicantStatus";
 import getAppliedJobById from "@salesforce/apex/GetApplicantData.getAppliedJobById";
 import { NavigationMixin } from "lightning/navigation";
+import Id from "@salesforce/user/Id";
 
 export default class ApplicantProfile extends NavigationMixin(
   LightningElement
 ) {
-  applicantId = sessionStorage.getItem("candidateid");
+  applicantId;
   applicantDetails = [];
   workExpDetails = [];
   status;
@@ -21,6 +22,13 @@ export default class ApplicantProfile extends NavigationMixin(
   value;
   contentDocumentId;
   pdfUrl;
+  jobId;
+  userId = Id;
+
+  connectedCallback() {
+    this.jobId = sessionStorage.getItem("uniquejobId");
+    this.applicantId = sessionStorage.getItem("candidateid");
+  }
 
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
   wiredGetApplicantDataMethod({ error, data }) {
@@ -29,24 +37,20 @@ export default class ApplicantProfile extends NavigationMixin(
     }
     if (data) {
       this.applicantDetails = data;
-      console.log("applicantId------>", this.applicantId);
-      console.log("this.applicantDetails", this.applicantDetails);
 
       if (this.applicantDetails && this.applicantDetails.Skills__c) {
         this.skills = [...this.applicantDetails.Skills__c.split(",")];
-        console.log("this.skills", this.skills);
       }
     }
     this.applicantStatus();
   }
 
-  @wire(getAppliedJobById, { candidateId: "$applicantId" })
+  @wire(getAppliedJobById, { jobId: "$jobId", userId: "$userId" })
   wiredGetAppliedJobById({ error, data }) {
     if (data) {
       this.appliedJob = data;
-      console.log("this.appliedJob", this.appliedJob);
     } else {
-      console.log("error------->", error);
+      console.log("error in fetching applied jobs------->", error);
     }
   }
   @wire(GetWorkExperienceData, { applicantId: "$applicantId" })
@@ -56,29 +60,32 @@ export default class ApplicantProfile extends NavigationMixin(
     }
     if (data) {
       this.workExpDetails = data;
-      console.log("this.workExpDetails", this.workExpDetails);
     }
   }
 
   handleShortlistButton(event) {
     this.value = event.target.value;
-    changeStatus({ value: this.value, applicantId: this.applicantId }).then(
-      () => {
-        console.log("true");
-        this.showToast("Success", "Candidate Shortlisted", "success");
-      }
-    );
+    changeStatus({
+      value: this.value,
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then(() => {
+      console.log("true");
+      this.showToast("Success", "Candidate Shortlisted", "success");
+    });
     this.IsAccepted = true;
     this.IsRejected = false;
   }
   handleRejectedButton(event) {
     this.value = event.target.value;
-    changeStatus({ value: this.value, applicantId: this.applicantId }).then(
-      () => {
-        console.log("true");
-        this.showToast("Rejected", "Candidate rejected", "Error");
-      }
-    );
+    changeStatus({
+      value: this.value,
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then(() => {
+      console.log("true");
+      this.showToast("Rejected", "Candidate rejected", "Error");
+    });
     this.IsRejected = true;
     this.IsAccepted = true;
   }
@@ -93,7 +100,10 @@ export default class ApplicantProfile extends NavigationMixin(
   }
 
   applicantStatus() {
-    getApplicantStatus({ applicantId: this.applicantId }).then((data) => {
+    getApplicantStatus({
+      applicantId: this.applicantId,
+      jobId: this.jobId
+    }).then((data) => {
       this.status = data;
       if (this.status === "Accepted") {
         this.IsAccepted = true;
@@ -103,5 +113,38 @@ export default class ApplicantProfile extends NavigationMixin(
         this.IsAccepted = true;
       }
     });
+  }
+  handleResumePreview() {
+    this.downloadFiles();
+  }
+
+  downloadFiles() {
+    const anchor = document.createElement("a");
+    anchor.style.display = "none";
+    document.body.appendChild(anchor);
+
+    this.filesList.forEach((file) => {
+      anchor.href = file.url;
+      anchor.download = file.label;
+      anchor.click();
+    });
+
+    document.body.removeChild(anchor);
+  }
+
+  filesList = [];
+
+  @wire(getResume, { applicantId: "$applicantId" })
+  wiredResult({ data, error }) {
+    if (data) {
+      this.filesList = Object.keys(data).map((item) => ({
+        label: data[item],
+        value: item,
+        url: `/sfc/servlet.shepherd/document/download/${item}`
+      }));
+    }
+    if (error) {
+      console.log(error);
+    }
   }
 }

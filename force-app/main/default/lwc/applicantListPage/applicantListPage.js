@@ -10,8 +10,8 @@ import { refreshApex } from "@salesforce/apex";
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
-  candidateDetails = [];
   @track filteredCandidateDetails = [];
+  candidateDetails = [];
   jobDetails = [];
   allIdList = [];
   selectedIdList = [];
@@ -28,12 +28,15 @@ export default class ApplicantListPage extends NavigationMixin(
   checkboxSelected = false;
   selectAllChecked = false;
   disableButtons = true;
+  showEvaluateColumn = false;
+
   currentFilter = "All";
   labelVariable = "Sort by";
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
       this.jobId = sessionStorage.getItem("uniquejobId");
+      console.log("this.jobId---->", this.jobId);
     }
     this.fetchJobDetails();
   }
@@ -75,8 +78,10 @@ export default class ApplicantListPage extends NavigationMixin(
     this.currentFilter = event.currentTarget.dataset.status;
     if (this.currentFilter === "Accepted") {
       this.labelVariable = "Sort By - Shortlisted";
+      this.showEvaluateColumn = true;
     } else {
       this.labelVariable = "Sort By - " + this.currentFilter;
+      this.showEvaluateColumn = false;
     }
     const status = this.currentFilter;
 
@@ -154,7 +159,8 @@ export default class ApplicantListPage extends NavigationMixin(
     const valueOfButton = event.target.value;
     changeStatus({
       value: valueOfButton,
-      applicantId: this.selectedIdList
+      applicantId: this.selectedIdList,
+      jobId: this.jobId
     })
       .then(() => {
         if (valueOfButton === "Accepted") {
@@ -191,5 +197,16 @@ export default class ApplicantListPage extends NavigationMixin(
     return (
       this.currentFilter === "Pending" || this.currentFilter === "Accepted"
     );
+  }
+  handleEvaluateBtn(event) {
+    const buttonValue = event.target.value;
+    sessionStorage.setItem("candidateId", buttonValue);
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/evaluate-candidate"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }
