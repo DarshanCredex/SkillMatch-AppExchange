@@ -89,6 +89,32 @@ export default class ApplicantListPage extends NavigationMixin(
       this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
         return item.Status === status;
       });
+
+      console.log(
+        "this.filteredCandidateDetails------>",
+        JSON.stringify(this.filteredCandidateDetails)
+      );
+      this.filteredCandidateDetails.forEach((item) => {
+        if (item.AssesmentStatus === "Pending") {
+          this.showPending = true;
+          this.showEvaluateButton = false;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Given") {
+          this.showPending = false;
+          this.showEvaluateButton = true;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Evaluated") {
+          this.showPending = false;
+          this.showEvaluateButton = false;
+          this.showScore = true;
+
+          getScore({ jobid: this.jobId, candidateid: item.Id }).then(
+            (result) => {
+              this.score = result;
+            }
+          );
+        }
+      });
     } else {
       this.filteredCandidateDetails = this.candidateDetails;
     }
