@@ -5,7 +5,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class EvaluateScreen extends LightningElement {
   jobId;
   candidateId;
-  subjectiveMarks;
+  subjectiveMarks = 0;
   TotalSubjectiveMarks = [];
   objectiveMarks = 0;
   questionIdList = [];
@@ -103,6 +103,12 @@ export default class EvaluateScreen extends LightningElement {
   }
 
   handleObjectiveEvaluate() {
+    console.log("this.objectiveMarks------->", this.objectiveMarks);
+    console.log("this.subjectiveMarks------>", this.subjectiveMarks);
+    console.log(
+      "this.objectiveMarks + this.subjectiveMarks-------->",
+      this.objectiveMarks + this.subjectiveMarks
+    );
     updateScore({
       score: this.objectiveMarks + this.subjectiveMarks,
       jobid: this.jobId,

@@ -97,6 +97,10 @@ export default class ApplicantListPage extends NavigationMixin(
         return item.Status === status;
       });
 
+      console.log(
+        "this.filteredCandidateDetails------>",
+        JSON.stringify(this.filteredCandidateDetails)
+      );
       this.filteredCandidateDetails.forEach((item) => {
         if (item.AssesmentStatus === "Pending") {
           this.showPending = true;
@@ -110,14 +114,10 @@ export default class ApplicantListPage extends NavigationMixin(
           this.showPending = false;
           this.showEvaluateButton = false;
           this.showScore = true;
-          getScore({ jobid: this.jobId, candidateid: this.candidateId }).then(
+
+          getScore({ jobid: this.jobId, candidateid: item.Id }).then(
             (result) => {
               this.score = result;
-              this.showToast(
-                "Sucess",
-                "Score Added to the database",
-                "success"
-              );
             }
           );
         }

@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-12-2024
+ * @last modified on  : 04-17-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -199,26 +199,41 @@ public with sharing class QuestionsController {
     }
   }
   @AuraEnabled
-  public static void updateScore(integer score, id jobid, id candidateid) {
+  public static void updateScore(
+    decimal score,
+    id jobid,
+    id candidateid
+  ) {
     try {
-      id applicantid = [
+      
+      list<Job_Applicants__c> applicantList = new List<Job_Applicants__c>();
+      
+      List<Job_Applicants__c> queryResult = [
         SELECT Id
         FROM Job_Applicants__c
         WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
-      ][0]
-      .id;
-
-      Job_Applicants__c applicant = [
-        SELECT Total_Score__c, Assesment_Status__c
-        FROM Job_Applicants__c
-        WHERE id = :applicantid
       ];
 
-      applicant.Total_Score__c = score;
-      applicant.Assesment_Status__c = 'Evaluated';
+      if (!queryResult.isEmpty()) {
+        id applicantid = queryResult[0].Id;
+        for (Job_Applicants__c applicant : [
+          SELECT Total_Score__c, Assesment_Status__c
+          FROM Job_Applicants__c
+          WHERE id = :applicantid
+        ]) {
+          applicant.Total_Score__c = score;
+          applicant.Assesment_Status__c = 'Evaluated';
+          applicantList.add(applicant);
+        }
+      }
 
-      update applicant;
+      if (!applicantList.isEmpty()) {
+        update applicantList;
+      }
     } catch (Exception e) {
+      System.debug(
+        'error------>' + e.getMessage() + '------->' + e.getLineNumber()
+      );
       throw new AuraHandledException(e.getMessage());
     }
   }

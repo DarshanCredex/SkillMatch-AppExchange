@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-15-2024
+ * @last modified on  : 04-17-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -49,14 +49,9 @@ public with sharing class JobApplicantController {
     @AuraEnabled
     public string AssesmentStatus { get; set; }
 
-    @AuraEnabled
-    public string AssesmentStatus { get; set; }
-
     public CandidateWrapper(
       Candidate_Details__c candidate,
       Integer matchPercentage,
-      String Status,
-      String AssesmentStatus
       String Status,
       String AssesmentStatus
     ) {
@@ -144,19 +139,13 @@ public with sharing class JobApplicantController {
           status,
           assessmentStatus
         )
-        new CandidateWrapper(
-          candidate,
-          matchPercentage,
-          status,
-          assessmentStatus
-        )
       );
     }
     return candidateRecords;
   }
   @AuraEnabled(cacheable=true)
   public static List<applicantWrapper> getApplicantsList(id userId) {
-     List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
+    List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
     string jobName = '';
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
@@ -228,7 +217,9 @@ public with sharing class JobApplicantController {
 
         appliedCandidateWrapperList.add(wrapper);
       }
-      System.debug('appliedCandidateWrapperList-------->'+appliedCandidateWrapperList);
+      System.debug(
+        'appliedCandidateWrapperList-------->' + appliedCandidateWrapperList
+      );
       return appliedCandidateWrapperList;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
@@ -346,18 +337,24 @@ public with sharing class JobApplicantController {
   @AuraEnabled(cacheable=true)
   public static decimal getScore(id jobid, id candidateid) {
     Decimal score;
-    id applicantid = [
-      SELECT id
-      FROM Job_Applicants__c
-      WHERE CandidateId__c = :candidateid AND Job_Id__c = :jobid
-    ][0]
-    .id;
-    for (Job_Applicants__c applicant : [
-      SELECT Total_Score__c
-      FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantid
-    ]) {
-      score = applicant.Total_Score__c;
+    try {
+      List<Job_Applicants__c> queryResult = [
+        SELECT Id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
+      ];
+
+      if (!queryResult.isEmpty()) {
+        id applicantid = queryResult[0].id;
+        for (Job_Applicants__c applicant : [
+          SELECT Total_Score__c
+          FROM Job_Applicants__c
+          WHERE id = :applicantid
+        ]) {
+          score = applicant.Total_Score__c;
+        }
+      }
+    } catch (Exception e) {
     }
     return score;
   }
