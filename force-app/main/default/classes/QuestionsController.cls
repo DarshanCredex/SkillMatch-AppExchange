@@ -249,9 +249,6 @@ public with sharing class QuestionsController {
         update applicantList;
       }
     } catch (Exception e) {
-      System.debug(
-        'error------>' + e.getMessage() + '------->' + e.getLineNumber()
-      );
       throw new AuraHandledException(e.getMessage());
     }
   }
