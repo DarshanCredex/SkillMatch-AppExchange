@@ -2,7 +2,7 @@
   @description       : a screen component to evaluate candidate's subjective score
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-12-2024
+  @last modified on  : 04-18-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -14,60 +14,81 @@
         onclick={handleSubjectiveObjectiveChange}></lightning-button>
     </div>
     <template lwc:if={showSubjective}>
-      <div class="question-card">
-        <template for:each={subjectiveList} for:item="question">
-          <div class="question-component" key={question.questionId}>
-            <div class="question-name">
-              <h1>Question - {question.question}</h1>
-            </div>
-            <template for:each={SubjectiveKeyValuePairs} for:item="item">
-              <div key={item.key} class="option-component">
-                <p>Actual Response - <lightning-formatted-rich-text value={item.key}></lightning-formatted-rich-text>
+      <template lwc:if={subjectiveIsEmpty}>
+        <div class="empty-list">
+          <h1>No Subjective Questions </h1>
+          <div class="emptyBox">
+            <img src={emptyBox} alt="empty">
+          </div>
+        </div>
+      </template>
+      <template lwc:else>
+        <div class="question-card">
+          <template for:each={subjectiveList} for:item="question">
+            <div class="question-component" key={question.questionId}>
+              <div class="question-name">
+                <h1>Question - {question.question}</h1>
+              </div>
+              <template for:each={SubjectiveKeyValuePairs} for:item="item">
+                <div key={item.key} class="option-component">
+                  <p>Actual Response - <lightning-formatted-rich-text value={item.key}></lightning-formatted-rich-text>
+                  </p>
+                </div>
+              </template>
+              <div class="candidate-response">
+                <h1>Candidate Response -</h1>
+                <p><lightning-formatted-rich-text value={question.candidateResponse}></lightning-formatted-rich-text>
                 </p>
               </div>
-            </template>
-            <div class="candidate-response">
-              <h1>Candidate Response -</h1>
-              <p><lightning-formatted-rich-text value={question.candidateResponse}></lightning-formatted-rich-text></p>
+              <lightning-input type="number" placeholder="Give marks" value={subjectiveMarks}
+                onchange={handleSubjectiveMarks} data-id="marksid"></lightning-input>
             </div>
-            <lightning-input type="number" placeholder="Give marks" value={subjectiveMarks}
-              onchange={handleSubjectiveMarks} data-id="marksid"></lightning-input>
-          </div>
-        </template>
-      </div>
-      <div class="Evaluate-btn">
-        <lightning-button variant="success" label="Evaluate" onclick={handleSubjectiveEvaluate}></lightning-button>
-        <div>
-          <h1> Subjective Score - {totalMarks}/{subjectiveWeightage}</h1>
+          </template>
         </div>
-      </div>
+        <div class="Evaluate-btn">
+          <lightning-button variant="success" label="Evaluate" onclick={handleSubjectiveEvaluate}></lightning-button>
+          <div>
+            <h1> Subjective Score - {totalMarks}/{subjectiveWeightage}</h1>
+          </div>
+        </div>
+      </template>
     </template>
     <template lwc:elseif={showObjective}>
-      <div class="question-card">
-        <template for:each={actualResponseArray} for:item="questionItem">
-          <div class="question-component" key={questionItem.questionId}>
-            <div class="question-name">
-              <h1>Question - {questionItem.question}</h1>
-            </div>
-            <h1>Options-</h1>
-            <template for:each={questionItem.actualResponse} for:item="responseItem">
-              <div class="option-component" key={responseItem}>
-                <h1><lightning-input type="checkbox" checked={responseItem.value} disabled=""></lightning-input>
-                </h1>
-                <h1>{responseItem.key}</h1>
-              </div>
-            </template>
-            <div class="candidate-response">
-              <h1>Candidate Response - </h1>
-              <lightning-formatted-rich-text value={questionItem.candidateResponse}></lightning-formatted-rich-text>
-            </div>
+      <template lwc:if={objectiveIsEmpty}>
+        <div class="empty-list">
+          <h1>No Objective Questions </h1>
+          <div class="emptyBox">
+            <img src={emptyBox} alt="empty">
           </div>
-        </template>
-        <div class="Evaluate-btn">
-          <h1>Objective Score - {objectiveMarks}/{objectiveWeightage}</h1>
-          <lightning-button variant="success" label="Evaluate Total score"
-            onclick={handleObjectiveEvaluate}></lightning-button>
         </div>
+      </template>
+      <template lwc:else>
+        <div class="question-card">
+          <template for:each={actualResponseArray} for:item="questionItem">
+            <div class="question-component" key={questionItem.questionId}>
+              <div class="question-name">
+                <h1>Question - {questionItem.question}</h1>
+              </div>
+              <h1>Options-</h1>
+              <template for:each={questionItem.actualResponse} for:item="responseItem">
+                <div class="option-component" key={responseItem}>
+                  <h1><lightning-input type="checkbox" checked={responseItem.value} disabled=""></lightning-input>
+                  </h1>
+                  <h1>{responseItem.key}</h1>
+                </div>
+              </template>
+              <div class="candidate-response">
+                <h1>Candidate Response - </h1>
+                <lightning-formatted-rich-text value={questionItem.candidateResponse}></lightning-formatted-rich-text>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+      <div class="Evaluate-btn">
+        <h1>Objective Score - {objectiveMarks}/{objectiveWeightage}</h1>
+        <lightning-button variant="success" label="Evaluate Total score"
+          onclick={handleObjectiveEvaluate}></lightning-button>
       </div>
     </template>
   </div>

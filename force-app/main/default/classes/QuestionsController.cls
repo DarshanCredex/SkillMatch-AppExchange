@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-17-2024
+ * @last modified on  : 04-18-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -231,9 +231,6 @@ public with sharing class QuestionsController {
         update applicantList;
       }
     } catch (Exception e) {
-      System.debug(
-        'error------>' + e.getMessage() + '------->' + e.getLineNumber()
-      );
       throw new AuraHandledException(e.getMessage());
     }
   }

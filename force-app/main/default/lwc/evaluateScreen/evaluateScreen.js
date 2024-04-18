@@ -1,25 +1,32 @@
 import { LightningElement, track, wire } from "lwc";
 import getResponsesAndQuestions from "@salesforce/apex/QuestionsController.getResponsesAndQuestions";
 import updateScore from "@salesforce/apex/QuestionsController.updateScore";
+import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class EvaluateScreen extends LightningElement {
   jobId;
   candidateId;
+
+  emptyBox = emptyBox;
+
   subjectiveMarks = 0;
-  TotalSubjectiveMarks = [];
   objectiveMarks = 0;
-  questionIdList = [];
   totalMarks = 0;
   subjectiveWeightage = 0;
   objectiveWeightage = 0;
 
-  showSubjective = true;
-  showObjective = false;
-  showMarksSubjective = false;
+  TotalSubjectiveMarks = [];
+  questionIdList = [];
 
   @track questionsList = [];
   @track subjectiveList = [];
   @track objectiveList = [];
+
+  showSubjective = true;
+  showObjective = false;
+  showMarksSubjective = false;
+  subjectiveIsEmpty = false;
+  objectiveIsEmpty = false;
 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("uniquejobId");
@@ -37,7 +44,13 @@ export default class EvaluateScreen extends LightningElement {
       this.subjectiveList = response.filter(
         (item) => item.type === "Subjective"
       );
+      if (this.subjectiveList.length === 0) {
+        this.subjectiveIsEmpty = true;
+      }
       this.objectiveList = response.filter((item) => item.type === "Objective");
+      if (this.objectiveList.length === 0) {
+        this.objectiveIsEmpty = true;
+      }
     }
     this.calculateWeightage();
     this.calculateObjectiveScore();
@@ -88,6 +101,7 @@ export default class EvaluateScreen extends LightningElement {
       }
     }
   }
+
   handleSubjectiveMarks() {
     this.subjectiveMarks = parseInt(
       this.template.querySelector('lightning-input[data-id="marksid"]').value,
@@ -103,12 +117,6 @@ export default class EvaluateScreen extends LightningElement {
   }
 
   handleObjectiveEvaluate() {
-    console.log("this.objectiveMarks------->", this.objectiveMarks);
-    console.log("this.subjectiveMarks------>", this.subjectiveMarks);
-    console.log(
-      "this.objectiveMarks + this.subjectiveMarks-------->",
-      this.objectiveMarks + this.subjectiveMarks
-    );
     updateScore({
       score: this.objectiveMarks + this.subjectiveMarks,
       jobid: this.jobId,
