@@ -14,6 +14,15 @@
     border-radius: 10px;
     margin: 2%;
 }
+.numberofQuestionsvsjob-chart,
+.assesment-status{
+    width: 50%;
+    height: auto;
+    padding: 2%;
+    border-radius: 10px;
+    border: 1px solid #e9e9e9;
+    margin: 2%;
+}
 .number-of-jobs-vs-applicants{
     width: 60%;
     height: auto;
@@ -38,6 +47,7 @@
     border-radius: 10px;
     margin: 2%;
 }
+.middle-charts,
 .bottom-charts,
 .top-charts{
     display: flex;

@@ -1,348 +1,390 @@
-import { LightningElement, wire, track } from "lwc";
+import { LightningElement, wire } from "lwc";
 import AgeWithNumberOfApplicants from "@salesforce/apex/analyticsDatasets.AgeWithNumberOfApplicants";
-import chartjs from "@salesforce/resourceUrl/chartjs";
-import { loadScript } from "lightning/platformResourceLoader";
 import applicantGender from "@salesforce/apex/analyticsDatasets.applicantGender";
 import industryJobsDataset from "@salesforce/apex/analyticsDatasets.industryJobsDataset";
 import numberOfApplicantsVsJobs from "@salesforce/apex/analyticsDatasets.numberOfApplicantsVsJobs";
+import numberOfApplicantsAssessmentStatusVsJob from "@salesforce/apex/analyticsDatasets.numberOfApplicantsAssessmentStatusVsJob";
+import numberofQuestionsVsJobPosted from "@salesforce/apex/analyticsDatasets.numberofQuestionsVsJobPosted";
+import chartjs from "@salesforce/resourceUrl/chartjs";
+import { loadScript } from "lightning/platformResourceLoader";
 import Id from "@salesforce/user/Id";
 
+const CHART_COLORS = [
+  "rgb(255,99,132)",
+  "rgb(255,159,64)",
+  "rgb(212,205,86)",
+  "rgb(75,192,192)",
+  "rgb(153,102,204)",
+  "rgb(200,158,181)",
+  "rgb(128,152,126)",
+  "rgb(123,124,238)",
+  "rgb(119,221,119)",
+  "rgb(129,221,80)",
+  "rgb(229,421,80)"
+];
+
+const CHART_COLORS_1 = [
+  "rgb(119,221,119)",
+  "rgb(200,158,181)",
+  "rgb(153,102,204)",
+  "rgb(255,99,132)",
+  "rgb(255,159,64)",
+  "rgb(212,205,86)",
+  "rgb(75,192,192)",
+  "rgb(128,152,126)",
+  "rgb(123,124,238)",
+  "rgb(129,221,80)",
+  "rgb(229,421,80)"
+];
+
+const CHART_COLORS_2 = [
+  "rgb(275,492,132)",
+  "rgb(119,221,119)",
+  "rgb(240,153,181)",
+  "rgb(153,132,204)",
+  "rgb(255,99,132)",
+  "rgb(255,159,324)",
+  "rgb(212,205,86)",
+  "rgb(128,152,126)",
+  "rgb(423,124,238)",
+  "rgb(129,241,80)",
+  "rgb(229,421,80)"
+];
+
+const CHART_COLORS_3 = [
+  "rgb(129,421,320)",
+  "rgb(212,205,86)",
+  "rgb(423,124,238)",
+  "rgb(128,152,126)",
+  "rgb(275,492,132)",
+  "rgb(119,221,119)",
+  "rgb(240,153,181)",
+  "rgb(153,132,204)",
+  "rgb(255,99,132)",
+  "rgb(255,159,324)",
+  "rgb(229,421,80)"
+];
+
+const CHART_COLORS_4 = [
+  "rgb(119,221,119)",
+  "rgb(240,153,181)",
+  "rgb(329,441,320)",
+  "rgb(275,492,132)",
+  "rgb(212,205,86)",
+  "rgb(423,124,238)",
+  "rgb(128,152,126)",
+  "rgb(153,132,204)",
+  "rgb(255,99,132)",
+  "rgb(255,159,324)",
+  "rgb(229,421,80)"
+];
+
 export default class Analytics extends LightningElement {
-  @track ageWithNumberDataset = [];
-  @track applicantGenderDataset = [];
-  @track industryAndJobsDataset = [];
-  @track applicantsVsJobs = [];
-
   chartjsInitialized = false;
-  genderChartJsInitialized = false;
-  industryChartjsIntialized = false;
-  numberfApplicantsVsJobsChartjsInitialized = false;
-
-  piechart;
-  industryChart;
-  chart;
-  numberfApplicantsVsJobsChart;
 
   userId = Id;
 
-  @wire(industryJobsDataset, {userId:"$userId"})
-  wiredindustryJobsDataset({ error, data }) {
-    if (error) {
-      console.error("error----->", error);
-    } else if (data) {
-      this.industryAndJobsDataset = data;
+  charts = {};
 
-      this.updateIndustryChart();
-
-      if (!this.industryChartjsIntialized) {
-        this.industryChartjsIntialized = true;
-        loadScript(this, chartjs).then(() => {
-          const ctx_2 = this.template
-            .querySelector("canvas.industryDoughnut")
-            .getContext("2d");
-          this.industryChart = new window.Chart(
-            ctx_2,
-            JSON.parse(JSON.stringify(this.industryConfig))
-          );
-          this.industryChart.canvas.parentNode.style.height = "auto";
-          this.industryChart.canvas.parentNode.style.width = "100%";
-        });
-      }
+  async loadChartJs() {
+    if (!this.chartjsInitialized) {
+      await loadScript(this, chartjs);
+      this.chartjsInitialized = true;
     }
   }
 
-  @wire(AgeWithNumberOfApplicants , {userId:"$userId"})
-  wiredAgeWithNumberOfApplicants({ error, data }) {
+  initializeChart(canvasSelector, config) {
+    const ctx = this.template.querySelector(canvasSelector).getContext("2d");
+    return new window.Chart(ctx, config);
+  }
+
+  updateChart(chart, data) {
+    chart.data.labels = data.map((item) => item.label);
+    chart.data.datasets[0].data = data.map((item) => item.count);
+    chart.update();
+  }
+
+  @wire(numberOfApplicantsAssessmentStatusVsJob, { userId: "$userId" })
+  async handleApplicantsAssessmentStatusVsJob({ error, data }) {
     if (error) {
-      console.error("error----->", error.message);
       return;
     }
     if (data) {
-      this.ageWithNumberDataset = data;
-
-      this.updateAgeChart();
-
-      if (!this.chartjsInitialized) {
-        this.chartjsInitialized = true;
-        loadScript(this, chartjs).then(() => {
-          const ctx = this.template
-            .querySelector("canvas.bar")
-            .getContext("2d");
-          this.chart = new window.Chart(
-            ctx,
-            JSON.parse(JSON.stringify(this.config))
-          );
-          this.chart.canvas.parentNode.style.height = "auto";
-          this.chart.canvas.parentNode.style.width = "100%";
-        });
+      await this.loadChartJs();
+      if (!this.charts.assessmentchart) {
+        this.charts.assessmentchart = this.initializeChart(
+          "canvas.bar_assessment_chart",
+          this.getAssessmentStatusVsJobChartConfig()
+        );
       }
-      console.log(
-        "this.ageWithNumberDataset---------->",
-        JSON.stringify(this.ageWithNumberDataset)
-      );
+      this.updateChart(this.charts.assessmentchart, data);
     }
   }
-  @wire(applicantGender , {userId:"$userId"})
-  wiredApplicantGender({ error, data }) {
+
+  @wire(numberofQuestionsVsJobPosted, { userId: "$userId" })
+  async handleNumberOfQuestionsVsJObPosted({ error, data }) {
     if (error) {
-      console.error("error----->", error.message);
+      console.error("error------->", error);
       return;
     }
     if (data) {
-      this.applicantGenderDataset = data;
-
-      this.updateGenderChart();
-
-      if (!this.genderChartJsInitialized) {
-        this.genderChartJsInitialized = true;
-        loadScript(this, chartjs).then(() => {
-          const ctx_1 = this.template
-            .querySelector("canvas.pie")
-            .getContext("2d");
-          this.piechart = new window.Chart(
-            ctx_1,
-            JSON.parse(JSON.stringify(this.newConfig))
-          );
-          this.piechart.canvas.parentNode.style.height = "auto";
-          this.piechart.canvas.parentNode.style.width = "100%";
-        });
+      await this.loadChartJs();
+      if (!this.charts.numberOfQuestionsChart) {
+        this.charts.numberOfQuestionsChart = this.initializeChart(
+          "canvas.bar_numberofQuestionsVsJobPostedChart",
+          this.getNumberofQuestionsVsJobPostedChartConfig()
+        );
       }
+      this.updateChart(this.charts.numberOfQuestionsChart, data);
     }
   }
 
-  @wire(numberOfApplicantsVsJobs, {userId:"$userId"})
-  wiredNumberOfApplicantsVsJobs({ error, data }) {
+  @wire(AgeWithNumberOfApplicants, { userId: "$userId" })
+  async handleAgeData({ error, data }) {
     if (error) {
-      console.error("Error------>", error);
-    } else if (data) {
-      this.applicantsVsJobs = data;
-
-      this.updateApplicantsVsJobsChart();
-
-      if (!this.numberfApplicantsVsJobsChartjsInitialized) {
-        this.numberfApplicantsVsJobsChartjsInitialized = true;
-        loadScript(this, chartjs).then(() => {
-          const ctx = this.template
-            .querySelector("canvas.barchart_1")
-            .getContext("2d");
-          this.numberfApplicantsVsJobsChart = new window.Chart(
-            ctx,
-            JSON.parse(JSON.stringify(this.barConfig))
-          );
-          this.numberfApplicantsVsJobsChart.canvas.parentNode.style.height =
-            "auto";
-          this.numberfApplicantsVsJobsChart.canvas.parentNode.style.width =
-            "100%";
-        });
+      return;
+    }
+    if (data) {
+      await this.loadChartJs();
+      if (!this.charts.ageChart) {
+        this.charts.ageChart = this.initializeChart(
+          "canvas.bar",
+          this.getAgeChartConfig()
+        );
       }
+      this.updateChart(this.charts.ageChart, data);
+    }
+  }
+  @wire(applicantGender, { userId: "$userId" })
+  async handleGenderData({ error, data }) {
+    if (error) {
+      return;
+    }
+    if (data) {
+      await this.loadChartJs();
+      if (!this.charts.genderChart) {
+        this.charts.genderChart = this.initializeChart(
+          "canvas.pie",
+          this.getGenderChartConfig()
+        );
+      }
+      this.updateChart(this.charts.genderChart, data);
+    }
+  }
+  @wire(industryJobsDataset, { userId: "$userId" })
+  async handleIndustryData({ error, data }) {
+    if (error) {
+      console.error("Error in industryJobsDataset:", error);
+      return;
+    }
+    if (data) {
+      await this.loadChartJs();
+      if (!this.charts.industryChart) {
+        this.charts.industryChart = this.initializeChart(
+          "canvas.industryDoughnut",
+          this.getIndustryChartConfig()
+        );
+      }
+      this.updateChart(this.charts.industryChart, data);
     }
   }
 
-  config = {
-    type: "bar",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: [
-            "rgb(255,99,132)",
-            "rgb(255,159,64)",
-            "rgb(255,205,86)",
-            "rgb(75,192,192)",
-            "rgb(153,102,204)",
-            "rgb(200,158,181)",
-            "rgb(188,152,126)",
-            "rgb(123,104,238)",
-            "rgb(119,221,119)",
-            "rgb(119,221,80)"
-          ],
-          label: "Number of Applicants"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      title: {
-        display: true,
-        text: "Applicants vs Age Group"
-      },
-      maintainAspectRatio: false,
-      legend: {
-        position: "left"
-      },
-      animation: {
-        animateScale: true,
-        animateRotate: true
-      }
+  @wire(numberOfApplicantsVsJobs, { userId: "$userId" })
+  async handleApplicantsVsJobsData({ error, data }) {
+    if (error) {
+      return;
     }
-  };
-
-  industryConfig = {
-    type: "doughnut",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: [
-            "rgb(153,102,204)",
-            "rgb(388,152,126)",
-            "rgb(199,421,80)",
-            "rgb(545,99,132)",
-            "rgb(555,159,64)",
-            "rgb(388,152,126)",
-            "rgb(924,104,238)",
-            "rgb(265,205,86)",
-            "rgb(753,192,192)",
-            "rgb(240,158,181)"
-          ],
-          label: "Number of Jobs"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      title: {
-        display: true,
-        text: "Industry vs Number of Jobs posted"
-      },
-      maintainAspectRatio: false,
-      legend: {
-        position: "left"
-      },
-      animation: {
-        animateScale: true,
-        animateRotate: true
+    if (data) {
+      await this.loadChartJs();
+      if (!this.charts.applicantsVsJobsChart) {
+        this.charts.applicantsVsJobsChart = this.initializeChart(
+          "canvas.barchart_1",
+          this.getApplicantsVsJobsChartConfig()
+        );
       }
-    }
-  };
-
-  newConfig = {
-    type: "pie",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: [
-            "rgb(388,152,126)",
-            "rgb(523,104,238)",
-            "rgb(179,221,119)",
-            "rgb(149,221,80)",
-            "rgb(245,99,132)",
-            "rgb(455,159,64)",
-            "rgb(265,205,86)",
-            "rgb(75,192,192)",
-            "rgb(153,102,204)",
-            "rgb(240,158,181)"
-          ],
-          label: "Number of Applicants"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      title: {
-        display: true,
-        text: "Applicants vs Gender"
-      },
-      maintainAspectRatio: false,
-      legend: {
-        position: "left"
-      },
-      animation: {
-        animateScale: true,
-        animateRotate: true
-      }
-    }
-  };
-
-  barConfig = {
-    type: "bar",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: [
-            "rgb(233,102,204)",
-            "rgb(768,177,426)",
-            "rgb(265,205,86)",
-            "rgb(545,349,132)",
-            "rgb(555,459,64)",
-            "rgb(388,152,126)",
-            "rgb(924,104,238)",
-            "rgb(265,205,86)",
-            "rgb(753,192,192)",
-            "rgb(240,158,181)"
-          ],
-          label: "Title of Position"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      title: {
-        display: true,
-        text: "Jobs posted vs Number of Applicants"
-      },
-      maintainAspectRatio: false,
-      legend: {
-        position: "left"
-      },
-      animation: {
-        animateScale: true,
-        animateRotate: true
-      }
-    }
-  };
-
-  updateAgeChart() {
-    this.config.data.labels = [];
-    this.config.data.datasets[0].data = [];
-    this.ageWithNumberDataset.forEach((applicant) => {
-      this.config.data.labels.push(applicant.label);
-      this.config.data.datasets[0].data.push(applicant.count);
-    });
-
-    if (this.chart) {
-      this.chart.update();
+      this.updateChart(this.charts.applicantsVsJobsChart, data);
     }
   }
-
-  updateGenderChart() {
-    this.newConfig.data.labels = [];
-    this.newConfig.data.datasets[0].data = [];
-    this.applicantGenderDataset.forEach((applicant) => {
-      this.newConfig.data.labels.push(applicant.label);
-      this.newConfig.data.datasets[0].data.push(applicant.count);
-    });
-    if (this.piechart) {
-      this.piechart.update();
-    }
+  getAgeChartConfig() {
+    return {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS,
+            label: "Number of Applicants"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Applicants vs Age Group"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
   }
-  updateIndustryChart() {
-    this.industryConfig.data.labels = [];
-    this.industryConfig.data.datasets[0].data = [];
-    this.industryAndJobsDataset.forEach((jobs) => {
-      this.industryConfig.data.labels.push(jobs.label);
-      this.industryConfig.data.datasets[0].data.push(jobs.count);
-    });
-    if (this.industryChart) {
-      this.industryChart.update();
-    }
+  getIndustryChartConfig() {
+    return {
+      type: "doughnut",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS_1,
+            label: "Number of Jobs"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Industry vs Number of Jobs posted"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
+  }
+  getGenderChartConfig() {
+    return {
+      type: "pie",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS_2,
+            label: "Number of Applicants"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Applicants vs Gender"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
+  }
+  getApplicantsVsJobsChartConfig() {
+    return {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS_3,
+            label: "Title of Position"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Jobs posted vs Number of Applicants"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
   }
 
-  updateApplicantsVsJobsChart() {
-    this.barConfig.data.labels = [];
-    this.barConfig.data.datasets[0].data = [];
-    this.applicantsVsJobs.forEach((jobs) => {
-      this.barConfig.data.labels.push(jobs.label);
-      this.barConfig.data.datasets[0].data.push(jobs.count);
-    });
-    if (this.numberfApplicantsVsJobsChart) {
-      this.numberfApplicantsVsJobsChart.update();
-    }
+  getAssessmentStatusVsJobChartConfig() {
+    return {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS_4,
+            label: "Title of Position"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Job  vs Number of applicants Assessemnt Given"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
+  }
+
+  getNumberofQuestionsVsJobPostedChartConfig() {
+    return {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: CHART_COLORS_1,
+            label: "Title of Position"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Number of Questions vs Job posted"
+        },
+        maintainAspectRatio: false,
+        legend: {
+          position: "left"
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        }
+      }
+    };
   }
 }
