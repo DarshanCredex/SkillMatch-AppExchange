@@ -1,4 +1,4 @@
-import { LightningElement, api } from "lwc";
+import { LightningElement } from "lwc";
 import StayMotivated from "@salesforce/resourceUrl/StayMotivated";
 import StartCareer from "@salesforce/resourceUrl/StartCareer";
 import AchieveDream from "@salesforce/resourceUrl/AchieveDream";
