@@ -134,7 +134,9 @@ public with sharing class JobApplicantController {
       );
       string Status = getApplicantStatus(candidate.Id, jobId);
       System.debug('status assessment--->' + Status);
-      string assessmentStatus = getAssessmentStatus(candidate.Id);
+
+      string assessmentStatus = getAssessmentStatus(candidate.Id, jobId);
+      System.debug('assessmentStatus------->' + assessmentStatus);
 
       candidateRecords.add(
         new CandidateWrapper(
@@ -333,12 +335,12 @@ public with sharing class JobApplicantController {
     return status;
   }
 
-  public static string getAssessmentStatus(id applicantId) {
+  public static string getAssessmentStatus(id candidateId, id jobid) {
     string status;
     for (Job_Applicants__c applicant : [
       SELECT Assesment_Status__c
       FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantId
+      WHERE CandidateId__c = :candidateId and Job_Id__c = :jobId
     ]) {
       status = applicant.Assesment_Status__c;
     }
