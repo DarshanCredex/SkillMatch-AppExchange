@@ -233,4 +233,46 @@ public with sharing class CandidateAppliedJobsController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
+  @AuraEnabled(cacheable=true)
+  public static Integer numberOfShorlistedJobs(Id userId) {
+    try {
+      Integer count = 0;
+      List<AggregateResult> results = [
+        SELECT COUNT(Job_Id__c) countJob
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Accepted'
+      ];
+
+      if (!results.isEmpty()) {
+        count = (Integer) results[0].get('countJob');
+      }
+      return count;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static Integer numberOfPendingJobs(Id userId) {
+    try {
+      Integer count = 0;
+      List<AggregateResult> results = [
+        SELECT COUNT(Job_Id__c) countJob
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Pending'
+      ];
+
+      if (!results.isEmpty()) {
+        count = (Integer) results[0].get('countJob');
+      }
+      return count;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }

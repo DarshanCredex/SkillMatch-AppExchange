@@ -1,101 +1,116 @@
 <!--
   @description       : 
-  @author            : Sagar Medatwal
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 03-18-2024
+  @last modified on  : 04-25-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <div class="profile-container">
-        <div class="profile-left-container">
-            <div class="profile-image">
-                <lightning-formatted-rich-text
-                    value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
-            </div>
-            <p class="name">{candidateDetails.Name}</p>
-            <p class="about-me">
-                {candidateDetails.About__c}
-            </p>
-            <div class="skill-container">
-                <p class="heading-text">Skills</p>
-                <div class="skill-list">
-                    <template if:true={candidateSkills}>
-                        <template for:each={candidateSkills} for:item="Skill">
-                            <p key={Skill} class="skill-info">{Skill}</p>
+    <div class="slds-is-relative slds-p-around_large" if:true={isLoadingFullScreen}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </div>
+    <div if:false={isLoadingFullScreen}>
+        <div class="profile-container">
+            <div class="profile-left-container">
+                <div class="profile-image">
+                    <lightning-formatted-rich-text
+                            value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
+                </div>
+                <p class="name">{candidateDetails.Name}</p>
+                <p class="title">{candidateTitle}</p>
+                <p class="about-me">
+                    {candidateDetails.About__c}
+                </p>
+                <div class="skill-container">
+                    <p class="heading-text">Skills</p>
+                    <div class="skill-list">
+                        <template if:true={candidateSkills}>
+                            <template for:each={candidateSkills} for:item="Skill">
+                                <p key={Skill} class="skill-info">{Skill}</p>
+                            </template>
                         </template>
-                    </template>
-                </div>
-            </div>
-        </div>
-        <div class="profile-right-container">
-            <div class="basic-detail">
-                <div class="basic-heading-container">
-                    <p class="heading-text">
-                        Basic Information
-                    </p>
-                    <div style="align-self: center;">
-                        <lightning-button label="Resume" onclick={handleResume} class="edit-button"></lightning-button>
-                        <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
                     </div>
                 </div>
-                <div class="detail-container">
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Date of Birth</div>
-                            <div class="detail-info">{candidateDetails.Date_of_birth__c}</div>
+            </div>
+            <div class="profile-right-container">
+                <div class="basic-detail">
+                    <div class="basic-heading-container">
+                        <p class="heading-text">
+                            Basic Information
+                        </p>
+                        <!-- <div class="progress-indicator">
+                            <lightning-progress-ring 
+                              direction="drain"
+                              size="medium"
+                              value={profileProgress}
+                              variant="base"
+                            ></lightning-progress-ring>
+                        </div> -->
+                        <div style="align-self: center;">
+                            <lightning-button label="Resume" onclick={handleResume}
+                                class="edit-button"></lightning-button>
+                            <lightning-button label="Edit" onclick={handleEdit} class="edit-button"></lightning-button>
                         </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">CTC</div>
-                            <div class="detail-info">
-                                <lightning-formatted-number
-                                    value={candidateDetails.CTC__c}></lightning-formatted-number>
+                    </div>
+                    <div class="detail-container">
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Date of Birth</div>
+                                <div class="detail-info">{candidateDetails.Date_of_birth__c}</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Years of Experience</div>
-                            <div class="detail-info">{candidateDetails.Experience__c} years</div>
-                        </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">Location</div>
-                            <div class="detail-info">{candidateDetails.City__c}, {candidateDetails.Country__c}</div>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="top-section">
-                            <div class="detail-heading">Phone</div>
-                            <div class="detail-info">{candidateDetails.Phone_Number__c}</div>
-                        </div>
-                        <div class="bottom-section">
-                            <div class="detail-heading">Email</div>
-                            <div class="detail-info">{candidateDetails.Candidate_Email__c}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="experience-detail">
-                <div class="basic-heading-container">
-                    <p class="heading-text">
-                        Work Experience
-                    </p>
-                    <div style="align-self: center;">
-                        <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
-                    </div>
-                </div>
-                <div class="exp-detail-container">
-                    <template if:true={candidateDetails.Work_Experience__r}>
-                        <template for:each={candidateDetails.Work_Experience__r} for:item="work">
-                            <div key={work.Id} data-id={work.Id} class="exp-list" onclick={handleEditExperience}>
-                                <div>
-                                    <p class="exp-company-name">{work.Organisation__c}</p>
-                                    <p class="exp-designation">{work.Name}</p>
-                                    <p class="exp-year">{work.From_Date__c} - {work.To_Date__c} | {work.City__c},
-                                        {work.Country__c}</p>
+                            <div class="bottom-section">
+                                <div class="detail-heading">CTC</div>
+                                <div class="detail-info">
+                                    <lightning-formatted-number
+                                        value={candidateDetails.CTC__c}></lightning-formatted-number>
                                 </div>
                             </div>
+                        </div>
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Years of Experience</div>
+                                <div class="detail-info">{candidateDetails.Experience__c} years</div>
+                            </div>
+                            <div class="bottom-section">
+                                <div class="detail-heading">Location</div>
+                                <div class="detail-info">{candidateDetails.City__c}, {candidateDetails.Country__c}</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="top-section">
+                                <div class="detail-heading">Phone</div>
+                                <div class="detail-info">{candidateDetails.Phone_Number__c}</div>
+                            </div>
+                            <div class="bottom-section">
+                                <div class="detail-heading">Email</div>
+                                <div class="detail-info">{candidateDetails.Candidate_Email__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="experience-detail">
+                    <div class="basic-heading-container">
+                        <p class="heading-text">
+                            Work Experience
+                        </p>
+                        <div style="align-self: center;">
+                            <lightning-button label="Add" onclick={handleAdd} class="edit-button"></lightning-button>
+                        </div>
+                    </div>
+                    <div class="exp-detail-container">
+                        <template if:true={candidateDetails.Work_Experience__r}>
+                            <template for:each={candidateDetails.Work_Experience__r} for:item="work">
+                                <div key={work.Id} data-id={work.Id} class="exp-list" onclick={handleEditExperience}>
+                                    <div>
+                                        <p class="exp-company-name">{work.Organisation__c}</p>
+                                        <p class="exp-designation">{work.Name}</p>
+                                        <p class="exp-year">{work.From_Date__c} - {work.To_Date__c} | {work.City__c},
+                                            {work.Country__c}</p>
+                                    </div>
+                                </div>
+                            </template>
                         </template>
-                    </template>
+                    </div>
                 </div>
             </div>
         </div>
@@ -179,9 +194,30 @@
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
-                    <lightning-file-upload label="Attach files" accept={acceptedFormats} class="file-selector-large"
-                        onuploadfinished={handleUploadFinished}>
-                    </lightning-file-upload>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="height: 50%; flex-grow: 1;">
+                            <template for:each={filesList} for:item="file">
+                                <div key={file.value} class="slds-box file-item">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-large-size_10-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                            <h1 class="file-name"><strong>Existing Resume - </strong> <span style="color: #9f9f9f;
+                                                text-decoration-line: underline;">{file.label}</span></h1>
+                                        </div>
+                                        <div class="slds-col slds-large-size_2-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                            <a href={file.url} download class="slds-button slds-button_brand download-btn">Download</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <template if:true={iframeLoading}>
+                            <div class="spinner"></div>
+                        </template>
+                        <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" width="100%" height="100px" class="iframe-content" onload={handleIframeLoad}></iframe>    
+                    </div>                  
+                </div>
+                                
+                    
                 </div>
             </div>
         </section>
@@ -196,19 +232,31 @@
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
-                    <lightning-input type="text" label="About" value={setAbout}
-                        onchange={handleAbout}></lightning-input>
-                    <lightning-input type="number" label="Phone Number" value={setPhoneNumber}
-                        onchange={handlePhoneNumber}></lightning-input>
-                    <lightning-input type="text" label="Skills" value={setSkills}
-                        onchange={handleSkills}></lightning-input>
-                    <lightning-input type="text" label="Experience" value={setExperience}
-                        onchange={handTotalExperience}></lightning-input>
-                    <lightning-input type="text" label="CTC" value={setCTC} onchange={handleCTC}></lightning-input>
-                    <lightning-input type="text" label="City" value={setCity_1}
-                        onchange={handleSetCity_1}></lightning-input>
-                    <lightning-input type="text" label="Country" value={setCountry_1}
-                        onchange={handleCountry_1}></lightning-input>
+                    <div class="slds-is-relative slds-p-around_large" if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                    </div>
+                    <lightning-record-edit-form data-id="updateProfileForm" object-api-name="Candidate_Details__c"
+                        record-id={candidateDetails.Id} onsuccess={handleSuccess}>
+                        <lightning-input-field field-name="About__c"></lightning-input-field>
+                        <div style="display: flex">
+                        <lightning-input-field field-name="Candidate_Email__c" disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name="Gender__c" ></lightning-input-field>
+                        </div>
+                        <div style="display: flex">
+                            <lightning-input-field field-name="Date_of_birth__c"></lightning-input-field>
+                            <lightning-input-field field-name="Phone_Number__c"></lightning-input-field>
+                        </div>
+                        <lightning-input-field field-name="Skills__c"></lightning-input-field>
+                        <div style="display: flex">
+                            <lightning-input-field field-name="Experience__c"></lightning-input-field>
+                            <lightning-input-field field-name="CTC__c"></lightning-input-field>
+                        </div>
+                        <div style="display: flex">
+                            <lightning-input-field field-name="City__c"></lightning-input-field>
+                            <lightning-input-field field-name="Country__c"></lightning-input-field>
+                        </div>
+                        <lightning-input-field field-name="Profile_Picture__c"></lightning-input-field>
+                    </lightning-record-edit-form>
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning-button style="padding-right: 1rem;" variant="brand" type="submit" label="Save"
