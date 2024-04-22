@@ -2,7 +2,7 @@
   @description       : the main landing page of HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-12-2024
+  @last modified on  : 04-19-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -31,42 +31,35 @@
     </div>
     <div class="main-content">
       <div class="left-box">
+
         <div class="box-heading">
-          <div class="box-heading">
-            <h1>Latest Applicants</h1>
-          </div>
-          <hr>
-          <template if:true={showApplicants}>
-            <template for:each={formattedApplicants} for:item="applicant" for:index="index">
-              <div class="applicant-box" key={applicant.id} data-candidateid={applicant.id} data-jobid={applicant.jobId}
-                onclick={navigateToApplicantPage}>
-                <h1 class="applicants-name">{applicant.name}</h1>
-                <div class="applicantDetails">
-                  <p>
-                    <lightning-icon icon-name="utility:email" alternative-text="Email" size="xx-small"
-                      variant="brand"></lightning-icon>
-                    {applicant.email}
-                  </p>
-                  <p class="location">
-                    <lightning-icon icon-name="utility:checkin" alternative-text="Location" size="xx-small"
-                      variant="brand"></lightning-icon>
-                    {applicant.city}, {applicant.country}
-                  </p>
-                  <p>Experience: {applicant.experience} years</p>
-                  <p>Applied for - {applicant.jobName}</p>
-                </div>
-              </div>
-            </template>
-          </template>
-          <template if:false={showApplicants}>
-            <div class="no-applicants">
-              <h1>No Applicants Pending</h1>
-              <div class="img">
-                <img src={empty_box} alt="na">
+          <h1>Latest Applicants</h1>
+        </div>
+        <hr>
+        <template if:true={showApplicants}>
+          <template for:each={formattedApplicants} for:item="applicant" for:index="index">
+            <div class="applicant-box" key={applicant.id} data-candidateid={applicant.id} data-jobid={applicant.jobId}
+              onclick={navigateToApplicantPage}>
+              <h1 class="applicants-name">
+                {applicant.name}
+              </h1>
+              <div class="applicantDetails">
+                <p>📧 {applicant.email}</p>
+                <p class="location">📍{applicant.city}, {applicant.country}
+                </p>
+                <p>Experience: {applicant.experience} years, Applied for - {applicant.jobName}</p>
               </div>
             </div>
           </template>
-        </div>
+        </template>
+        <template if:false={showApplicants}>
+          <div class="no-applicants">
+            <h1>No Applicants Pending</h1>
+            <div class="img">
+              <img src={empty_box} alt="na">
+            </div>
+          </div>
+        </template>
       </div>
       <div class="right-box">
         <div class="box-heading">
@@ -76,13 +69,10 @@
         <div class="drafts">
           <template for:each={draftJobList} for:item="job">
             <div class="draft-job" key={job.Id} data-jobid={job.Id} onclick={navigateToJobDescPage}>
-              {job.id}
-              <h1 class="job-title">{job.Title_of_position__c}</h1>
+              <h1 class="job-title">💼 {job.Title_of_position__c}</h1>
               <div class="job-details">
                 <p class="company-name">{job.Company_Name__c}</p>
-                <p class="location"> <lightning-icon icon-name="utility:checkin" alternative-text="Connected"
-                    size="xx-small" variant="brand"></lightning-icon>
-                  {job.City__c}, {job.Country__c}</p>
+                <p class="location">📍 {job.City__c}, {job.Country__c}</p>
               </div>
             </div>
           </template>
