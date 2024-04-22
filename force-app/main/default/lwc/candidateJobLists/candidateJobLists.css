@@ -57,3 +57,9 @@
     padding: 1%;
     color: #333;
 }
+.view-all{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1%;
+}

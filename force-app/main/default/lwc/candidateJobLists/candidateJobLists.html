@@ -11,33 +11,6 @@
             <h1>Quick Access</h1>
         </div>
         <div class="jobs">
-            <div class="applied-box">
-                <div class="header">
-                    <h1>Shortlisted Jobs</h1>
-                </div>
-                <template lwc:if={AppliedList}>
-                    <div class="applied">
-                        <template for:each={AppliedList} for:item="job">
-                            <div class="applied-job" key={job.Id} data-jobid={job.Id}
-                                onclick={redirectToJobDescription}>
-                                <h1 class="job-title">💼 {job.Title_of_position__c}</h1>
-                                <div class="job-details">
-                                    <p class="company-name">{job.Company_Name__c}</p>
-                                    <p class="location">📍 {job.City__c}, {job.Country__c}</p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </template>
-                <template lwc:else>
-                    <div class="no-applicants">
-                        <h1>No Applicants Pending</h1>
-                        <div class="img">
-                            <img src={empty_box} alt="na">
-                        </div>
-                    </div>
-                </template>
-            </div>
             <div class="pending-box">
                 <div class="header">
                     <h1>Pending Jobs</h1>
@@ -54,6 +27,41 @@
                                 </div>
                             </div>
                         </template>
+                        <div class="view-all">
+                            <lightning-button variant="base" label="View All"
+                                onclick={handleViewAll}></lightning-button>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="no-applicants">
+                        <h1>No Applicants Pending</h1>
+                        <div class="img">
+                            <img src={empty_box} alt="na">
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="applied-box">
+                <div class="header">
+                    <h1>Shortlisted Jobs</h1>
+                </div>
+                <template lwc:if={AppliedList}>
+                    <div class="applied">
+                        <template for:each={AppliedList} for:item="job">
+                            <div class="applied-job" key={job.Id} data-jobid={job.Id}
+                                onclick={redirectToJobDescription}>
+                                <h1 class="job-title">💼 {job.Title_of_position__c}</h1>
+                                <div class="job-details">
+                                    <p class="company-name">{job.Company_Name__c}</p>
+                                    <p class="location">📍 {job.City__c}, {job.Country__c}</p>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="view-all">
+                            <lightning-button variant="base" label="View All"
+                                onclick={handleViewAll}></lightning-button>
+                        </div>
                     </div>
                 </template>
                 <template lwc:else>

@@ -5,7 +5,9 @@ import { NavigationMixin } from "lightning/navigation";
 import Id from "@salesforce/user/Id";
 import empty_box from "@salesforce/resourceUrl/empty_box";
 
-export default class CandidateJobLists extends NavigationMixin(LightningElement) {
+export default class CandidateJobLists extends NavigationMixin(
+  LightningElement
+) {
   @track AppliedList = [];
   @track PendingList = [];
   empty_box = empty_box;
@@ -22,6 +24,7 @@ export default class CandidateJobLists extends NavigationMixin(LightningElement)
       this.AppliedList = data;
     }
   }
+
   @wire(getPendingJobListForHomePage, {
     userId: "$userId"
   })
@@ -45,5 +48,17 @@ export default class CandidateJobLists extends NavigationMixin(LightningElement)
     }).then((generatedUrl) => {
       window.open(generatedUrl);
     });
+  }
+
+  handleViewAll() {
+    const currentURL = window.location.href;
+    const newURL = currentURL + "my-jobs";
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: newURL
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }
