@@ -2,7 +2,7 @@
   @description       : Add jobs page for HR portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-15-2024
+  @last modified on  : 04-18-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -17,7 +17,8 @@
           <h1>About Job</h1>
           <lightning-input type="text" label="Job Title" value={jobTitle} data-id="jobTitle"></lightning-input>
           <lightning-input type="text" label="Company Overview" value={summary} data-id="summary"></lightning-input>
-          <lightning-input type="text" label="Job Description" value={description} data-id="description"></lightning-input>
+          <lightning-input type="text" label="Job Description" value={description}
+            data-id="description"></lightning-input>
           <lightning-helptext content="Enter only the salary in numbers without any currency sign"></lightning-helptext>
           <lightning-input type="text" label="Salary" value={salaryRange} data-id="salaryRange">
           </lightning-input>
@@ -31,7 +32,14 @@
           <h1>Location</h1>
           <lightning-input type="text" label="Country" value={country} data-id="country"></lightning-input>
           <lightning-input type="text" label="City" value={city} data-id="city"></lightning-input>
+          <hr>
+          <h1>Publishing</h1>
+          <lightning-input type="date" name="Publishing Start Date" label="Publishing Start Date" value={startDate}
+            data-id="start-date"></lightning-input>
+          <lightning-input type="date" name="Publishing End Date" label="Publishing End Date" value={endDate}
+            data-id="end-date"></lightning-input>
         </div>
+        <hr>
       </div>
       <hr />
       <div class="requirements">

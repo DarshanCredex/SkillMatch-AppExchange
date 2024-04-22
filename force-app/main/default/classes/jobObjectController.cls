@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-12-2024
+ * @last modified on  : 04-19-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -20,7 +20,9 @@ public with sharing class jobObjectController {
     string industryValue,
     string summary,
     string skills,
-    string timing
+    string timing,
+    date publishStartDate,
+    date publishEndDate
   ) {
     try {
       list<job__c> jobRecordsList = new List<job__c>();
@@ -39,6 +41,8 @@ public with sharing class jobObjectController {
       newJob.Status__c = value;
       newJob.Skills_Required__c = skills;
       newJob.Test_Timing__c = timing;
+      newJob.Publish_start_date__c = publishStartDate;
+      newJob.Publish_end_date__c = publishEndDate;
 
       jobRecordsList.add(newJob);
 
@@ -74,7 +78,7 @@ public with sharing class jobObjectController {
         Id
       FROM Job__c
       WHERE Status__c = 'Draft' AND Company_Name__c = :companyname
-      LIMIT 3
+      LIMIT 4
     ]) {
       draftJobList.add(job);
     }
