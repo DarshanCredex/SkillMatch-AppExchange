@@ -77,4 +77,17 @@ public with sharing class CandidateProfileController {
     }
     return mapIdTitle;
   }
+
+  @AuraEnabled
+  public static void deleteWorkExperience(id workExpId){
+    try {
+      
+      Work_Experience__c workexp = [select id from Work_Experience__c where id = :workExpId];
+      if(workexp!=null){
+        delete workexp;
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }
