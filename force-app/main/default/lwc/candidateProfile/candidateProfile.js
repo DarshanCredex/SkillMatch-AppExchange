@@ -7,6 +7,7 @@ import UserId from "@salesforce/user/Id";
 import { refreshApex } from "@salesforce/apex";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { NavigationMixin } from "lightning/navigation";
+import deleteWorkExperience from "@salesforce/apex/CandidateProfileController.deleteWorkExperience";
 
 export default class CandidateProfile extends NavigationMixin(
   LightningElement
@@ -66,7 +67,6 @@ export default class CandidateProfile extends NavigationMixin(
         this.candidateTitle = this.candidateDetails.Work_Experience__r[0].Name;
         this.profileProgress += 20;
       }
-      
     } else if (result.error) {
       console.log("Error received in wire-----", result.error);
     }
@@ -221,6 +221,26 @@ export default class CandidateProfile extends NavigationMixin(
       )
       .submit();
     this.isLoading = false;
+  }
+
+  handleDeleteExperience() {
+    deleteWorkExperience({ workExpId: this.experienceToUpdate })
+      .then(() => {
+        console.log("deleted");
+
+        refreshApex(this.candidateDetailsWire);
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Success",
+            message: "Experience deleted successfully",
+            variant: "success"
+          })
+        );
+        this.closeEditExpModal();
+      })
+      .catch((error) => {
+        console.error("errror---->", error);
+      });
   }
 
   handleUpdateExpSuccess() {

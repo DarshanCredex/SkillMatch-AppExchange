@@ -14,7 +14,7 @@
             <div class="profile-left-container">
                 <div class="profile-image">
                     <lightning-formatted-rich-text
-                            value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
+                        value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
                 </div>
                 <p class="name">{candidateDetails.Name}</p>
                 <p class="title">{candidateTitle}</p>
@@ -38,14 +38,6 @@
                         <p class="heading-text">
                             Basic Information
                         </p>
-                        <!-- <div class="progress-indicator">
-                            <lightning-progress-ring 
-                              direction="drain"
-                              size="medium"
-                              value={profileProgress}
-                              variant="base"
-                            ></lightning-progress-ring>
-                        </div> -->
                         <div style="align-self: center;">
                             <lightning-button label="Resume" onclick={handleResume}
                                 class="edit-button"></lightning-button>
@@ -143,6 +135,8 @@
 
                 <footer class="slds-modal__footer">
                     <div style="text-align: right;">
+                        <lightning-button variant="neutral" label="Delete" onclick={handleDeleteExperience}
+                            style="margin-right: 1%"></lightning-button>
                         <lightning-button variant="brand" type="submit" label="Update"
                             onclick={handleUpdateExperience}></lightning-button>
                     </div>
@@ -160,31 +154,44 @@
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
-                    <lightning-input type="text" label="Organisation" value={getOrganisation}
-                        onchange={handleGetOrganisation}></lightning-input>
-                    <lightning-input type="text" label="Enter Designation" value={getDesignation}
-                        onchange={handleGetDesignation}></lightning-input>
-                    <lightning-input type="checkbox" label="Is Current Company" value={getCheckboxValue}
-                        onchange={handleGetCheckBoxValue}></lightning-input>
-                    <lightning-input type="date" label="From Date" value={getFromDate}
-                        onchange={handleGetFromDate}></lightning-input>
-                    <lightning-input type="date" label="To Date" value={getToDate}
-                        onchange={handleGetToDate}></lightning-input>
-                    <lightning-input type="text" label="City" value={getCity}
-                        onchange={handleGetCity}></lightning-input>
-                    <lightning-input type="text" label="Country" value={getCountry}
-                        onchange={handleGetCountry}></lightning-input>
-                </div>
-                <footer class="slds-modal__footer">
-                    <div style="text-align: right;">
-                        <lightning-button variant="brand" type="submit" label="Add"
-                            onclick={handleAddExperience}></lightning-button>
+                    <div class="slds-is-relative slds-p-around_large" if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading"></lightning-spinner>
                     </div>
-                </footer>
+                    <lightning-record-edit-form data-id="addExperienceForm" object-api-name="Work_Experience__c"
+                        onsuccess={handleAddSuccess}>
+                        <lightning-messages> </lightning-messages>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="Organisation__c"></lightning-input-field>
+                            <lightning-input-field field-name="CandidateId__c" value={candidateDetails.Id}
+                                disabled="true"></lightning-input-field>
+                        </div>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="Name"></lightning-input-field>
+                            <lightning-input-field field-name="Is_Current_Company__c"
+                                onchange={handleCurrentCompanyChange}></lightning-input-field>
+                        </div>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="From_Date__c"></lightning-input-field>
+                            <lightning-input-field field-name="To_Date__c"
+                                disabled={isToDateDisabled}></lightning-input-field>
+                        </div>
+                        <div style="display: flex;">
+                            <lightning-input-field field-name="City__c"></lightning-input-field>
+                            <lightning-input-field field-name="Country__c"></lightning-input-field>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <div style="text-align: right;">
+                                <lightning-button variant="brand" type="submit" label="Add"
+                                    onclick={handleSubmitExperience}></lightning-button>
+                            </div>
+                        </footer>
+                    </lightning-record-edit-form>
+                </div>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
+
     <template if:true={isResumeModalOpen}>
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
@@ -199,12 +206,15 @@
                             <template for:each={filesList} for:item="file">
                                 <div key={file.value} class="slds-box file-item">
                                     <div class="slds-grid slds-wrap">
-                                        <div class="slds-col slds-large-size_10-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                        <div
+                                            class="slds-col slds-large-size_10-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
                                             <h1 class="file-name"><strong>Existing Resume - </strong> <span style="color: #9f9f9f;
                                                 text-decoration-line: underline;">{file.label}</span></h1>
                                         </div>
-                                        <div class="slds-col slds-large-size_2-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
-                                            <a href={file.url} download class="slds-button slds-button_brand download-btn">Download</a>
+                                        <div
+                                            class="slds-col slds-large-size_2-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                            <a href={file.url} download
+                                                class="slds-button slds-button_brand download-btn">Download</a>
                                         </div>
                                     </div>
                                 </div>
@@ -213,12 +223,13 @@
                         <template if:true={iframeLoading}>
                             <div class="spinner"></div>
                         </template>
-                        <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" width="100%" height="100px" class="iframe-content" onload={handleIframeLoad}></iframe>    
-                    </div>                  
+                        <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" width="100%"
+                            height="100px" class="iframe-content" onload={handleIframeLoad}></iframe>
+                    </div>
                 </div>
-                                
-                    
-                </div>
+
+
+            </div>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
@@ -239,8 +250,9 @@
                         record-id={candidateDetails.Id} onsuccess={handleSuccess}>
                         <lightning-input-field field-name="About__c"></lightning-input-field>
                         <div style="display: flex">
-                        <lightning-input-field field-name="Candidate_Email__c" disabled="true"></lightning-input-field>
-                        <lightning-input-field field-name="Gender__c" ></lightning-input-field>
+                            <lightning-input-field field-name="Candidate_Email__c"
+                                disabled="true"></lightning-input-field>
+                            <lightning-input-field field-name="Gender__c"></lightning-input-field>
                         </div>
                         <div style="display: flex">
                             <lightning-input-field field-name="Date_of_birth__c"></lightning-input-field>
