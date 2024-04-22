@@ -18,6 +18,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   IsEmptyExpiredJobList = true;
 
   jobId;
+
   noJobs = no_jobs;
   userId = Id;
 
@@ -34,7 +35,6 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
   @wire(getJobs, { userId: "$userId" })
   wireGetJobs({ error, data }) {
     if (error) {
-      console.error("error----->", error);
       return;
     }
     if (data) {
@@ -54,7 +54,7 @@ export default class ManageJobs extends NavigationMixin(LightningElement) {
     this.IsEmptyDraftList = this.draftedJobList.length === 0;
 
     this.expiredJobList = this.postedJobList.filter((item) => {
-      return item.Publish_end_date__c > Date.now();
+      return item.endDate < Date.now();
     });
     this.IsEmptyExpiredJobList = this.expiredJobList.length === 0;
   }
