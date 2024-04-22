@@ -63,3 +63,29 @@
     align-items: center;
     margin: 1%;
 }
+.appliedJobs,
+.shortlistedjobs,
+.profileProgress{
+    width: 25%;
+    height: 20%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+    padding: 2%;
+    border: #e0e0e0 solid 1px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tags{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.shortlistedjobs p,
+.appliedJobs p{
+    font-size: 15px;
+}

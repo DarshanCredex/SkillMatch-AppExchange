@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 04-22-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
     <div class="slds-is-relative slds-p-around_large" if:true={isLoadingFullScreen}>
         <lightning-spinner alternative-text="Loading"></lightning-spinner>
@@ -10,7 +17,7 @@
                             value={candidateDetails.Profile_Picture__c}></lightning-formatted-rich-text>
                 </div>
                 <p class="name">{candidateDetails.Name}</p>
-                <p class="title">Senior Salesforce Developer</p>
+                <p class="title">{candidateTitle}</p>
                 <p class="about-me">
                     {candidateDetails.About__c}
                 </p>
@@ -31,6 +38,14 @@
                         <p class="heading-text">
                             Basic Information
                         </p>
+                        <!-- <div class="progress-indicator">
+                            <lightning-progress-ring 
+                              direction="drain"
+                              size="medium"
+                              value={profileProgress}
+                              variant="base"
+                            ></lightning-progress-ring>
+                        </div> -->
                         <div style="align-self: center;">
                             <lightning-button label="Resume" onclick={handleResume}
                                 class="edit-button"></lightning-button>
@@ -193,11 +208,30 @@
                         class="slds-modal__close"></lightning-button-icon>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
-                    <template if:true={iframeLoading}>
-                        <div class="spinner"></div>
-                    </template>
-                    <!-- Hide iframe until loaded -->
-                    <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" height="100%" width="100%" onload={handleIframeLoad}></iframe>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="height: 50%; flex-grow: 1;">
+                            <template for:each={filesList} for:item="file">
+                                <div key={file.value} class="slds-box file-item">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-large-size_10-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                            <h1 class="file-name"><strong>Existing Resume - </strong> <span style="color: #9f9f9f;
+                                                text-decoration-line: underline;">{file.label}</span></h1>
+                                        </div>
+                                        <div class="slds-col slds-large-size_2-of-12 slds-medium-size_5-of-12 slds-size_5-of-12">
+                                            <a href={file.url} download class="slds-button slds-button_brand download-btn">Download</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <template if:true={iframeLoading}>
+                            <div class="spinner"></div>
+                        </template>
+                        <iframe id="vfFrame" src={iframeSrc} frameborder="0" scrolling="auto" width="100%" height="100px" class="iframe-content" onload={handleIframeLoad}></iframe>    
+                    </div>                  
+                </div>
+                                
+                    
                 </div>
             </div>
         </section>
@@ -219,8 +253,11 @@
                         record-id={candidateDetails.Id} onsuccess={handleSuccess}>
                         <lightning-input-field field-name="About__c"></lightning-input-field>
                         <div style="display: flex">
-                            <lightning-input-field field-name="Candidate_Email__c"
-                                disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name="Candidate_Email__c" disabled="true"></lightning-input-field>
+                        <lightning-input-field field-name="Gender__c" ></lightning-input-field>
+                        </div>
+                        <div style="display: flex">
+                            <lightning-input-field field-name="Date_of_birth__c"></lightning-input-field>
                             <lightning-input-field field-name="Phone_Number__c"></lightning-input-field>
                         </div>
                         <lightning-input-field field-name="Skills__c"></lightning-input-field>

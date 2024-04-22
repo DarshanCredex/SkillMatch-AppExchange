@@ -7,6 +7,21 @@
 -->
 <template>
     <div class="main">
+        <div class="tags">
+            <div class="profileProgress">
+                <lightning-progress-ring direction="drain" size="xx-large" value={profileProgress}
+                    variant="base-autocomplete"></lightning-progress-ring>
+                <h1>Profile Completion - {profileProgress}%</h1>
+            </div>
+            <div class="appliedJobs">
+               <p>{numberOfShortlisted}</p>
+                <h1>Number of Jobs shortlistings</h1>
+            </div>
+            <div class="shortlistedjobs">
+                <p>{numberOfPending}</p>
+                <h1>Number of Jobs pending</h1>
+            </div>
+        </div>
         <div class="header-top">
             <h1>Quick Access</h1>
         </div>
