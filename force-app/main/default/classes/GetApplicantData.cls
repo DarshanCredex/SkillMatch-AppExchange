@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-12-2024
+ * @last modified on  : 04-22-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -79,10 +79,11 @@ public with sharing class GetApplicantData {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
  @AuraEnabled(cacheable=true)
         public static Map<ID, String> getResume(String applicantId) {
             // Get record file IDs    
-             list<Candidate_Details__c> candidateDetails = [SELECT Id FROM Candidate_Details__c WHERE id = :applicantId limit 1];    
+            list<Candidate_Details__c> candidateDetails = [SELECT Id FROM Candidate_Details__c WHERE id = :applicantId limit 1];    
             List<ContentDocumentLink> files = [SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :candidateDetails[0].Id];
             List<ID> fileIDs = new List<ID>();
             for (ContentDocumentLink docLink : files) {
