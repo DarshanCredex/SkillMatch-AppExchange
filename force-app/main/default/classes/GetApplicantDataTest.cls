@@ -39,6 +39,25 @@ private class GetApplicantDataTest {
     return candidate;
   }
 
+  private static user createDummyUser() {
+    User dummyUser = new User(
+      FirstName = 'Test',
+      LastName = 'User',
+      Email = 'test@example.com',
+      Username = 'te1212121st@example.com',
+      Alias = 'testu',
+      EmailEncodingKey = 'UTF-8',
+      LanguageLocaleKey = 'en_US',
+      LocaleSidKey = 'en_US',
+      TimeZoneSidKey = 'America/Los_Angeles',
+      CompanyName = 'ABC',
+      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
+      .Id
+    );
+    insert dummyUser;
+    return dummyUser;
+  }
+
   private static Job__c createJob() {
     Job__c job = new Job__c(
       Title_of_position__c = 'Sales Manager',
@@ -47,7 +66,8 @@ private class GetApplicantDataTest {
       Type__c = 'Temporary',
       Experience__c = '1 to 3 years',
       Industry__c = 'Information Technology',
-      Status__c = 'Completed'
+      Status__c = 'Completed',
+      Company_Name__c = 'ABC'
     );
     insert job;
     return job;
@@ -103,9 +123,9 @@ private class GetApplicantDataTest {
     Candidate_Details__c candidate = createCandidateDetails();
     Job__c job = createJob();
 
-    Job_Applicants__c applicant = createJobApplicant(candidate.id, job.id);
+    user user = createDummyUser();
 
-    List<Job__c> result = GetApplicantData.getAppliedJobById(candidate.id);
+    List<Job__c> result = GetApplicantData.getAppliedJobById(job.id, user.id);
 
     System.assertEquals(1, result.size());
   }
