@@ -66,9 +66,8 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  jobList({ data, error }) {
+  jobList({ data}) {
     if (data) {
-      console.log("joblist--->", data);
       this.jobListdata = data;
       this.filterJobListData = [...this.jobListdata];
       if (this.jobListdata.length > 0) {
@@ -91,10 +90,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleSortList() {
     if (Array.isArray(this.filterJobListData)) {
       this.filterJobListData.sort((a, b) => a.daysAgo - b.daysAgo);
-      console.log(
-        "this.filterJobListData---> (sorted)",
-        JSON.stringify(this.filterJobListData)
-      );
     } else {
       console.error("filterJobListData is not an array");
     }
