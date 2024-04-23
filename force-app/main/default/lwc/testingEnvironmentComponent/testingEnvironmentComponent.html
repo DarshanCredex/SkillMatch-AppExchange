@@ -2,7 +2,7 @@
   @description       : this component contains the questions of the test
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-05-2024
+  @last modified on  : 04-23-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -91,12 +91,17 @@
             You may now close this window or give us a valueable feedback.
           </div>
           <div class="slds-form-element" style="width: 50vw;">
-            <label style="float: inline-start;" class="slds-form-element__label" for="text-input-id-47">Experience/Feedback :</label>
+            <label style="float: inline-start;" class="slds-form-element__label"
+              for="text-input-id-47">Experience/Feedback :</label>
             <div class="slds-form-element__control">
-              <input type="text" id="text-input-id-47" placeholder="Write here…" class="slds-input" style="height: 15vh;margin-bottom: 2vh;" />
+              <lightning-input type="text" placeholder="Write here......" label="Feedback/Suggestions"
+                onchange={getFeedback}></lightning-input>
             </div>
           </div>
-          <lightning-button style="text-align: end;" variant="brand" label="Submit" title="Submit" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+          <div style="padding:2%">
+            <lightning-button style="text-align: end;" variant="brand" label="Submit" title="Submit"
+              onclick={handleFeedbackSubmit} class="slds-m-left_x-small"></lightning-button>
+          </div>
         </div>
       </div>
     </div>
