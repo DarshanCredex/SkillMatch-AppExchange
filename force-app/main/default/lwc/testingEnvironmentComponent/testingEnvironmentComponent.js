@@ -163,6 +163,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
     this.timerTimeout = setInterval(() => {
       this.timeRemaining--;
       if (this.timeRemaining <= 0) {
+        console.log('time remaining', this.timeRemaining);
         clearInterval(this.timerTimeout);
         alert("Time is up!");
         this.getResponse();

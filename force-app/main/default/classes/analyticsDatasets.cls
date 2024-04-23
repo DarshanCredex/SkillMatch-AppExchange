@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-18-2024
+ * @last modified on  : 04-23-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -269,7 +269,7 @@ public with sharing class analyticsDatasets {
         SELECT count(id) cnt, Job_Id__r.Title_of_position__c titleOfPosition
         FROM Job_Applicants__c
         WHERE Job_Id__r.Company_Name__c = :companyname
-        AND Assesment_Status__c = 'Given'
+        AND (Assesment_Status__c = 'Given' or Assesment_Status__c = 'Evaluated')
         GROUP BY Job_Id__r.Title_of_position__c
       ];
 
