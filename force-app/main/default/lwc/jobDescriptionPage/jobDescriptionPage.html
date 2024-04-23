@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-19-2024
+  @last modified on  : 04-23-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -14,6 +14,7 @@
                         <h1>{job.Title_of_position__c}</h1>
 
                         <div class="buttons">
+                            <lightning-button variant="brand-outline" label="delete" onclick={handleDelete}></lightning-button>
                             <lightning-button variant="brand" label="Applicants" data-job-id={job.id}
                                 lwc:if={showApplicantsButton} onclick={handleApplicantButton}></lightning-button>
                             <lightning-button variant="Neutral" label="Edit"

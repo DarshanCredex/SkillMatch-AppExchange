@@ -102,7 +102,6 @@ export default class CandidateJobLists extends NavigationMixin(
       this.profileProgress += this.candidateDetails.Experience__c ? 2 : 0;
       this.profileProgress += this.candidateDetails.City__c ? 2 : 0;
       this.profileProgress += this.candidateDetails.Country__c ? 2 : 0;
-
       this.profileProgress = Math.min(Math.max(this.profileProgress, 0), 100);
     }
   }
