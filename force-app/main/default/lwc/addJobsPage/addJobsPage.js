@@ -110,6 +110,16 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   postJobData(event) {
     this.getInput();
     const value = event.target.value;
+
+    if (this.endDate && this.startDate && this.endDate < this.startDate) {
+      this.showToast(
+        "Error",
+        "End Date cannot be less than Start Date",
+        "error"
+      );
+      return;
+    }
+
     postJob({
       value: value,
       jobTitle: this.jobTitle,

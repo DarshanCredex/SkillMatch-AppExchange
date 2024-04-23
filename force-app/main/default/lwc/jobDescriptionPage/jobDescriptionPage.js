@@ -177,7 +177,6 @@ export default class JobDescriptionPage extends NavigationMixin(
 
   handleNext() {
     this.getQuestionInput();
-
     this.showQuestion = false;
     if (this.type === "Objective") {
       this.showOptionsObjective = true;
