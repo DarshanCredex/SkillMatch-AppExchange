@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-alert */
 import { LightningElement, track, wire } from "lwc";
 import getPostedJobListBasedOnId from "@salesforce/apex/jobObjectController.getPostedJobListBasedOnId";
 import { NavigationMixin } from "lightning/navigation";
@@ -5,7 +7,11 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import questionTypeValue from "@salesforce/apex/QuestionsController.questionTypeValue";
 import insertQuestionAndOptions from "@salesforce/apex/QuestionsController.insertQuestionAndOptions";
-export default class JobDescriptionPage extends NavigationMixin(LightningElement) {
+import deleteJob from "@salesforce/apex/jobObjectController.deleteJob";
+
+export default class JobDescriptionPage extends NavigationMixin(
+  LightningElement
+) {
   jobDetails;
   error;
   jobId;
@@ -195,6 +201,34 @@ export default class JobDescriptionPage extends NavigationMixin(LightningElement
     this.getOptionsInput();
     if (!this.questionName || !this.type) {
       this.showToast("Error", "Fields cannot be empty", "error");
+    } else if (
+      this.type === "Objective" &&
+      ((!this.optionA && this.checkbox_1) ||
+        (!this.optionB && this.checkbox_2) ||
+        (!this.optionC && this.checkbox_3) ||
+        (!this.optionD && this.checkbox_4))
+    ) {
+      this.showToast(
+        "Error",
+        "Options cannot be blank if the checkbox is checked",
+        "error"
+      );
+    } else if (
+      this.type === "Objective" &&
+      ((this.checkbox_1 &&
+        (this.checkbox_2 || this.checkbox_3 || this.checkbox_4)) ||
+        (this.checkbox_2 &&
+          (this.checkbox_1 || this.checkbox_3 || this.checkbox_4)) ||
+        (this.checkbox_3 &&
+          (this.checkbox_1 || this.checkbox_2 || this.checkbox_4)) ||
+        (this.checkbox_4 &&
+          (this.checkbox_1 || this.checkbox_2 || this.checkbox_3)))
+    ) {
+      this.showToast(
+        "Error",
+        "Only one checkbox can be checked for each Question",
+        "error"
+      );
     } else {
       insertQuestionAndOptions({
         questionName: this.questionName,
@@ -218,9 +252,8 @@ export default class JobDescriptionPage extends NavigationMixin(LightningElement
           this.showOptionsObjective = false;
           this.showOptionsSubjective = false;
         })
-        .catch((error) => {
+        .catch(() => {
           this.showToast("Error", "Questions could not be saved", "error");
-          console.error("error---->", error);
         });
     }
   }
@@ -243,5 +276,24 @@ export default class JobDescriptionPage extends NavigationMixin(LightningElement
       }
     };
     this[NavigationMixin.Navigate](pageReference);
+  }
+
+  handleDelete() {
+    if (confirm("Are you sure you want to delete this job?")) {
+      deleteJob({ jobId: this.jobId })
+        .then(() => {
+          this.showToast("Success", "Job Deleted", "success");
+          const pageReference = {
+            type: "standard__webPage",
+            attributes: {
+              url: "/manage-jobs"
+            }
+          };
+          this[NavigationMixin.Navigate](pageReference);
+        })
+        .catch(() => {
+          this.showToast("Error", "Job could not be deleted", "error");
+        });
+    }
   }
 }

@@ -203,4 +203,18 @@ public with sharing class jobObjectController {
       throw new AuraHandledException(e.getMessage());
     }
   }
+
+  @AuraEnabled
+  public static void deleteJob(id jobId) {
+    try {
+      Job__c job = [SELECT id FROM Job__c WHERE id = :jobId Limit 1];
+      system.debug('job------------->' + Job);
+      if (job != null) {
+        system.debug('job' + Job);
+        delete job;
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
 }
