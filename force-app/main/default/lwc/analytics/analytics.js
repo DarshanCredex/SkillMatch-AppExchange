@@ -304,7 +304,7 @@ export default class Analytics extends LightningElement {
           {
             data: [],
             backgroundColor: CHART_COLORS_3,
-            label: "Title of Position"
+            label: "Number of Applicants"
           }
         ]
       },
@@ -335,7 +335,7 @@ export default class Analytics extends LightningElement {
           {
             data: [],
             backgroundColor: CHART_COLORS_4,
-            label: "Title of Position"
+            label: "Number of Applicants"
           }
         ]
       },
@@ -366,7 +366,7 @@ export default class Analytics extends LightningElement {
           {
             data: [],
             backgroundColor: CHART_COLORS_1,
-            label: "Title of Position"
+            label: "Number of Questions"
           }
         ]
       },
