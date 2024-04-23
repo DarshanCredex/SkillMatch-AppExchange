@@ -217,15 +217,10 @@ public with sharing class QuestionsController {
   // }
 
   @AuraEnabled
-  public static void updateScore(
-    decimal score,
-    id jobid,
-    id candidateid
-  ) {
+  public static void updateScore(decimal score, id jobid, id candidateid) {
     try {
-      
       list<Job_Applicants__c> applicantList = new List<Job_Applicants__c>();
-      
+
       List<Job_Applicants__c> queryResult = [
         SELECT Id
         FROM Job_Applicants__c
@@ -247,6 +242,22 @@ public with sharing class QuestionsController {
 
       if (!applicantList.isEmpty()) {
         update applicantList;
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static void deleteQuestion(id questionId) {
+    try {
+      Question__c question = [
+        SELECT id
+        FROM Question__c
+        WHERE id = :questionId
+      ];
+      if (question != null) {
+        delete question;
       }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
