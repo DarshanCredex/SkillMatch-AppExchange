@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-23-2024
+ * @last modified on  : 04-24-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -74,7 +74,6 @@ public with sharing class testingEnvironmentController {
           response.Question__c = option.Question__c;
           responseList.add(response);
         }
-        System.debug('responseList' + responseList);
         if (!responseList.isEmpty()) {
           insert responseList;
         }
@@ -91,7 +90,6 @@ public with sharing class testingEnvironmentController {
     id userid,
     Map<Id, String> subjectiveResponseAndId
   ) {
-    System.debug('subjectiveResponseAndId------->' + subjectiveResponseAndId);
     try {
       id candidateid = [
         SELECT id
