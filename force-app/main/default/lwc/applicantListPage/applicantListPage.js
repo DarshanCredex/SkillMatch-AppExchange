@@ -6,6 +6,8 @@ import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { refreshApex } from "@salesforce/apex";
+import getScore from "@salesforce/apex/JobApplicantController.getScore";
+
 
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
