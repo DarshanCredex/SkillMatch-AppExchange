@@ -142,4 +142,32 @@ private class GetApplicantDataTest {
 
     System.assertEquals(1, result.size());
   }
+
+  @isTest
+  static void testGetResume() {
+    Candidate_Details__c candidate = createCandidateDetails();
+    ContentVersion contentVersion = new ContentVersion(
+      Title = 'Penguins',
+      PathOnClient = 'Penguins.jpg',
+      VersionData = Blob.valueOf('Test Content'),
+      IsMajorVersion = true
+    );
+
+    insert contentVersion;
+
+    List<ContentDocument> documents = [
+      SELECT Id, Title, LatestPublishedVersionId
+      FROM ContentDocument limit 1
+    ];
+    ContentDocumentLink cdl = new ContentDocumentLink();
+    cdl.LinkedEntityId = candidate.id;
+    cdl.ContentDocumentId = documents[0].Id;
+    cdl.shareType = 'V';
+    insert cdl;
+
+    Test.startTest();
+    Map<Id, String> result = GetApplicantData.getResume(candidate.Id);
+    Test.stopTest();
+    System.assertEquals(1, result.size());
+  }
 }
