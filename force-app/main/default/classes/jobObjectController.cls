@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-25-2024
+ * @last modified on  : 04-29-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -49,67 +49,17 @@ public with sharing class jobObjectController {
 
       jobRecordsList.add(newJob);
 
-      system.debug('jobRecordsList--------->' + jobRecordsList);
-
       if (!jobRecordsList.isEmpty()) {
         insert jobRecordsList;
       }
     } catch (Exception e) {
-      system.debug(
-        'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage() + e.getLineNumber());
     }
   }
-  @AuraEnabled
-  public static void saveToDraft(
-    string jobTitle,
-    string description,
-    Decimal salaryRange,
-    string companyName,
-    string city,
-    string country,
-    string experienceValue,
-    string typeValue,
-    string industryValue,
-    string summary,
-    string skills
-  ) {
-    System.debug('start');
-    try {
-      list<job__c> jobRecordsList = new List<job__c>();
-      job__c newJob = new job__c();
 
-      newJob.Title_of_position__c = jobTitle;
-      newJob.Description__c = description;
-      newJob.Summary__c = summary;
-      newJob.Salary__c = salaryRange;
-      newJob.Industry__c = industryValue;
-      newJob.Experience__c = experienceValue;
-      newJob.Country__c = country;
-      newJob.Company_Name__c = companyName;
-      newJob.Type__c = typeValue;
-      newJob.City__c = city;
-      newJob.Status__c = 'Draft';
-      newJob.Skills_Required__c = skills;
-
-      jobRecordsList.add(newJob);
-
-      system.debug('jobRecordsList--------->' + jobRecordsList);
-
-      if (!jobRecordsList.isEmpty()) {
-        insert jobRecordsList;
-      }
-    } catch (Exception e) {
-      system.debug(
-        'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
-      );
-    }
-  }
   @AuraEnabled(cacheable=true)
-  public static list<job__c> getDraftJobList(string userId) {
-    System.debug('start');
-
-    user u = [select companyName from user where id = :userId limit 1];
+  public static list<job__c> getDraftJobList(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     system.debug('companyname---->'+companyname);
     list<job__c> draftJobList = new List<job__c>();
@@ -141,8 +91,7 @@ public with sharing class jobObjectController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static list<job__c> getPostedJobListBasedOnId(string jobId) {
-    system.debug('job------->' + jobId);
+  public static list<job__c> getPostedJobListBasedOnId(id jobId) {
     list<job__c> jobDetails = new List<job__c>();
 
     try {
@@ -174,9 +123,7 @@ public with sharing class jobObjectController {
         LIMIT 1
       ];
     } catch (Exception e) {
-      system.debug(
-        'errror------>' + e.getMessage() + '------->' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage() + e.getLineNumber());
     }
 
     system.debug('jobDetails------->' + jobDetails);
@@ -207,10 +154,8 @@ public with sharing class jobObjectController {
   @AuraEnabled
   public static void deleteJob(id jobId) {
     try {
-      Job__c job = [SELECT id FROM Job__c WHERE id = :jobId Limit 1];
-      system.debug('job------------->' + Job);
+      Job__c job = [SELECT id FROM Job__c WHERE id = :jobId LIMIT 1];
       if (job != null) {
-        system.debug('job' + Job);
         delete job;
       }
     } catch (Exception e) {
