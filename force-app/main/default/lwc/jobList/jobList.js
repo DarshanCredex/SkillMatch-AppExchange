@@ -8,20 +8,25 @@ import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
+  
   companyLogo = alternateCompanyLogo;
   emptyBox = emptyBox;
+
   typeValues = [];
   experienceValues = [];
   industryValues = [];
-  @track selectedTypeValues = [];
-  @track selectedExperienceValues = [];
-  @track selectedIndustryValues = [];
-  @track searchLocation = "";
-  @track searchTitle = "";
-  @track isLoading = false;
-  @track errorMessage = false;
+  selectedTypeValues = [];
+  selectedExperienceValues = [];
+  selectedIndustryValues = [];
+
   @track jobListdata = [];
   @track filterJobListData = [];
+
+  searchLocation = "";
+  searchTitle = "";
+
+  isLoading = false;
+  errorMessage = false;
 
   connectedCallback() {
     this.searchTitle = sessionStorage.getItem("searchText") || "";
@@ -66,7 +71,10 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  jobList({ data}) {
+  wiredJobList({ data, error }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.jobListdata = data;
       this.filterJobListData = [...this.jobListdata];
@@ -90,8 +98,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleSortList() {
     if (Array.isArray(this.filterJobListData)) {
       this.filterJobListData.sort((a, b) => a.daysAgo - b.daysAgo);
-    } else {
-      console.error("filterJobListData is not an array");
     }
   }
 
