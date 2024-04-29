@@ -123,35 +123,31 @@ public class jobObjectControllerTest {
     Date publishStartDate = Date.today();
     Date publishEndDate = Date.today().addDays(30);
 
-    Test.startTest();
-    try {
-      jobObjectController.postJob(
-        'Draft',
-        jobTitle,
-        description,
-        salaryRange,
-        companyName,
-        city,
-        country,
-        experienceValue,
-        typeValue,
-        industryValue,
-        summary,
-        skills,
-        timing,
-        publishStartDate,
-        publishEndDate
-      );
-    } catch (Exception e) {
-      System.assert(false, 'Exception occurred: ' + e.getMessage());
-    }
-    Test.stopTest();
+    jobObjectController.postJob(
+      'Draft',
+      jobTitle,
+      description,
+      salaryRange,
+      companyName,
+      city,
+      country,
+      experienceValue,
+      typeValue,
+      industryValue,
+      summary,
+      skills,
+      timing,
+      publishStartDate,
+      publishEndDate
+    );
+
     Job__c[] insertedJobs = [
       SELECT Id
       FROM Job__c
       WHERE Title_of_position__c = :jobTitle
       LIMIT 1
     ];
+
     System.assertNotEquals(0, insertedJobs.size());
   }
 }
