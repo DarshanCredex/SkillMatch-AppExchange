@@ -1,15 +1,13 @@
 /**
- * @description       : 
+ * @description       :
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
- * @group             : 
- * @last modified on  : 04-08-2024
+ * @group             :
+ * @last modified on  : 04-30-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
-**/
+ **/
 public with sharing class JobDetailController {
   @AuraEnabled
   public static Boolean createJobApplicants(Id userId, Id jobId) {
-    System.debug('userId---->' + userId);
-    System.debug('jobId---->' + jobId);
     if (userId != null) {
       List<Candidate_Details__c> candidate = [
         SELECT Id
@@ -18,7 +16,6 @@ public with sharing class JobDetailController {
         LIMIT 1
       ];
       if (candidate.size() > 0) {
-        System.debug('inside if ');
         Job_Applicants__c applicant = new Job_Applicants__c();
         applicant.CandidateId__c = candidate[0].Id;
         applicant.Job_Id__c = jobId;
@@ -27,8 +24,7 @@ public with sharing class JobDetailController {
           insert applicant;
           return true;
         } catch (DMLException e) {
-            System.debug('error message -->'+e.getMessage());
-          return false;
+          throw new AuraHandledException(e.getMessage() + e.getLineNumber());
         }
       }
     }
@@ -37,8 +33,6 @@ public with sharing class JobDetailController {
 
   @AuraEnabled(cacheable=true)
   public static Boolean checkJobStatus(String userId, String jobId) {
-    System.debug('jobId---->' + jobId);
-    System.debug('userId---->' + userId);
     if (userId != null && jobId != null) {
       List<Candidate_Details__c> CandidateId = [
         SELECT Id
@@ -47,7 +41,7 @@ public with sharing class JobDetailController {
         LIMIT 1
       ];
       if (CandidateId.size() > 0) {
-        String candId = CandidateId[0].Id;
+        Id candId = CandidateId[0].Id;
         List<Job_Applicants__c> jobApplication = [
           SELECT Id
           FROM Job_Applicants__c
@@ -64,7 +58,6 @@ public with sharing class JobDetailController {
 
   @AuraEnabled(cacheable=true)
   public static List<JobDetailWrapper> getJobDescription(String jobId) {
-    System.debug('jobId---->' + jobId);
     Job__c jobDetail = [
       SELECT
         Id,

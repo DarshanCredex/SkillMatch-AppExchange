@@ -37,7 +37,7 @@
 
 .skills p {
     font-size: 18px;
-    text-wrap: nowrap;
+    text-wrap: wrap;
     padding-left: 2%;
 }
 
