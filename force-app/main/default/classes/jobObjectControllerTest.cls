@@ -21,82 +21,34 @@
  */
 @isTest
 public class jobObjectControllerTest {
-  private static Job__c createDraft() {
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Draft',
-      Company_Name__c = 'ABC'
-    );
-    insert job;
-    return job;
-  }
-  private static Job__c createJob() {
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed',
-      Company_Name__c = 'ABC',
-      Test_Timing__c = '15 mins'
-    );
-    insert job;
-    return job;
-  }
-  private static user createDummyUser() {
-    User dummyUser = new User(
-      FirstName = 'Test',
-      LastName = 'User',
-      Email = 'test@example.com',
-      Username = 'te1212121st@example.com',
-      Alias = 'testu',
-      EmailEncodingKey = 'UTF-8',
-      LanguageLocaleKey = 'en_US',
-      LocaleSidKey = 'en_US',
-      TimeZoneSidKey = 'America/Los_Angeles',
-      CompanyName = 'ABC',
-      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
-      .Id
-    );
-    insert dummyUser;
-    return dummyUser;
-  }
-
   @isTest
   static void TestGetDraftJobList() {
-    Job__c job = createDraft();
-    user u = createDummyUser();
+    Job__c job = TestDataFactory.createDraft();
+    user u = TestDataFactory.createDummyUser();
     list<Job__c> result = jobObjectController.getDraftJobList(u.id);
     System.assertEquals(1, result.size());
   }
   @isTest
   static void TestGetPostedJobListBasedOnId() {
-    Job__c job = createJob();
+    Job__c job = TestDataFactory.createJob();
     list<job__c> result = jobObjectController.getPostedJobListBasedOnId(job.id);
     System.assertEquals(1, result.size());
   }
   @isTest
   static void TestGetTestTimings() {
-    Job__c job = createJob();
+    Job__c job = TestDataFactory.createJob();
     string result = jobObjectController.getTestTimings(job.id);
     System.assertEquals('15 mins', result);
   }
   @isTest
   static void TestGetCompanyName() {
-    user u = createDummyUser();
+    user u = TestDataFactory.createDummyUser();
     string result = jobObjectController.getCompanyName(u.id);
     System.assertEquals('ABC', result);
   }
   @isTest
   static void TestDeleteJob() {
-    Job__c job = createJob();
+    Job__c job = TestDataFactory.createJob();
     test.startTest();
     jobObjectController.deleteJob(job.id);
     test.stopTest();

@@ -8,25 +8,20 @@ import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
-
   companyLogo = alternateCompanyLogo;
   emptyBox = emptyBox;
-
   typeValues = [];
   experienceValues = [];
   industryValues = [];
-  selectedTypeValues = [];
-  selectedExperienceValues = [];
-  selectedIndustryValues = [];
-
+  @track selectedTypeValues = [];
+  @track selectedExperienceValues = [];
+  @track selectedIndustryValues = [];
+  @track searchLocation = "";
+  @track searchTitle = "";
+  @track isLoading = false;
+  @track errorMessage = false;
   @track jobListdata = [];
   @track filterJobListData = [];
-
-  searchLocation = "";
-  searchTitle = "";
-
-  isLoading = false;
-  errorMessage = false;
 
   connectedCallback() {
     this.searchTitle = sessionStorage.getItem("searchText") || "";
@@ -71,10 +66,7 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  wiredJobList({ data, error }) {
-    if (error) {
-      return;
-    }
+  jobList({ data }) {
     if (data) {
       this.jobListdata = data;
       this.filterJobListData = [...this.jobListdata];
