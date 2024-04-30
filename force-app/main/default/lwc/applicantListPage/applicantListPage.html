@@ -2,7 +2,7 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-29-2024
+  @last modified on  : 04-17-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -75,6 +75,9 @@
               <td><b>Email</b></td>
               <td><b>Experience</b></td>
               <td><b>Match Percentage</b></td>
+              <template lwc:if={showEvaluateColumn}>
+                <td><b>Candidate Evaluation</b></td>
+              </template>
               <td><b>Location</b></td>
               <td><b>Status</b></td>
             </tr>
@@ -93,6 +96,23 @@
                     <p>{candidate.matchPercentage}%</p>
                   </div>
                 </td>
+                <template lwc:if={showEvaluateColumn}>
+                  <template lwc:if={showEvaluateButton}>
+                    <td><lightning-button variant="base" label="Evaluate" value={candidate.Id}
+                        onclick={handleEvaluateBtn}></lightning-button>
+                    </td>
+                  </template>
+                  <template lwc:elseif={showPending}>
+                    <td>
+                      <p>Pending</p>
+                    </td>
+                  </template>
+                  <template lwc:elseif={showScore}>
+                    <td>
+                      <p>Assesment Score - {score}</p>
+                    </td>
+                  </template>
+                </template>
                 <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.City},
                   {candidate.Country}
                 </td>

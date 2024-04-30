@@ -6,12 +6,14 @@ import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { refreshApex } from "@salesforce/apex";
+import getScore from "@salesforce/apex/JobApplicantController.getScore";
 
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
-  candidateDetails = [];
   @track filteredCandidateDetails = [];
+
+  candidateDetails = [];
   jobDetails = [];
   allIdList = [];
   selectedIdList = [];
@@ -20,20 +22,27 @@ export default class ApplicantListPage extends NavigationMixin(
 
   candidateId;
   jobId;
-
   emptyBox = emptyBox;
+  score = 0;
 
   candiateListIsEmpty = false;
   filteredListIsEmpty = false;
   checkboxSelected = false;
   selectAllChecked = false;
   disableButtons = true;
+  showEvaluateColumn = false;
+
+  showPending = true;
+  showEvaluateButton = false;
+  showScore = false;
+
   currentFilter = "All";
   labelVariable = "Sort by";
 
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
       this.jobId = sessionStorage.getItem("uniquejobId");
+      console.log("this.jobId---->", this.jobId);
     }
     this.fetchJobDetails();
   }
@@ -43,6 +52,7 @@ export default class ApplicantListPage extends NavigationMixin(
     this.wiredResult = result;
     if (result.data) {
       this.candidateDetails = result.data; // source of truth
+      console.log("this.candidateDetails-------->", this.candidateDetails);
       this.filteredCandidateDetails = this.candidateDetails;
       this.temp = this.filteredCandidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
@@ -75,14 +85,42 @@ export default class ApplicantListPage extends NavigationMixin(
     this.currentFilter = event.currentTarget.dataset.status;
     if (this.currentFilter === "Accepted") {
       this.labelVariable = "Sort By - Shortlisted";
+      this.showEvaluateColumn = true;
     } else {
       this.labelVariable = "Sort By - " + this.currentFilter;
+      this.showEvaluateColumn = false;
     }
     const status = this.currentFilter;
 
     if (status !== "All") {
       this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
         return item.Status === status;
+      });
+
+      console.log(
+        "this.filteredCandidateDetails------>",
+        JSON.stringify(this.filteredCandidateDetails)
+      );
+      this.filteredCandidateDetails.forEach((item) => {
+        if (item.AssesmentStatus === "Pending") {
+          this.showPending = true;
+          this.showEvaluateButton = false;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Given") {
+          this.showPending = false;
+          this.showEvaluateButton = true;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Evaluated") {
+          this.showPending = false;
+          this.showEvaluateButton = false;
+          this.showScore = true;
+
+          getScore({ jobid: this.jobId, candidateid: item.Id }).then(
+            (result) => {
+              this.score = result;
+            }
+          );
+        }
       });
     } else {
       this.filteredCandidateDetails = this.candidateDetails;
@@ -154,7 +192,8 @@ export default class ApplicantListPage extends NavigationMixin(
     const valueOfButton = event.target.value;
     changeStatus({
       value: valueOfButton,
-      applicantId: this.selectedIdList
+      applicantId: this.selectedIdList,
+      jobId: this.jobId
     })
       .then(() => {
         if (valueOfButton === "Accepted") {
@@ -191,5 +230,16 @@ export default class ApplicantListPage extends NavigationMixin(
     return (
       this.currentFilter === "Pending" || this.currentFilter === "Accepted"
     );
+  }
+  handleEvaluateBtn(event) {
+    const buttonValue = event.target.value;
+    sessionStorage.setItem("candidateId", buttonValue);
+    const pageReference = {
+      type: "standard__webPage",
+      attributes: {
+        url: "/evaluate-candidate"
+      }
+    };
+    this[NavigationMixin.Navigate](pageReference);
   }
 }

@@ -1,0 +1,138 @@
+<!--
+  @description       : this component contains the questions of the test
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 04-23-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+  <template lwc:if={showMain}>
+    <div class="main">
+      <div class="header">
+        <div style="display: flex;justify-content: space-between;">
+          <div class="timer">
+            <h1>Test timer - {timerDisplay}</h1>
+          </div>
+          <div class="buttons">
+            <div lwc:if={showObjective}>
+              <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
+            </div>
+            <div lwc:elseif={showSubjective}>
+              <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%;
+        margin-top: 10px;">
+          <lightning-progress-bar value={progress} size="large"></lightning-progress-bar>
+        </div>
+      </div>
+      <template lwc:if={showObjective}>
+        <template if:true={emptyObjective}>
+          <div class="empty-list">
+            <h1>No questions for this Type</h1>
+          </div>
+        </template>
+        <template if:false={emptyObjective}>
+          <template for:each={objectiveList} for:item="question" for:index="index">
+            <div key={question.Id} class="question-component" data-value={index}>
+              <div class="question-name">
+                <h1> {question.Question_Name__c}</h1>
+              </div>
+              <template for:each={question.Options__r} for:item="option">
+                <div key={option.Id} class="option-component">
+                  <p>
+                    <input type="radio" name={question.Id} value={option.Answers__c}
+                      onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
+                  </p>
+                  <p><lightning-formatted-rich-text value={option.Answers__c}></lightning-formatted-rich-text></p>
+                </div>
+              </template>
+            </div>
+          </template>
+        </template>
+      </template>
+      <template lwc:elseif={showSubjective}>
+        <template if:true={emptySubjective}>
+          <div class="empty-list">
+            <h1>No questions for this Type</h1>
+          </div>
+        </template>
+        <template if:false={emptySubjective}>
+          <template for:each={subjectiveList} for:item="question">
+            <div key={question.Id} class="question-component">
+              <div class="question-name">
+                <h1> {question.Question_Name__c}</h1>
+              </div>
+              <lightning-input-rich-text disabled-categories="INSERT_CONTENT" value={myVal}
+                onchange={handleSubjectiveChange} data-id={question.Id}></lightning-input-rich-text>
+            </div>
+          </template>
+        </template>
+      </template>
+    </div>
+  </template>
+  <!--Final screen-->
+  <template lwc:elseif={showFinalScreen}>
+    <div class="final-screen">
+      <div class="thank-you">
+        <p>
+          <lightning-icon icon-name="action:approval" alternative-text="Approved" title="Approved"></lightning-icon>
+        </p>
+        <p style="margin-left: 10px;">Thank you for taking an Online Proctored exam with us!</p>
+      </div>
+      <div style="height: 70vh;text-align: -webkit-center;">
+        <div class="feedback-container">
+          <div style="line-height: 30px;font-size: medium;">
+            A proctor has closed your exam window.
+            <br />
+            If you believe this was in error, please contact your recruiter.
+            <br />
+            You may now close this window or give us a valueable feedback.
+          </div>
+          <div class="slds-form-element" style="width: 50vw;">
+            <label style="float: inline-start;" class="slds-form-element__label"
+              for="text-input-id-47">Experience/Feedback :</label>
+            <div class="slds-form-element__control">
+              <lightning-input type="text" placeholder="Write here......" label="Feedback/Suggestions"
+                onchange={getFeedback}></lightning-input>
+            </div>
+          </div>
+          <div style="padding:2%">
+            <lightning-button style="text-align: end;" variant="brand" label="Submit" title="Submit"
+              onclick={handleFeedbackSubmit} class="slds-m-left_x-small"></lightning-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <template lwc:if={showWarningModal}>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title"> WARNING</h2>
+          <lightning-button-icon icon-name="utility:close" onclick={closeModal} alternative-text="Close"
+            class="slds-modal__close"></lightning-button-icon>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" style="text-align: center">
+          <h1>You cannot go back and edit your responses if you click next!!</h1>
+        </div>
+        <footer class="slds-modal__footer">
+          <div style="text-align: right;">
+            <lightning-button variant="destructive" label="Close" onclick={closeModal}
+              style="padding-right: 1%"></lightning-button>
+            <template lwc:if={showObjective}>
+              <lightning-button variant="brand" type="submit" label="Next"
+                onclick={handleNextSubjective}></lightning-button>
+            </template>
+            <template lwc:elseif={showSubjective}>
+              <lightning-button variant="brand" type="submit" label="Submit"
+                onclick={handleFinalSubmit}></lightning-button>
+            </template>
+          </div>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>

@@ -1,0 +1,128 @@
+.main {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    margin: 0 auto;
+}
+
+.timer {
+    text-align: center;
+}
+
+.timer h1 {
+    font-size: 20px;
+    margin: 0;
+    color: #333;
+}
+
+.header {
+    background-color: white;
+    position: sticky;
+    top: 0;
+    padding: 1%;
+}
+
+.question-card h1 {
+    font-size: 20px;
+    margin: 1%;
+    cursor: pointer;
+}
+
+.question-card p {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.question-card div {
+    margin-bottom: 1%;
+}
+
+.question-component {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    margin: 1%;
+}
+
+.option-component {
+    padding-left: 1%;
+    display: flex;
+    flex-direction: row;
+}
+
+.question-name {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.question-name h1 {
+    font-size: 25px;
+    padding: 1%;
+}
+
+.option-component p {
+    font-size: 20px;
+    padding-left: 1%;
+}
+
+.empty-list {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.empty-list h1 {
+    font-size: 24px;
+    color: #888;
+}
+
+.option-component input[type="radio"] {
+    margin-right: 5px;
+}
+
+lightning-input {
+    margin-top: 10px;
+}
+
+.question-component:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+.question-component lightning-input{
+    width: 80%;
+    height: 70%;
+}
+.question-component{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+}
+.final-screen {
+    text-align: center;
+    height: 90vh;
+    text-wrap: wrap;
+    align-content: center;
+
+        .thank-you{
+            font-size: x-large;
+            font-weight: bold;
+            height: 20vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-container {
+            background: aliceblue;
+            height: 50vh;
+            width: 60vw;
+            padding: 2%;
+        }
+}
