@@ -8,7 +8,6 @@ import Id from "@salesforce/user/Id";
 import getObjectiveResponse from "@salesforce/apex/testingEnvironmentController.getObjectiveResponse";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getSubjectiveResponse from "@salesforce/apex/testingEnvironmentController.getSubjectiveResponse";
-import getFeedbackFromCandidate from "@salesforce/apex/testingEnvironmentController.getFeedbackFromCandidate";
 
 export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
@@ -16,20 +15,14 @@ export default class TestingEnvironmentComponent extends LightningElement {
   @track subjectiveList = [];
   @track selectedOptions = [];
   @track timeRemaining;
-
   subjectiveResponseAndId = {};
 
   userId = Id;
-  tabSwitchCount = 0;
-  progress = 100;
-  myVal = "";
-  feedback = "";
-
   jobid;
+  tabSwitchCount = 0;
+  myVal = "";
   success;
   error;
-  progressPercentage;
-  timerTimeout;
 
   showSubjective = false;
   showObjective = true;
@@ -38,79 +31,71 @@ export default class TestingEnvironmentComponent extends LightningElement {
   showWarningModal = false;
   showFinalScreen = false;
   showMain = true;
+  progress = 100;
+  progressPercentage;
+  timerTimeout;
 
   constructor() {
     super();
-    this.visibilityChangeListener = this.visibilityChangeListener.bind(this);
-    this.contextMenuListener = this.contextMenuListener.bind(this);
-    this.beforeUnloadListener = this.beforeUnloadListener.bind(this);
-    this.copyListener = this.copyListener.bind(this);
-    this.keyupListener = this.keyupListener.bind(this);
-
-    window.addEventListener("visibilitychange", this.visibilityChangeListener);
-    this.template.addEventListener("contextmenu", this.contextMenuListener);
-    window.addEventListener("beforeunload", this.beforeUnloadListener);
-    document.addEventListener("copy", this.copyListener, false);
-    window.addEventListener("keyup", this.keyupListener);
-  }
-
-  visibilityChangeListener() {
-    if (document.visibilityState === "hidden") {
-      if (this.tabSwitchCount < 2) {
-        alert(
-          "WARNING!!! \nDo not switch tabs otherwise paper will be submitted after two times"
-        );
-      }
-      this.tabSwitchCount++;
-      if (this.tabSwitchCount >= 2) {
-        this.getResponse();
-        alert(
-          "You switched tabs more than twice \nYour test is over and response has been recorded"
-        );
-        window.removeEventListener(
-          "visibilitychange",
-          this.visibilityChangeListener
-        );
-      }
-    }
-  }
-
-  contextMenuListener(event) {
-    event.preventDefault();
-    alert("No right click allowed");
-  }
-
-  beforeUnloadListener(event) {
-    event.preventDefault();
-    alert("Do not reload");
     if (!this.showFinalScreen) {
-      this.getResponse();
-    }
-  }
+      window.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+          if (this.tabSwitchCount < 2) {
+            alert(
+              "WARNING!!! \nDo not switch tabs otherwise paper will be submitted after two times"
+            );
+          }
+          this.tabSwitchCount++;
+          if (this.tabSwitchCount >= 2) {
+            this.getResponse();
+            alert(
+              "You switched tabs more than twice \nYour test is over and response has been recorded"
+            );
+          }
+        }
+      });
 
-  copyListener(event) {
-    event.clipboardData.setData("text/plain", "*pasting is prevented*");
-    alert("Do not copy paste");
-    event.preventDefault();
-  }
+      this.template.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        alert("No right click allowed");
+      });
 
-  keyupListener(event) {
-    if (
-      event.key === "F12" ||
-      event.key === "F11" ||
-      event.key === "F10" ||
-      event.key === "F9" ||
-      event.key === "F8" ||
-      event.key === "F7" ||
-      event.key === "F6" ||
-      event.key === "F5" ||
-      event.key === "F4" ||
-      event.key === "F3" ||
-      event.key === "F2" ||
-      event.key === "F1"
-    ) {
-      alert("Cannot use function keys");
-      return false;
+      window.addEventListener("beforeunload", (event) => {
+        event.preventDefault();
+        //event.returnValue = "Do not reload";
+        alert("Do not reload");
+        this.getResponse();
+      });
+
+      document.addEventListener(
+        "copy",
+        (event) => {
+          event.clipboardData.setData("text/plain", "*pasting is prevented*");
+          alert("Do not copy paste");
+          event.preventDefault();
+        },
+        false
+      );
+
+      window.addEventListener("keyup", (event) => {
+        if (
+          event.key === "F12" ||
+          event.key === "F11" ||
+          event.key === "F10" ||
+          event.key === "F9" ||
+          event.key === "F8" ||
+          event.key === "F7" ||
+          event.key === "F6" ||
+          event.key === "F5" ||
+          event.key === "F4" ||
+          event.key === "F3" ||
+          event.key === "F2" ||
+          event.key === "F1"
+        ) {
+          alert("Cannot use function keys");
+          return false;
+        }
+      });
     }
   }
 
@@ -128,6 +113,7 @@ export default class TestingEnvironmentComponent extends LightningElement {
         if (result) {
           this.timeRemaining = result;
           this.startTimer();
+          this.startProgressBar();
         }
       })
       .catch((error) => {
@@ -159,27 +145,27 @@ export default class TestingEnvironmentComponent extends LightningElement {
       if (unit === "mins") {
         this.timeRemaining = parseInt(minutes, 10) * 60;
       } else {
+        console.error('Invalid time format. Expected format: "15 mins"');
         return;
       }
     } else {
+      console.error("Time remaining not provided.");
       return;
     }
-    const timeInitial = this.timeRemaining;
+
     this.timerTimeout = setInterval(() => {
       this.timeRemaining--;
       if (this.timeRemaining <= 0) {
-        console.log("time remaining", this.timeRemaining);
         clearInterval(this.timerTimeout);
         alert("Time is up!");
         this.getResponse();
         this.showFinalScreen = true;
         this.showMain = false;
-      } else {
-        this.progress =
-          100 - ((timeInitial - this.timeRemaining) / timeInitial) * 100;
       }
     }, 1000);
   }
+
+  startProgressBar() {}
 
   handleObjectiveOptionChange(event) {
     const questionId = event.target.dataset.id;
@@ -236,7 +222,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
           "Your Response has been recorded",
           "success"
         );
-        this.removeEventListeners();
         this.showFinalScreen = true;
         this.showWarningModal = false;
         this.showSubjective = false;
@@ -248,16 +233,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
       });
   }
 
-  removeEventListeners() {
-    window.removeEventListener(
-      "visibilitychange",
-      this.visibilityChangeListener
-    );
-    this.template.removeEventListener("contextmenu", this.contextMenuListener);
-    document.removeEventListener("copy", this.copyListener, false);
-    window.removeEventListener("keyup", this.keyupListener);
-  }
-
   showToast(title, message, variant) {
     this.dispatchEvent(
       new ShowToastEvent({
@@ -266,24 +241,5 @@ export default class TestingEnvironmentComponent extends LightningElement {
         variant: variant
       })
     );
-  }
-
-  getFeedback(event) {
-    this.feedback = event.target.value;
-    console.log("this.feedback------>", this.feedback);
-  }
-
-  handleFeedbackSubmit() {
-    getFeedbackFromCandidate({
-      feedback: this.feedback,
-      userId: this.userId,
-      jobId: this.jobId
-    }).then(() => {
-      this.showToast(
-        "Feeback Recorded",
-        "Your Feedback has been saved",
-        "success"
-      );
-    });
   }
 }

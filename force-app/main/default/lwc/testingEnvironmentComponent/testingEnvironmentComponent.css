@@ -15,7 +15,14 @@
     color: #333;
 }
 
+.buttons div {
+    margin-right: 10px;
+}
+
 .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     background-color: white;
     position: sticky;
     top: 0;
@@ -105,24 +112,10 @@ lightning-input {
     align-items: left;
 }
 .final-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    height: 90vh;
     text-wrap: wrap;
-    align-content: center;
-
-        .thank-you{
-            font-size: x-large;
-            font-weight: bold;
-            height: 20vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .feedback-container {
-            background: aliceblue;
-            height: 50vh;
-            width: 60vw;
-            padding: 2%;
-        }
+    font-size: 25px;
 }

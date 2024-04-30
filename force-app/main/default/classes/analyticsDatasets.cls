@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 03-11-2024
+ * @last modified on  : 04-12-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -92,8 +92,7 @@ public with sharing class analyticsDatasets {
       Map<String, Integer> ageMap = new Map<String, Integer>();
 
       for (Date dob : dobList) {
-        calculateAge newInstance = new calculateAge();
-        String ageGroup = newInstance.calculateAgeMethod(dob);
+        String ageGroup = calculateAge.calculateAgeMethod(dob);
         if (ageMap.containsKey(ageGroup)) {
           ageMap.put(ageGroup, ageMap.get(ageGroup) + 1);
         } else {

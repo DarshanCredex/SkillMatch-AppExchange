@@ -2,28 +2,27 @@
   @description       : this component contains the questions of the test
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-23-2024
+  @last modified on  : 04-05-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
   <template lwc:if={showMain}>
     <div class="main">
       <div class="header">
-        <div style="display: flex;justify-content: space-between;">
+        <div style="display: flex;flex-direction: column;">
           <div class="timer">
-            <h1>Test timer - {timerDisplay}</h1>
+          <h1>Test timer - {timerDisplay}</h1>
           </div>
           <div class="buttons">
-            <div lwc:if={showObjective}>
-              <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
-            </div>
-            <div lwc:elseif={showSubjective}>
-              <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
-            </div>
+          <div lwc:if={showObjective}>
+            <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
+          </div>
+          <div lwc:elseif={showSubjective}>
+            <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
+          </div>
           </div>
         </div>
-        <div style="width: 100%;
-        margin-top: 10px;">
+        <div>
           <lightning-progress-bar value={progress} size="large"></lightning-progress-bar>
         </div>
       </div>
@@ -45,7 +44,7 @@
                     <input type="radio" name={question.Id} value={option.Answers__c}
                       onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
                   </p>
-                  <p><lightning-formatted-rich-text value={option.Answers__c}></lightning-formatted-rich-text></p>
+                  <p>{option.Answers__c}</p>
                 </div>
               </template>
             </div>
@@ -72,40 +71,15 @@
       </template>
     </div>
   </template>
+
   <!--Final screen-->
   <template lwc:elseif={showFinalScreen}>
     <div class="final-screen">
-      <div class="thank-you">
-        <p>
-          <lightning-icon icon-name="action:approval" alternative-text="Approved" title="Approved"></lightning-icon>
-        </p>
-        <p style="margin-left: 10px;">Thank you for taking an Online Proctored exam with us!</p>
-      </div>
-      <div style="height: 70vh;text-align: -webkit-center;">
-        <div class="feedback-container">
-          <div style="line-height: 30px;font-size: medium;">
-            A proctor has closed your exam window.
-            <br />
-            If you believe this was in error, please contact your recruiter.
-            <br />
-            You may now close this window or give us a valueable feedback.
-          </div>
-          <div class="slds-form-element" style="width: 50vw;">
-            <label style="float: inline-start;" class="slds-form-element__label"
-              for="text-input-id-47">Experience/Feedback :</label>
-            <div class="slds-form-element__control">
-              <lightning-input type="text" placeholder="Write here......" label="Feedback/Suggestions"
-                onchange={getFeedback}></lightning-input>
-            </div>
-          </div>
-          <div style="padding:2%">
-            <lightning-button style="text-align: end;" variant="brand" label="Submit" title="Submit"
-              onclick={handleFeedbackSubmit} class="slds-m-left_x-small"></lightning-button>
-          </div>
-        </div>
-      </div>
+      <h1>Your assessment is complete, your response has been recorded. You may close this tab</h1>
     </div>
   </template>
+
+
   <template lwc:if={showWarningModal}>
     <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
@@ -135,4 +109,5 @@
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </template>
+
 </template>

@@ -1,14 +1,11 @@
+/* eslint-disable array-callback-return */
 import { LightningElement, api, track, wire } from "lwc";
-
 import alternateCompanyLogo from "@salesforce/resourceUrl/Alternate_Company_Logo";
 import getAppliedJobs from "@salesforce/apex/CandidateAppliedJobsController.getAppliedJobs";
 import { NavigationMixin } from "lightning/navigation";
 import UserId from "@salesforce/user/Id";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
-
-export default class CandidateAppliedJobs extends NavigationMixin(
-  LightningElement
-) {
+export default class CandidateAppliedJobs extends NavigationMixin(LightningElement) {
   companyLogo = alternateCompanyLogo;
   isShortlisted = false;
   assessmentButtonCss = "job-logo";
@@ -25,6 +22,8 @@ export default class CandidateAppliedJobs extends NavigationMixin(
   @track userId = UserId;
   @track selectedTab = "Applied";
   @track errorMessage = false;
+  showAssesmentButton = false;
+  disableAssesmentButton = false;
 
   handleSearchTitleChange(event) {
     this.searchTitle = event.target.value;
@@ -39,11 +38,19 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     searchCompany: "$searchCompany",
     userId: "$userId"
   })
-  appliedJobList({ data, error }) {
+  wiredAppliedJobList({ data, error }) {
     if (data) {
       this.isLoading = true;
       console.log("Received data-->", data);
       this.appliedJob = data;
+
+      this.appliedJob.jobWrapperList.forEach((item) => {
+        if (item.questionPresent === true) {
+          this.showAssesmentButton = true;
+        } else {
+          this.showAssesmentButton = false;
+        }
+      });
       if (this.selectedTab === "Pending") {
         this.handleTabChange3();
       } else if (this.selectedTab === "Shortlisted") {
@@ -79,7 +86,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     this.addPendingCss = "information";
     this.isShortlisted = false;
     this.selectedJob = this.appliedJob;
-    console.log("selectedJob-->", this.selectedJob);
     if (this.selectedJob.jobWrapperList.length > 0) {
       this.errorMessage = false;
     } else {
@@ -96,22 +102,18 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     this.assessmentButtonCss = "job-logo";
     this.selectedJob = this.appliedJob;
     this.isShortlisted = true;
-    console.log("selectedJob21-->", this.selectedJob);
     try {
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Shortlisted"
       );
-      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
-      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
-      console.error("Error in filtering shortlisted jobs --> ", e.message);
+      console.error("Error in filtering shortlisted jobs ------> ", e.message);
     } finally {
-      console.log("Selected Job after filter -->", this.selectedJob);
       if (this.selectedJob.jobWrapperList.length > 0) {
         this.errorMessage = false;
       } else {
@@ -120,6 +122,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+  
   handleTabChange3() {
     this.isLoading = true;
     this.selectedTab = "Pending";
@@ -133,12 +136,10 @@ export default class CandidateAppliedJobs extends NavigationMixin(
       const filteredJobList = this.selectedJob.jobWrapperList.filter(
         (job) => job.status === "Pending"
       );
-      // Create a new object with the filtered jobWrapperList
       const updatedSelectedJob = {
         ...this.selectedJob,
         jobWrapperList: filteredJobList
       };
-      // Assign the new object to this.selectedJob
       this.selectedJob = updatedSelectedJob;
     } catch (e) {
       console.error("Error in filtering shortlisted jobs --> ", e.message);
@@ -152,6 +153,7 @@ export default class CandidateAppliedJobs extends NavigationMixin(
     }
     this.isLoading = false;
   }
+
   handleAssesmentButton(event) {
     const jobid = event.target.value;
     sessionStorage.setItem("jobId", jobid);

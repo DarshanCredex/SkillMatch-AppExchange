@@ -12,7 +12,6 @@ export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
   @track filteredCandidateDetails = [];
-
   candidateDetails = [];
   jobDetails = [];
   allIdList = [];
@@ -31,10 +30,6 @@ export default class ApplicantListPage extends NavigationMixin(
   selectAllChecked = false;
   disableButtons = true;
   showEvaluateColumn = false;
-
-  showPending = true;
-  showEvaluateButton = false;
-  showScore = false;
 
   currentFilter = "All";
   labelVariable = "Sort by";

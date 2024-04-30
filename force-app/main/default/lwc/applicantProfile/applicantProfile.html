@@ -2,11 +2,10 @@
   @description       : applicant details page
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-21-2024
+  @last modified on  : 04-15-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-
     <template for:each={applicantDetails} for:item="applicant">
         <div key={applicant.Id} class="main">
             <div class="profile-details">
@@ -21,7 +20,7 @@
                             <p>{applicant.Job_Title__c}</p>
                         </div>
                         <div class="buttons">
-                            <lightning-button variant="Neutral" label="Download CV" 
+                            <lightning-button variant="Neutral" label="Download CV"
                                 onclick={handleResumePreview}></lightning-button>
                             <lightning-button value="Accepted" variant="brand" label="Shortlist" disabled={IsAccepted}
                                 onclick={handleShortlistButton}></lightning-button>
@@ -62,5 +61,4 @@
             </div>
         </div>
     </template>
-      
 </template>
