@@ -37,7 +37,8 @@ public class TestDataFactory {
       Phone_Number__c = '1234567890',
       Skills__c = 'Java, JavaScript',
       Experience__c = 5,
-      Job_Title__c = 'Software Engineer'
+      Job_Title__c = 'Software Engineer',
+      Date_of_birth__c = Date.valueOf('1996-10-10')
     );
     insert candidate;
     return candidate;
@@ -77,7 +78,21 @@ public class TestDataFactory {
     Job_Applicants__c applicant = new Job_Applicants__c(
       CandidateId__c = candidateId,
       Job_Id__c = jobId,
-      Application_Status__c = 'Pending'
+      Application_Status__c = 'Pending',
+      Assesment_Status__c = 'Pending'
+    );
+    insert applicant;
+    return applicant;
+  }
+  public static Job_Applicants__c createJobApplicantWithAssesmentGiven(
+    Id candidateId,
+    Id jobId
+  ) {
+    Job_Applicants__c applicant = new Job_Applicants__c(
+      CandidateId__c = candidateId,
+      Job_Id__c = jobId,
+      Application_Status__c = 'Pending',
+      Assesment_Status__c = 'Given'
     );
     insert applicant;
     return applicant;
@@ -106,7 +121,7 @@ public class TestDataFactory {
   public static List<Question__c> createSubjectiveQuestion(id jobId) {
     List<Question__c> questionList = new List<Question__c>{
       new Question__c(
-        Job__c = jobId, 
+        Job__c = jobId,
         Question_Name__c = 'Test Question',
         Type__c = 'Subjective',
         Weightage__c = 2
@@ -116,12 +131,9 @@ public class TestDataFactory {
     return questionList;
   }
 
-  public static List<Options__c> createSubjectiveOptions(id questionId){
+  public static List<Options__c> createSubjectiveOptions(id questionId) {
     list<options__c> optionsList = new List<Options__c>{
-      new Options__c(
-        Question__c = questionId,
-        Answers__c = 'Test Answer'
-      )
+      new Options__c(Question__c = questionId, Answers__c = 'Test Answer')
     };
     insert optionsList;
     return optionsList;
