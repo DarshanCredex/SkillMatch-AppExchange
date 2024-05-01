@@ -116,7 +116,7 @@ public class TestDataFactory {
     return questionList;
   }
 
-  public static List<Options__c> createSubjectiveOption(id questionId){
+  public static List<Options__c> createSubjectiveOptions(id questionId){
     list<options__c> optionsList = new List<Options__c>{
       new Options__c(
         Question__c = questionId,

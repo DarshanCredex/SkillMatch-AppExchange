@@ -33,7 +33,7 @@ private class QuestionsControllerTest {
     List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
       job.id
     );
-    List<Options__c> option = TestDataFactory.createSubjectiveOption(
+    List<Options__c> option = TestDataFactory.createSubjectiveOptions(
       question[0].id
     );
     list<Question__c> result = QuestionsController.fetchQuestions(job.id);
@@ -48,20 +48,16 @@ private class QuestionsControllerTest {
       candidate.id,
       job.id
     );
-
     List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
       job.id
     );
-
-    List<Options__c> option = TestDataFactory.createSubjectiveOption(
+    List<Options__c> option = TestDataFactory.createSubjectiveOptions(
       question[0].id
     );
-
     string result = QuestionsController.getResponsesAndQuestions(
       job.id,
       candidate.id
     );
-
     System.assert(result != null);
   }
 
@@ -92,11 +88,8 @@ private class QuestionsControllerTest {
     List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
       job.id
     );
-
     QuestionsController.deleteQuestion(question[0].id);
-
-    integer result = [SELECT COUNT() FROM Question__c WHERE Job__c = :job.id];
-
-    System.assert(result == 0);
+    integer result = [select count() from Question__c where Job__c = :job.id];
+    System.assert(result==0);
   }
 }
