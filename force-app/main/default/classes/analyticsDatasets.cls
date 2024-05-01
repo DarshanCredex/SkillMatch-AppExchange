@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-23-2024
+ * @last modified on  : 05-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -31,7 +31,7 @@ public with sharing class analyticsDatasets {
         FROM Job__c
         WHERE Company_Name__c = :companyname
       ]) {
-        jobIdList.add(job.Id);
+        jobIdList.add(job.Id); 
       }
 
       List<Id> jobApplicantIdList = new List<Id>();
