@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-24-2024
+ * @last modified on  : 05-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -144,7 +144,6 @@ public with sharing class testingEnvironmentController {
         );
       }
     } catch (Exception e) {
-      System.debug('Exception in changeAssesmentStatus: ' + e.getMessage());
       throw new AuraHandledException(e.getMessage());
     }
   }
