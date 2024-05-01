@@ -2,14 +2,13 @@
  * @description       :
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             :
- * @last modified on  : 03-05-2024
+ * @last modified on  : 05-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class loginLwcController {
     @AuraEnabled(cacheable=true)
     public static Boolean loginLwcControllerMethod(String email, String password) {
         Boolean authenticated = false;
-        system.debug('email---->'+email);
         Candidate_Details__c candidate = [
             SELECT password__c
             FROM Candidate_Details__c

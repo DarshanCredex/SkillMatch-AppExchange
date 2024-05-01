@@ -2,7 +2,7 @@
  * @description       : questions and options custom object controller class
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-23-2024
+ * @last modified on  : 05-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class QuestionsController {
@@ -114,7 +114,6 @@ public with sharing class QuestionsController {
       throw new AuraHandledException(e.getMessage());
     }
   }
-
   @AuraEnabled(cacheable=true)
   public static list<Question__c> fetchQuestions(Id jobId) {
     try {

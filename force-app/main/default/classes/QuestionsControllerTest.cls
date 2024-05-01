@@ -22,8 +22,82 @@
 @isTest
 private class QuestionsControllerTest {
   @isTest
-  static void TestuestionTypeValue() {
+  static void TestQuestionTypeValue() {
     list<string> result = QuestionsController.questionTypeValue();
     System.assertEquals(2, result.size());
+  }
+
+  @isTest
+  static void TestFetchQuestions() {
+    Job__c job = TestDataFactory.createJob();
+    List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
+      job.id
+    );
+    List<Options__c> option = TestDataFactory.createSubjectiveOption(
+      question[0].id
+    );
+    list<Question__c> result = QuestionsController.fetchQuestions(job.id);
+    System.assertEquals(1, result.size());
+  }
+
+  @isTest
+  static void TestGetResponsesAndQuestions() {
+    Job__c job = TestDataFactory.createJob();
+    Candidate_Details__c candidate = TestDataFactory.createCandidateDetails();
+    Job_Applicants__c applicant = TestDataFactory.createJobApplicant(
+      candidate.id,
+      job.id
+    );
+
+    List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
+      job.id
+    );
+
+    List<Options__c> option = TestDataFactory.createSubjectiveOption(
+      question[0].id
+    );
+
+    string result = QuestionsController.getResponsesAndQuestions(
+      job.id,
+      candidate.id
+    );
+
+    System.assert(result != null);
+  }
+
+  @isTest
+  static void TestUpdateScore() {
+    Job__c job = TestDataFactory.createJob();
+    Candidate_Details__c candidate = TestDataFactory.createCandidateDetails();
+    Job_Applicants__c applicant = TestDataFactory.createJobApplicant(
+      candidate.id,
+      job.id
+    );
+    QuestionsController.updateScore(25.0, job.id, candidate.id);
+    String result;
+    for (Job_Applicants__c app : [
+      SELECT Assesment_Status__c
+      FROM Job_Applicants__c
+      WHERE id = :applicant.id
+    ]) {
+      result = app.Assesment_Status__c;
+    }
+    System.assert(result != null);
+    System.assertEquals('Evaluated', result);
+  }
+
+  @isTest
+  static void TestDeleteQuestion() {
+
+    Job__c job = TestDataFactory.createJob();
+    List<Question__c> question = TestDataFactory.createSubjectiveQuestion(
+      job.id
+    );
+
+    QuestionsController.deleteQuestion(question[0].id);
+
+    integer result = [select count() from Question__c where Job__c = :job.id];
+
+    System.assert(result==0);
   }
 }
