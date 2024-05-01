@@ -2,7 +2,7 @@
  * @description       : test data for apex unit tests
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-30-2024
+ * @last modified on  : 05-01-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 @isTest
@@ -101,5 +101,29 @@ public class TestDataFactory {
     };
     insert workExpList;
     return workExpList;
+  }
+
+  public static List<Question__c> createSubjectiveQuestion(id jobId) {
+    List<Question__c> questionList = new List<Question__c>{
+      new Question__c(
+        Job__c = jobId, 
+        Question_Name__c = 'Test Question',
+        Type__c = 'Subjective',
+        Weightage__c = 2
+      )
+    };
+    insert questionList;
+    return questionList;
+  }
+
+  public static List<Options__c> createSubjectiveOption(id questionId){
+    list<options__c> optionsList = new List<Options__c>{
+      new Options__c(
+        Question__c = questionId,
+        Answers__c = 'Test Answer'
+      )
+    };
+    insert optionsList;
+    return optionsList;
   }
 }
