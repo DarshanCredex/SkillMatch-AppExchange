@@ -9,20 +9,21 @@
   <template lwc:if={showMain}>
     <div class="main">
       <div class="header">
-        <div style="display: flex;flex-direction: column;">
+        <div style="display: flex;justify-content: space-between;">
           <div class="timer">
-          <h1>Test timer - {timerDisplay}</h1>
+            <h1>Test timer - {timerDisplay}</h1>
           </div>
           <div class="buttons">
-          <div lwc:if={showObjective}>
-            <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
-          </div>
-          <div lwc:elseif={showSubjective}>
-            <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
-          </div>
+            <div lwc:if={showObjective}>
+              <lightning-button variant="brand" label="Next" onclick={handleNext}></lightning-button>
+            </div>
+            <div lwc:elseif={showSubjective}>
+              <lightning-button variant="success" label="Submit" onclick={handleNext}></lightning-button>
+            </div>
           </div>
         </div>
-        <div>
+        <div style="width: 100%;
+        margin-top: 10px;">
           <lightning-progress-bar value={progress} size="large"></lightning-progress-bar>
         </div>
       </div>
@@ -44,7 +45,7 @@
                     <input type="radio" name={question.Id} value={option.Answers__c}
                       onchange={handleObjectiveOptionChange} data-id={option.Id}></input>
                   </p>
-                  <p>{option.Answers__c}</p>
+                  <p><lightning-formatted-rich-text value={option.Answers__c}></lightning-formatted-rich-text></p>
                 </div>
               </template>
             </div>
@@ -71,15 +72,35 @@
       </template>
     </div>
   </template>
-
   <!--Final screen-->
   <template lwc:elseif={showFinalScreen}>
     <div class="final-screen">
-      <h1>Your assessment is complete, your response has been recorded. You may close this tab</h1>
+      <div class="thank-you">
+        <p>
+          <lightning-icon icon-name="action:approval" alternative-text="Approved" title="Approved"></lightning-icon>
+        </p>
+        <p style="margin-left: 10px;">Thank you for taking an Online Proctored exam with us!</p>
+      </div>
+      <div style="height: 70vh;text-align: -webkit-center;">
+        <div class="feedback-container">
+          <div style="line-height: 30px;font-size: medium;">
+            A proctor has closed your exam window.
+            <br />
+            If you believe this was in error, please contact your recruiter.
+            <br />
+            You may now close this window or give us a valueable feedback.
+          </div>
+          <div class="slds-form-element" style="width: 50vw;">
+            <label style="float: inline-start;" class="slds-form-element__label" for="text-input-id-47">Experience/Feedback :</label>
+            <div class="slds-form-element__control">
+              <input type="text" id="text-input-id-47" placeholder="Write here…" class="slds-input" style="height: 15vh;margin-bottom: 2vh;" />
+            </div>
+          </div>
+          <lightning-button style="text-align: end;" variant="brand" label="Submit" title="Submit" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+        </div>
+      </div>
     </div>
   </template>
-
-
   <template lwc:if={showWarningModal}>
     <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
@@ -109,5 +130,4 @@
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </template>
-
 </template>
