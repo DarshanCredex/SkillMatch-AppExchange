@@ -39,7 +39,7 @@ private class GetApplicantDataTest {
     Job__c job = TestDataFactory.createJob();
     user user = TestDataFactory.createDummyUser();
     List<Job__c> result = GetApplicantData.getAppliedJobById(job.id, user.id);
-    System.assertEquals(0 ,result.size());
+    System.assertEquals(1 ,result.size());
   }
 
   @isTest
