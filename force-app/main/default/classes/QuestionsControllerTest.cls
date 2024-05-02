@@ -89,7 +89,67 @@ private class QuestionsControllerTest {
       job.id
     );
     QuestionsController.deleteQuestion(question[0].id);
-    integer result = [select count() from Question__c where Job__c = :job.id];
-    System.assert(result==0);
+    integer result = [SELECT COUNT() FROM Question__c WHERE Job__c = :job.id];
+    System.assert(result == 0);
+  }
+
+  @isTest
+  static void TestInsertQuestionAndOption() {
+    Job__c job = TestDataFactory.createJob();
+
+    string questionName = 'Test';
+    Decimal weightage = 2.0;
+    string type_1 = 'Objective';
+    string type_2 = 'Subjective';
+    string optionA = 'a';
+    string optionB = 'b';
+    string optionC = 'c';
+    string optionD = 'd';
+    boolean checkbox_1 = false;
+    boolean checkbox_2 = true;
+    boolean checkbox_3 = false;
+    boolean checkbox_4 = false;
+    string answer = 'abcd';
+
+    test.startTest();
+    QuestionsController.insertQuestionAndOptions(
+      questionName,
+      weightage,
+      type_1,
+      optionA,
+      optionB,
+      optionC,
+      optionD,
+      checkbox_1,
+      checkbox_2,
+      checkbox_3,
+      checkbox_4,
+      job.id,
+      answer
+    );
+    QuestionsController.insertQuestionAndOptions(
+      questionName,
+      weightage,
+      type_2,
+      optionA,
+      optionB,
+      optionC,
+      optionD,
+      checkbox_1,
+      checkbox_2,
+      checkbox_3,
+      checkbox_4,
+      job.id,
+      answer
+    );
+    test.stopTest();
+    integer questionCount = [SELECT COUNT() FROM Question__c];
+    integer optionCount = [SELECT COUNT() FROM options__c];
+
+    integer questionCount_2 = [SELECT COUNT() FROM Question__c];
+    integer optionCount_2 = [SELECT COUNT() FROM options__c];
+
+    System.assert(questionCount != 0 && optionCount != 0);
+    System.assert(questionCount_2 != 0 && optionCount_2 != 0);
   }
 }
