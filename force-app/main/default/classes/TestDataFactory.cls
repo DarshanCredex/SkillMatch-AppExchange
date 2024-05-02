@@ -2,7 +2,7 @@
  * @description       : test data for apex unit tests
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 05-01-2024
+ * @last modified on  : 05-02-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 @isTest
@@ -137,5 +137,39 @@ public class TestDataFactory {
     };
     insert optionsList;
     return optionsList;
+  }
+
+  public static user createrRecruiterUser(id contactId) {
+    User recruiterUser = new User(
+      Username = 'testrecruiter@example.com',
+      Email = 'testrecruiter@example.com',
+      LastName = 'Test',
+      FirstName = 'Recruiter',
+      Alias = 'trec',
+      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Recruiter']
+      .Id,
+      EmailEncodingKey = 'UTF-8',
+      LanguageLocaleKey = 'en_US',
+      LocaleSidKey = 'en_US',
+      TimeZoneSidKey = 'America/Los_Angeles',
+      ContactId = contactId
+    );
+    insert recruiterUser;
+    return recruiterUser;
+  }
+
+  public static account createAccount() {
+    Account objAcc = new Account(name = 'Test Account');
+    insert objAcc;
+    return objAcc;
+  }
+
+  public static contact createContact(id accountId){
+     Contact objContact = new Contact(
+      LastName = 'testCon',
+      AccountId = accountId
+    );
+    insert objContact;
+    return objContact;
   }
 }
