@@ -2,7 +2,7 @@
   @description       : candidate list component who have applied for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-08-2024
+  @last modified on  : 04-25-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -97,9 +97,21 @@
                   </div>
                 </td>
                 <template lwc:if={showEvaluateColumn}>
-                  <td><lightning-button variant="base" label="Evaluate" value={candidate.Id}
-                      onclick={handleEvaluateBtn}></lightning-button>
-                  </td>
+                  <template lwc:if={showEvaluateButton}>
+                    <td><lightning-button variant="base" label="Evaluate" value={candidate.Id}
+                        onclick={handleEvaluateBtn}></lightning-button>
+                    </td>
+                  </template>
+                  <template lwc:elseif={showPending}>
+                    <td>
+                      <p>Pending</p>
+                    </td>
+                  </template>
+                  <template lwc:elseif={showScore}>
+                    <td>
+                      <p>Assesment Score - {score}</p>
+                    </td>
+                  </template>
                 </template>
                 <td data-candidateid={candidate.Id} onclick={navigateToDetailsPage}>{candidate.City},
                   {candidate.Country}

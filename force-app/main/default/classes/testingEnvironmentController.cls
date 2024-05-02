@@ -2,7 +2,7 @@
  * @description       : apex controller for the testing environment component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-15-2024
+ * @last modified on  : 04-24-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class testingEnvironmentController {
@@ -74,7 +74,6 @@ public with sharing class testingEnvironmentController {
           response.Question__c = option.Question__c;
           responseList.add(response);
         }
-        System.debug('responseList' + responseList);
         if (!responseList.isEmpty()) {
           insert responseList;
         }
@@ -91,7 +90,6 @@ public with sharing class testingEnvironmentController {
     id userid,
     Map<Id, String> subjectiveResponseAndId
   ) {
-    System.debug('subjectiveResponseAndId------->' + subjectiveResponseAndId);
     try {
       id candidateid = [
         SELECT id
@@ -177,5 +175,26 @@ public with sharing class testingEnvironmentController {
       );
     }
     return assessmentStatus;
+  }
+
+  @AuraEnabled
+  public static void getFeedbackFromCandidate(
+    String feedback,
+    Id userId,
+    Id jobId
+  ) {
+    List<Job_Applicants__c> applicants = [
+      SELECT Id, Feedback__c
+      FROM Job_Applicants__c
+      WHERE CandidateId__r.User__c = :userId AND Job_Id__c = :jobId
+      LIMIT 1
+    ];
+    if (!applicants.isEmpty()) {
+      Job_Applicants__c applicant = applicants[0];
+      applicant.Feedback__c = feedback;
+      update applicant;
+    } else {
+      throw new AuraHandledException('No job applicant record found for the given user and job.');
+    }
   }
 }

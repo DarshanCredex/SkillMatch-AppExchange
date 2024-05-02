@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-15-2024
+ * @last modified on  : 04-25-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -131,7 +131,9 @@ public with sharing class JobApplicantController {
       );
       string Status = getApplicantStatus(candidate.Id, jobId);
       System.debug('status assessment--->' + Status);
-      string assessmentStatus = getAssessmentStatus(candidate.Id);
+
+      string assessmentStatus = getAssessmentStatus(candidate.Id, jobId);
+      System.debug('assessmentStatus------->' + assessmentStatus);
 
       candidateRecords.add(
         new CandidateWrapper(
@@ -146,7 +148,7 @@ public with sharing class JobApplicantController {
   }
   @AuraEnabled(cacheable=true)
   public static List<applicantWrapper> getApplicantsList(id userId) {
-     List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
+    List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
     List<Candidate_Details__c> appliedCandidateDetailsList = new List<Candidate_Details__c>();
     string jobName = '';
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
@@ -218,7 +220,9 @@ public with sharing class JobApplicantController {
 
         appliedCandidateWrapperList.add(wrapper);
       }
-      System.debug('appliedCandidateWrapperList-------->'+appliedCandidateWrapperList);
+      System.debug(
+        'appliedCandidateWrapperList-------->' + appliedCandidateWrapperList
+      );
       return appliedCandidateWrapperList;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
@@ -321,12 +325,12 @@ public with sharing class JobApplicantController {
     return status;
   }
 
-  public static string getAssessmentStatus(id applicantId) {
+  public static string getAssessmentStatus(id candidateId, id jobid) {
     string status;
     for (Job_Applicants__c applicant : [
       SELECT Assesment_Status__c
       FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantId
+      WHERE CandidateId__c = :candidateId and Job_Id__c = :jobId
     ]) {
       status = applicant.Assesment_Status__c;
     }
@@ -336,18 +340,24 @@ public with sharing class JobApplicantController {
   @AuraEnabled(cacheable=true)
   public static decimal getScore(id jobid, id candidateid) {
     Decimal score;
-    id applicantid = [
-      SELECT id
-      FROM Job_Applicants__c
-      WHERE CandidateId__c = :candidateid AND Job_Id__c = :jobid
-    ][0]
-    .id;
-    for (Job_Applicants__c applicant : [
-      SELECT Total_Score__c
-      FROM Job_Applicants__c
-      WHERE CandidateId__c = :applicantid
-    ]) {
-      score = applicant.Total_Score__c;
+    try {
+      List<Job_Applicants__c> queryResult = [
+        SELECT Id
+        FROM Job_Applicants__c
+        WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
+      ];
+
+      if (!queryResult.isEmpty()) {
+        id applicantid = queryResult[0].id;
+        for (Job_Applicants__c applicant : [
+          SELECT Total_Score__c
+          FROM Job_Applicants__c
+          WHERE id = :applicantid
+        ]) {
+          score = applicant.Total_Score__c;
+        }
+      }
+    } catch (Exception e) {
     }
     return score;
   }

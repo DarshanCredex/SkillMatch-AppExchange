@@ -2,7 +2,7 @@
   @description       : contains the questions added by the recruiter for a particular job
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 04-15-2024
+  @last modified on  : 04-23-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -48,6 +48,9 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <div style="text-align: right;">
+
+                        <lightning-button variant="brand-outline" type="submit" label="Delete"
+                            onclick={handleDeleteQuestion}></lightning-button>
                         <lightning-button variant="brand" type="submit" label="Save"
                             onclick={handleSave}></lightning-button>
                     </div>

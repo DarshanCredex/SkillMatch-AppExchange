@@ -2,7 +2,7 @@
   @description       : job description and edit page for the HR
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 03-26-2024
+  @last modified on  : 04-23-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -14,6 +14,7 @@
                         <h1>{job.Title_of_position__c}</h1>
 
                         <div class="buttons">
+                            <lightning-button variant="brand-outline" label="delete" onclick={handleDelete}></lightning-button>
                             <lightning-button variant="brand" label="Applicants" data-job-id={job.id}
                                 lwc:if={showApplicantsButton} onclick={handleApplicantButton}></lightning-button>
                             <lightning-button variant="Neutral" label="Edit"
@@ -60,15 +61,12 @@
                             onsuccess={handleSuccess}>
                             <lightning-input-field field-name="Title_of_position__c"> </lightning-input-field>
                             <lightning-input-field field-name="City__c"> </lightning-input-field>
-                            <lightning-input-field field-name="Company_Name__c"> </lightning-input-field>
                             <lightning-input-field field-name="Country__c"> </lightning-input-field>
                             <lightning-input-field field-name="Description__c"> </lightning-input-field>
                             <lightning-input-field field-name="Experience__c"> </lightning-input-field>
-                            <lightning-input-field field-name="External_Application_Link__c"> </lightning-input-field>
                             <lightning-input-field field-name="Industry__c"> </lightning-input-field>
-                            <!-- <lightning-input-field field-name="Location__c"> </lightning-input-field> -->
-                            <!-- <lightning-input-field field-name="Publish_end_date__c"> </lightning-input-field>
-                            <lightning-input-field field-name="Publish_start_date__c"> </lightning-input-field> -->
+                            <lightning-input-field field-name="Publish_end_date__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Publish_start_date__c"> </lightning-input-field>
                             <lightning-input-field field-name="Salary__c"> </lightning-input-field>
                             <lightning-input-field field-name="Status__c"> </lightning-input-field>
                             <lightning-input-field field-name="Summary__c"> </lightning-input-field>

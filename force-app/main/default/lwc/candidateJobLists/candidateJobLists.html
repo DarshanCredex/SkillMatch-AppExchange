@@ -1,0 +1,94 @@
+<!--
+  @description       : to show the list of pending and shortlisted jobs to the candidate on homepage
+  @author            : Rudransh Shukla
+  @group             : 
+  @last modified on  : 04-23-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="main">
+        <div class="tags">
+            <div class="profileProgress">
+                <lightning-progress-ring direction="drain" size="xx-large" value={profileProgress}
+                    variant="base-autocomplete"></lightning-progress-ring>
+                <h1>Profile Completion - {profileProgress}%</h1>
+            </div>
+            <div class="appliedJobs">
+               <p>{numberOfShortlisted}</p>
+                <h1>Number of Jobs shortlistings</h1>
+            </div>
+            <div class="shortlistedjobs">
+                <p>{numberOfPending}</p>
+                <h1>Number of Jobs pending</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="header-top">
+            <h1>Quick Access</h1>
+        </div>
+        <div class="jobs">
+            <div class="pending-box">
+                <div class="header">
+                    <h1>Pending Jobs</h1>
+                </div>
+                <template lwc:if={PendingList}>
+                    <div class="pending">
+                        <template for:each={PendingList} for:item="job">
+                            <div class="pending-job" key={job.Id} data-jobid={job.Id}
+                                onclick={redirectToJobDescription}>
+                                <h1 class="job-title">💼 {job.Title_of_position__c}</h1>
+                                <div class="job-details">
+                                    <p class="company-name">{job.Company_Name__c}</p>
+                                    <p class="location">📍 {job.City__c}, {job.Country__c}</p>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="view-all">
+                            <lightning-button variant="base" label="View All"
+                                onclick={handleViewAll}></lightning-button>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="no-applicants">
+                        <h1>No Applicants Pending</h1>
+                        <div class="img">
+                            <img src={empty_box} alt="na">
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="applied-box">
+                <div class="header">
+                    <h1>Shortlisted Jobs</h1>
+                </div>
+                <template lwc:if={AppliedList}>
+                    <div class="applied">
+                        <template for:each={AppliedList} for:item="job">
+                            <div class="applied-job" key={job.Id} data-jobid={job.Id}
+                                onclick={redirectToJobDescription}>
+                                <h1 class="job-title">💼 {job.Title_of_position__c}</h1>
+                                <div class="job-details">
+                                    <p class="company-name">{job.Company_Name__c}</p>
+                                    <p class="location">📍 {job.City__c}, {job.Country__c}</p>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="view-all">
+                            <lightning-button variant="base" label="View All"
+                                onclick={handleViewAll}></lightning-button>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="no-applicants">
+                        <h1>No Applicants Pending</h1>
+                        <div class="img">
+                            <img src={empty_box} alt="na">
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

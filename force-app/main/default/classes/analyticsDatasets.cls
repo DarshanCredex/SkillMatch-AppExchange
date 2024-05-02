@@ -2,7 +2,7 @@
  * @description       : this class includes datasets for the analytics component
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-12-2024
+ * @last modified on  : 04-23-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class analyticsDatasets {
@@ -19,14 +19,18 @@ public with sharing class analyticsDatasets {
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<DataSet> getApplicantDataset(string userId) {
+  public static List<DataSet> getApplicantDataset(id userId) {
     List<DataSet> dataSet = new List<DataSet>();
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
 
     try {
       List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c where Company_Name__c = :companyname]) {
+      for (Job__c job : [
+        SELECT Id
+        FROM Job__c
+        WHERE Company_Name__c = :companyname
+      ]) {
         jobIdList.add(job.Id);
       }
 
@@ -50,23 +54,25 @@ public with sharing class analyticsDatasets {
         dataSet.add(new DataSet(City, total));
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' at line----> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
     }
     return dataSet;
   }
 
   @AuraEnabled(cacheable=true)
-  public static List<DataSet> AgeWithNumberOfApplicants(string userId) {
+  public static List<DataSet> AgeWithNumberOfApplicants(id userId) {
     List<DataSet> dataset = new List<DataSet>();
-    
-    user u = [select companyName from user where id = :userId limit 1];
+
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
 
     try {
       List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c WHERE status__c = 'Completed' AND Company_Name__c = :companyname]) {
+      for (Job__c job : [
+        SELECT Id
+        FROM Job__c
+        WHERE status__c = 'Completed' AND Company_Name__c = :companyname
+      ]) {
         jobIdList.add(job.Id);
       }
 
@@ -104,20 +110,22 @@ public with sharing class analyticsDatasets {
         dataset.add(new DataSet(age, ageMap.get(age)));
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
     }
     return dataset;
   }
   @AuraEnabled(cacheable=true)
-  public static List<DataSet> applicantGender(string userId) {
+  public static List<DataSet> applicantGender(id userId) {
     List<DataSet> dataset = new List<DataSet>();
-    user u = [select companyName from user where id = :userId limit 1];
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     try {
       List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c WHERE status__c = 'Completed' AND Company_Name__c = :companyname]) {
+      for (Job__c job : [
+        SELECT Id
+        FROM Job__c
+        WHERE status__c = 'Completed' AND Company_Name__c = :companyname
+      ]) {
         jobIdList.add(job.Id);
       }
       List<Id> jobApplicantIdList = new List<Id>();
@@ -142,23 +150,21 @@ public with sharing class analyticsDatasets {
         dataset.add(new dataset(gender, count));
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
     }
     return dataset;
   }
 
   @AuraEnabled(cacheable=true)
-  public static list<dataset> industryJobsDataset(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+  public static list<dataset> industryJobsDataset(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     List<DataSet> dataset = new List<DataSet>();
     try {
       list<AggregateResult> results = [
         SELECT count(id) cnt, Industry__c
         FROM Job__c
-        WHERE status__c = 'Completed' AND Company_Name__c =:companyname
+        WHERE status__c = 'Completed' AND Company_Name__c = :companyname
         GROUP BY Industry__c
       ];
       for (AggregateResult result : results) {
@@ -167,20 +173,22 @@ public with sharing class analyticsDatasets {
         dataset.add(new dataset(Industry, count));
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
     }
     return dataset;
   }
   @AuraEnabled(cacheable=true)
-  public static List<Dataset> numberOfApplicantsVsJobs(string userId) {
-    user u = [select companyName from user where id = :userId limit 1];
+  public static List<Dataset> numberOfApplicantsVsJobs(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
     List<Dataset> dataset = new List<Dataset>();
     try {
       List<Id> jobIdList = new List<Id>();
-      for (Job__c job : [SELECT Id FROM Job__c WHERE Status__c = 'Completed' AND Company_Name__c =:companyname]) {
+      for (Job__c job : [
+        SELECT Id
+        FROM Job__c
+        WHERE Status__c = 'Completed' AND Company_Name__c = :companyname
+      ]) {
         jobIdList.add(job.Id);
       }
 
@@ -211,24 +219,29 @@ public with sharing class analyticsDatasets {
         }
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
     }
     return dataset;
   }
 
   @AuraEnabled(cacheable=true)
-  public static list<dataset> numberOfApplicantsShortlistedAndRejected(string userId) {
-
-    user u = [select companyName from user where id = :userId limit 1];
+  public static list<dataset> numberOfApplicantsShortlistedAndRejected(
+    id userId
+  ) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
 
     List<Dataset> dataset = new List<Dataset>();
     try {
       list<AggregateResult> results = [
         SELECT count(id) cnt, Application_Status__c
-        FROM Job_Applicants__c where Job_Id__c in (select id from Job__c where Company_Name__c = :companyname)
+        FROM Job_Applicants__c
+        WHERE
+          Job_Id__c IN (
+            SELECT id
+            FROM Job__c
+            WHERE Company_Name__c = :companyname
+          )
         GROUP BY Application_Status__c
       ];
 
@@ -238,9 +251,64 @@ public with sharing class analyticsDatasets {
         dataset.add(new dataset(status, count));
       }
     } catch (Exception e) {
-      System.debug(
-        'Error--------> ' + e.getMessage() + ' -------> ' + e.getLineNumber()
-      );
+      throw new AuraHandledException(e.getMessage());
+    }
+    return dataset;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static list<dataset> numberOfApplicantsAssessmentStatusVsJob(
+    id userId
+  ) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
+    string companyname = u.CompanyName;
+
+    List<Dataset> dataset = new List<Dataset>();
+    try {
+      list<AggregateResult> results = [
+        SELECT count(id) cnt, Job_Id__r.Title_of_position__c titleOfPosition
+        FROM Job_Applicants__c
+        WHERE Job_Id__r.Company_Name__c = :companyname
+        AND (Assesment_Status__c = 'Given' or Assesment_Status__c = 'Evaluated')
+        GROUP BY Job_Id__r.Title_of_position__c
+      ];
+
+      for (AggregateResult result : results) {
+        integer count = (integer) result.get('cnt');
+        string assessementStatus = (string) result.get(
+          'titleOfPosition'
+        );
+        dataset.add(new dataset(assessementStatus, count));
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+    return dataset;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static list<dataset> numberofQuestionsVsJobPosted(id userId) {
+    user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
+    string companyname = u.CompanyName;
+
+    List<Dataset> dataset = new List<Dataset>();
+    try {
+      list<AggregateResult> results = [
+        SELECT count(id) cnt, Job__r.Title_of_position__c titleOfPosition
+        FROM Question__c
+        WHERE
+          Job__r.Company_Name__c = :companyname
+          AND Job__r.Status__c = 'Completed'
+        GROUP BY Job__r.Title_of_position__c
+      ];
+
+      for (AggregateResult result : results) {
+        integer count = (integer) result.get('cnt');
+        string jobName = (string) result.get('titleOfPosition');
+        dataset.add(new dataset(jobName, count));
+      }
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
     }
     return dataset;
   }

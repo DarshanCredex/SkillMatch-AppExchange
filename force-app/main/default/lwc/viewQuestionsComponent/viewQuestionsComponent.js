@@ -4,6 +4,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import emptyBox from "@salesforce/resourceUrl/empty_box";
 import getTestTimings from "@salesforce/apex/jobObjectController.getTestTimings";
+import deleteQuestion from "@salesforce/apex/QuestionsController.deleteQuestion";
 
 export default class ViewQuestionsComponent extends LightningElement {
   questionsList = [];
@@ -75,7 +76,16 @@ export default class ViewQuestionsComponent extends LightningElement {
       })
     );
   }
+
   handleSave() {
     this.template.querySelector("lightning-record-edit-form").submit(); 
+  }
+
+  handleDeleteQuestion() {
+    deleteQuestion({ questionId: this.recordId }).then(() => {
+      this.showToast("Success", "Question Deleted", "success");
+      refreshApex(this.wiredResult);
+    });
+    
   }
 }

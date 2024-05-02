@@ -1,8 +1,8 @@
 <!--
-  @description       : Manage Jobs Component for Recruitment Portal
+  @description       : manage Jobs Component for Recruitment Portal
   @author            : Rudransh Shukla
   @group             : 
-  @last modified on  : 02-12-2024
+  @last modified on  : 04-18-2024
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
@@ -42,6 +42,7 @@
                   <td>Title</td>
                   <td>Salary</td>
                   <td>Experience</td>
+                  <td>Applicants</td>
                   <td>Organisation</td>
                   <td>Location</td>
                 </tr>
@@ -49,11 +50,12 @@
               <tbody>
                 <template for:each={postedJobList} for:item="job">
                   <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
-                    <td>{job.Title_of_position__c}</td>
-                    <td>{job.Salary__c}</td>
-                    <td>{job.Experience__c}</td>
-                    <td>{job.Company_Name__c}</td>
-                    <td>{job.City__c}, {job.Country__c}</td>
+                    <td>{job.title}</td>
+                    <td>{job.salary}</td>
+                    <td>{job.experience} years</td>
+                    <td>{job.applicants}</td>
+                    <td>{job.company}</td>
+                    <td>{job.city}, {job.country}</td>
                   </tr>
                 </template>
               </tbody>
@@ -83,11 +85,11 @@
             <tbody>
               <template for:each={draftedJobList} for:item="job">
                 <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
-                  <td>{job.Title_of_position__c}</td>
-                  <td>{job.Salary__c}</td>
-                  <td>{job.Experience__c}</td>
-                  <td>{job.Company_Name__c}</td>
-                  <td>{job.City__c}, {job.Country__c}</td>
+                  <td>{job.title}</td>
+                  <td>{job.salary}</td>
+                  <td>{job.experience} years</td>
+                  <td>{job.company}</td>
+                  <td>{job.city}, {job.country}</td>
                 </tr>
               </template>
             </tbody>
@@ -116,11 +118,11 @@
             <tbody>
               <template for:each={expiredJobList} for:item="job">
                 <tr key={job.Id} data-jobid={job.Id} onclick={handlejobDescriptionPageView}>
-                  <td>{job.Title_of_position__c}</td>
-                  <td>{job.Salary__c}</td>
-                  <td>{job.Experience__c}</td>
-                  <td>{job.Company_Name__c}</td>
-                  <td>{job.City__c}, {job.Country__c}</td>
+                  <td>{job.title}</td>
+                  <td>{job.salary}</td>
+                  <td>{job.experience} years</td>
+                  <td>{job.company}</td>
+                  <td>{job.city}, {job.country}</td>
                 </tr>
               </template>
             </tbody>

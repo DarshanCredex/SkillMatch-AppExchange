@@ -8,6 +8,7 @@ import Id from "@salesforce/user/Id";
 import getObjectiveResponse from "@salesforce/apex/testingEnvironmentController.getObjectiveResponse";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getSubjectiveResponse from "@salesforce/apex/testingEnvironmentController.getSubjectiveResponse";
+import getFeedbackFromCandidate from "@salesforce/apex/testingEnvironmentController.getFeedbackFromCandidate";
 
 export default class TestingEnvironmentComponent extends LightningElement {
   @track questionList = [];
@@ -15,14 +16,20 @@ export default class TestingEnvironmentComponent extends LightningElement {
   @track subjectiveList = [];
   @track selectedOptions = [];
   @track timeRemaining;
+
   subjectiveResponseAndId = {};
 
   userId = Id;
-  jobid;
   tabSwitchCount = 0;
+  progress = 100;
   myVal = "";
+  feedback = "";
+
+  jobid;
   success;
   error;
+  progressPercentage;
+  timerTimeout;
 
   showSubjective = false;
   showObjective = true;
@@ -31,9 +38,6 @@ export default class TestingEnvironmentComponent extends LightningElement {
   showWarningModal = false;
   showFinalScreen = false;
   showMain = true;
-  progress = 100;
-  progressPercentage;
-  timerTimeout;
 
   constructor() {
     super();
@@ -63,7 +67,10 @@ export default class TestingEnvironmentComponent extends LightningElement {
         alert(
           "You switched tabs more than twice \nYour test is over and response has been recorded"
         );
-        window.removeEventListener("visibilitychange", this.visibilityChangeListener);
+        window.removeEventListener(
+          "visibilitychange",
+          this.visibilityChangeListener
+        );
       }
     }
   }
@@ -152,24 +159,24 @@ export default class TestingEnvironmentComponent extends LightningElement {
       if (unit === "mins") {
         this.timeRemaining = parseInt(minutes, 10) * 60;
       } else {
-        console.error('Invalid time format. Expected format: "15 mins"');
         return;
       }
     } else {
-      console.error("Time remaining not provided.");
       return;
     }
     const timeInitial = this.timeRemaining;
     this.timerTimeout = setInterval(() => {
       this.timeRemaining--;
       if (this.timeRemaining <= 0) {
+        console.log("time remaining", this.timeRemaining);
         clearInterval(this.timerTimeout);
         alert("Time is up!");
         this.getResponse();
         this.showFinalScreen = true;
         this.showMain = false;
       } else {
-        this.progress = 100 - (((timeInitial - this.timeRemaining) / timeInitial) * 100);
+        this.progress =
+          100 - ((timeInitial - this.timeRemaining) / timeInitial) * 100;
       }
     }, 1000);
   }
@@ -242,7 +249,10 @@ export default class TestingEnvironmentComponent extends LightningElement {
   }
 
   removeEventListeners() {
-    window.removeEventListener("visibilitychange", this.visibilityChangeListener);
+    window.removeEventListener(
+      "visibilitychange",
+      this.visibilityChangeListener
+    );
     this.template.removeEventListener("contextmenu", this.contextMenuListener);
     document.removeEventListener("copy", this.copyListener, false);
     window.removeEventListener("keyup", this.keyupListener);
@@ -256,5 +266,24 @@ export default class TestingEnvironmentComponent extends LightningElement {
         variant: variant
       })
     );
+  }
+
+  getFeedback(event) {
+    this.feedback = event.target.value;
+    console.log("this.feedback------>", this.feedback);
+  }
+
+  handleFeedbackSubmit() {
+    getFeedbackFromCandidate({
+      feedback: this.feedback,
+      userId: this.userId,
+      jobId: this.jobId
+    }).then(() => {
+      this.showToast(
+        "Feeback Recorded",
+        "Your Feedback has been saved",
+        "success"
+      );
+    });
   }
 }

@@ -1,0 +1,91 @@
+.main {
+    margin: 0 auto;
+}
+.jobs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.pending,
+.applied {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+}
+.pending-job,
+.applied-job {
+    width: 95%;
+    height: 30%;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 2%;
+    background-color: #ffffff;
+    padding: 2%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+}
+.pending-job:hover,
+.applied-job:hover {
+    background-color: #c9e4f5;
+}
+.applied-box,
+.pending-box {
+    width: 48%;
+    margin: 1%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+.header-top,
+.header {
+    text-align: left;
+}
+.header h1 {
+    font-size: 18px;
+    padding: 1%;
+    color: #333;
+}
+.header-top h1{
+    font-size: 25px;
+    padding: 1%;
+    color: #333;
+}
+.view-all{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1%;
+}
+.appliedJobs,
+.shortlistedjobs,
+.profileProgress{
+    width: 25%;
+    height: 20%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+    padding: 2%;
+    border: #e0e0e0 solid 1px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tags{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.shortlistedjobs p,
+.appliedJobs p{
+    font-size: 15px;
+}

@@ -1,8 +1,8 @@
 /**
- * @description       : 
- * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
- * @group             : 
- * @last modified on  : 04-15-2024
+ * @description       : candidate applied jobs controller class
+ * @author            : Sagar Medatwal
+ * @group             :
+ * @last modified on  : 04-25-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 public with sharing class CandidateAppliedJobsController {
@@ -163,5 +163,116 @@ public with sharing class CandidateAppliedJobsController {
       wrappedAppliedJobs.jobWrapperList.addAll(wrappedJobs);
     }
     return wrappedAppliedJobs;
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<Job__c> getPendingJobListForHomePage(id userId) {
+    try {
+      list<id> jobIds = new List<id>();
+      for (Job_Applicants__c applicant : [
+        SELECT Job_Id__c
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Pending'
+      ]) {
+        jobIds.add(applicant.Job_Id__c);
+      }
+
+      return new List<Job__c>(
+        [
+          SELECT
+            Id,
+            CreatedDate,
+            City__c,
+            Country__c,
+            Salary__c,
+            Title_of_position__c,
+            Type__c,
+            Company_Name__c
+          FROM Job__c
+          WHERE id IN :jobIds
+          LIMIT 3
+        ]
+      );
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<Job__c> getAppliedJobListForHomePage(id userId) {
+    try {
+      list<id> jobIds = new List<id>();
+      for (Job_Applicants__c applicant : [
+        SELECT Job_Id__c
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Accepted'
+      ]) {
+        jobIds.add(applicant.Job_Id__c);
+      }
+      return new List<Job__c>(
+        [
+          SELECT
+            Id,
+            CreatedDate,
+            City__c,
+            Country__c,
+            Salary__c,
+            Title_of_position__c,
+            Type__c,
+            Company_Name__c
+          FROM Job__c
+          WHERE id IN :jobIds
+          LIMIT 3
+        ]
+      );
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static Integer numberOfShorlistedJobs(Id userId) {
+    try {
+      Integer count = 0;
+      List<AggregateResult> results = [
+        SELECT COUNT(Job_Id__c) countJob
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Accepted'
+      ];
+
+      if (!results.isEmpty()) {
+        count = (Integer) results[0].get('countJob');
+      }
+      return count;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static Integer numberOfPendingJobs(Id userId) {
+    try {
+      Integer count = 0;
+      List<AggregateResult> results = [
+        SELECT COUNT(Job_Id__c) countJob
+        FROM Job_Applicants__c
+        WHERE
+          CandidateId__r.User__c = :userId
+          AND Application_Status__c = 'Pending'
+      ];
+
+      if (!results.isEmpty()) {
+        count = (Integer) results[0].get('countJob');
+      }
+      return count;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
   }
 }

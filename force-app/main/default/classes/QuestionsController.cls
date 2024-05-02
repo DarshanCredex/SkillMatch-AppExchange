@@ -1,10 +1,10 @@
 /**
-* @description       : questions and options custom object controller class
-* @author            : Rudransh Shukla
-* @group             :
-* @last modified on  : 04-10-2024
-* @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
-**/
+ * @description       : questions and options custom object controller class
+ * @author            : Rudransh Shukla
+ * @group             :
+ * @last modified on  : 04-25-2024
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ **/
 public with sharing class QuestionsController {
     public class responseWrapper {
         @AuraEnabled

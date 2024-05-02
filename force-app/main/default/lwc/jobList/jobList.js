@@ -66,9 +66,8 @@ export default class JobList extends NavigationMixin(LightningElement) {
     selectedExperienceValues: "$selectedExperienceValues",
     selectedIndustryValues: "$selectedIndustryValues"
   })
-  jobList({ data }) {
+  jobList({ data}) {
     if (data) {
-      console.log("joblist--->", data);
       this.jobListdata = data;
       this.filterJobListData = [...this.jobListdata];
       if (this.jobListdata.length > 0) {
@@ -91,10 +90,6 @@ export default class JobList extends NavigationMixin(LightningElement) {
   handleSortList() {
     if (Array.isArray(this.filterJobListData)) {
       this.filterJobListData.sort((a, b) => a.daysAgo - b.daysAgo);
-      console.log(
-        "this.filterJobListData---> (sorted)",
-        JSON.stringify(this.filterJobListData)
-      );
     } else {
       console.error("filterJobListData is not an array");
     }
@@ -169,10 +164,15 @@ export default class JobList extends NavigationMixin(LightningElement) {
     let jobId = event.currentTarget.id;
     jobId = jobId.split("-");
     this[NavigationMixin.GenerateUrl]({
+    this[NavigationMixin.GenerateUrl]({
       type: "standard__webPage",
       attributes: {
         url: "/s/job-detail?id=" + jobId[0]
+        url: "/s/job-detail?id=" + jobId[0]
       }
+    }).then((generatedUrl) => {
+      window.open(generatedUrl);
+    });
     }).then((generatedUrl) => {
       window.open(generatedUrl);
     });

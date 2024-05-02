@@ -24,10 +24,11 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
   industryValue = "";
   timingValue = "";
   skills = "";
+  startDate = "";
+  endDate = "";
+
   userCompanyName;
   userId = Id;
-
-  showQuestionModal = false;
 
   connectedCallback() {
     experienceFieldValues().then((result) => {
@@ -96,6 +97,13 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
     const skillsInput = this.template.querySelector(
       'lightning-input[data-id="skills"]'
     );
+    const start = this.template.querySelector(
+      'lightning-input[data-id="start-date"]'
+    );
+    const end = this.template.querySelector(
+      'lightning-input[data-id="end-date"]'
+    );
+
     this.jobTitle = jobTitleInput.value || "";
     this.summary = summaryInput.value || "";
     this.description = descriptionInput.value || "";
@@ -103,11 +111,23 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
     this.city = cityInput.value || "";
     this.country = countryInput.value || "";
     this.skills = skillsInput.value || "";
+    this.startDate = start.value || "";
+    this.endDate = end.value || "";
   }
 
   postJobData(event) {
     this.getInput();
     const value = event.target.value;
+
+    if (this.endDate && this.startDate && this.endDate < this.startDate) {
+      this.showToast(
+        "Error",
+        "End Date cannot be less than Start Date",
+        "error"
+      );
+      return;
+    }
+
     postJob({
       value: value,
       jobTitle: this.jobTitle,
@@ -121,7 +141,9 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
       industryValue: this.industryValue,
       summary: this.summary,
       skills: this.skills,
-      timing: this.timingValue
+      timing: this.timingValue,
+      publishStartDate: this.startDate,
+      publishEndDate: this.endDate
     })
       .then(() => {
         console.log("true");

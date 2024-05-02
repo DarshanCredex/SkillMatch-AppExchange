@@ -2,7 +2,7 @@
  * @description       : this class creates a job record in the database
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-15-2024
+ * @last modified on  : 04-25-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class jobObjectController {
@@ -19,7 +19,10 @@ public with sharing class jobObjectController {
     string typeValue,
     string industryValue,
     string summary,
-    string skills
+    string skills,
+    string timing,
+    date publishStartDate,
+    date publishEndDate
   ) {
     system.debug('start');
     system.debug('jobTitle' + jobTitle);
@@ -40,6 +43,9 @@ public with sharing class jobObjectController {
       newJob.City__c = city;
       newJob.Status__c = value;
       newJob.Skills_Required__c = skills;
+      newJob.Test_Timing__c = timing;
+      newJob.Publish_start_date__c = publishStartDate;
+      newJob.Publish_end_date__c = publishEndDate;
 
       jobRecordsList.add(newJob);
 
@@ -125,8 +131,8 @@ public with sharing class jobObjectController {
         Status__c,
         Id
       FROM Job__c
-      WHERE Status__c = 'Draft' AND Company_Name__c=:companyname 
-      LIMIT 3
+      WHERE Status__c = 'Draft' AND Company_Name__c = :companyname
+      LIMIT 4
     ]) {
       draftJobList.add(job);
     }
@@ -193,6 +199,20 @@ public with sharing class jobObjectController {
       user u = [SELECT companyName, id FROM user WHERE id = :userId];
       string companyName = u.CompanyName;
       return companyName;
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static void deleteJob(id jobId) {
+    try {
+      Job__c job = [SELECT id FROM Job__c WHERE id = :jobId Limit 1];
+      system.debug('job------------->' + Job);
+      if (job != null) {
+        system.debug('job' + Job);
+        delete job;
+      }
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
