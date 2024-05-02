@@ -2,7 +2,7 @@
  * @description       : This class is used for fetching the applcant data and work experience
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-29-2024
+ * @last modified on  : 05-02-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class GetApplicantData {
@@ -10,7 +10,6 @@ public with sharing class GetApplicantData {
   public static list<Candidate_Details__c> GetApplicantDataMethod(
     string applicantId
   ) {
-    system.debug('applicantId------>' + applicantId);
     list<Candidate_Details__c> candidateDetails = [
       SELECT
         Id,
@@ -37,7 +36,6 @@ public with sharing class GetApplicantData {
   public static list<Work_Experience__c> GetWorkExperienceData(
     string applicantId
   ) {
-    system.debug('applicantId------>' + applicantId);
     list<Work_Experience__c> workExpList = [
       SELECT
         CandidateId__c,
@@ -56,8 +54,6 @@ public with sharing class GetApplicantData {
       WHERE CandidateId__c = :applicantId
       ORDER BY To_Date__c DESC
     ];
-
-    system.debug('workExpList' + workExpList);
     return workExpList;
   }
 
@@ -94,7 +90,6 @@ public with sharing class GetApplicantData {
     for (ContentDocumentLink docLink : files) {
       fileIDs.add(docLink.ContentDocumentId);
     }
-
     List<ContentVersion> docs = [
       SELECT ContentDocumentId, FileExtension, Title
       FROM ContentVersion
