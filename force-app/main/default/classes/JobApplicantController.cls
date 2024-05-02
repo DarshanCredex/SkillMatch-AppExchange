@@ -46,11 +46,14 @@ public with sharing class JobApplicantController {
     public boolean isAccepted { get; set; }
     @AuraEnabled
     public string Status { get; set; }
+    @AuraEnabled
+    public string AssesmentStatus { get; set; }
 
     public CandidateWrapper(
       Candidate_Details__c candidate,
       Integer matchPercentage,
-      String Status
+      String Status,
+      String AssesmentStatus
     ) {
       this.matchPercentage = matchPercentage;
       this.About = candidate.About__c;
@@ -67,9 +70,9 @@ public with sharing class JobApplicantController {
       this.Id = candidate.Id;
       this.isAccepted = false;
       this.Status = Status;
+      this.AssesmentStatus = assesmentStatus;
     }
   }
-
   @AuraEnabled(cacheable=true)
   public static List<CandidateWrapper> fetchCandidateNames(id jobId) {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
@@ -82,14 +85,12 @@ public with sharing class JobApplicantController {
       FROM Job__c
       WHERE Id = :jobId
     ];
-    List<String> requiredSkills = new List<String>();
-
+    Set<String> requiredSkills = new Set<String>();
     for (Job__c job : jobs) {
       if (String.isNotBlank(job.Skills_Required__c)) {
         requiredSkills.addAll(job.Skills_Required__c.split(','));
       }
     }
-
     for (Job_Applicants__c applicant : [
       SELECT CandidateId__c
       FROM Job_Applicants__c
@@ -97,12 +98,10 @@ public with sharing class JobApplicantController {
     ]) {
       candidateIdList.add(applicant);
     }
-
     List<Id> candidateIds = new List<Id>();
     for (Job_Applicants__c applicant : candidateIdList) {
       candidateIds.add(applicant.CandidateId__c);
     }
-
     for (Candidate_Details__c candidate : [
       SELECT
         Id,
@@ -127,21 +126,24 @@ public with sharing class JobApplicantController {
       }
       Integer matchPercentage = calculateMatchPercentage(
         requiredSkills,
-        candidate.Skills__c.split(';')
+        candidateSkills,
+        candidate.ParsedSkills__c
       );
       string Status = getApplicantStatus(candidate.Id, jobId);
       System.debug('status assessment--->' + Status);
       string assessmentStatus = getAssessmentStatus(candidate.Id);
 
       candidateRecords.add(
-        new CandidateWrapper(candidate, matchPercentage, status)
+        new CandidateWrapper(
+          candidate,
+          matchPercentage,
+          status,
+          assessmentStatus
+        )
       );
     }
-
-    system.debug('candidateRecords---------->' + candidateRecords);
     return candidateRecords;
   }
-
   @AuraEnabled(cacheable=true)
   public static List<applicantWrapper> getApplicantsList(id userId) {
      List<applicantWrapper> appliedCandidateWrapperList = new List<applicantWrapper>();
@@ -149,7 +151,6 @@ public with sharing class JobApplicantController {
     string jobName = '';
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
     string companyname = u.CompanyName;
-
     try {
       List<Job_Applicants__c> applicantList = [
         SELECT CandidateId__c, Job_Id__c
@@ -170,7 +171,6 @@ public with sharing class JobApplicantController {
         candidateIds.add(applicant.CandidateId__c);
         jobIds.add(applicant.Job_Id__c);
       }
-
       if (!candidateIds.isEmpty()) {
         appliedCandidateDetailsList = [
           SELECT Name, Candidate_Email__c, City__c, Country__c, Experience__c
@@ -224,7 +224,6 @@ public with sharing class JobApplicantController {
       throw new AuraHandledException(e.getMessage());
     }
   }
-
   @AuraEnabled(cacheable=true)
   public static integer getNumberOfJobsPosted(id userId) {
     user u = [SELECT companyName FROM user WHERE id = :userId LIMIT 1];
@@ -249,7 +248,6 @@ public with sharing class JobApplicantController {
 
   @AuraEnabled(cacheable=true)
   public static list<job__c> fetchJobDetails(string jobId) {
-    system.debug('jobId---->' + jobId);
     list<Job__c> jobList = new List<Job__c>();
     try {
       for (Job__c job : [
@@ -282,10 +280,8 @@ public with sharing class JobApplicantController {
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
-    system.debug('jobList------->' + jobList);
     return jobList;
   }
-
   @AuraEnabled
   public static void changeStatus(
     String value,
@@ -367,17 +363,12 @@ public with sharing class JobApplicantController {
       resumeParsedSkills = resumeParsedSkills.deleteWhitespace().toLowerCase();
     }
     for (String skill : candidateSkills) {
-      candidateSkillsLower.add(skill.normalizeSpace().toLowerCase());
+      candidateSkillsLower.add(skill.deleteWhitespace().toLowerCase());
     }
-
     List<String> requiredSkillsLower = new List<String>();
     for (String skill : requiredSkills) {
-      requiredSkillsLower.add(skill.normalizeSpace().toLowerCase());
+      requiredSkillsLower.add(skill.deleteWhitespace().toLowerCase());
     }
-
-    System.debug('candidateSkillsLower-------->' + candidateSkillsLower);
-    System.debug('requiredSkillsLower-------->' + requiredSkillsLower);
-
     Integer commonSkillsCount = 0;
     for (String skill : requiredSkillsLower) {
       Pattern pattern = Pattern.compile(Pattern.quote(skill));

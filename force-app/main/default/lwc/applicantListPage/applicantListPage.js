@@ -6,6 +6,7 @@ import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { refreshApex } from "@salesforce/apex";
+import getScore from "@salesforce/apex/JobApplicantController.getScore";
 
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
@@ -20,8 +21,8 @@ export default class ApplicantListPage extends NavigationMixin(
 
   candidateId;
   jobId;
-
   emptyBox = emptyBox;
+  score = 0;
 
   candiateListIsEmpty = false;
   filteredListIsEmpty = false;
@@ -46,6 +47,7 @@ export default class ApplicantListPage extends NavigationMixin(
     this.wiredResult = result;
     if (result.data) {
       this.candidateDetails = result.data; // source of truth
+      console.log("this.candidateDetails-------->", this.candidateDetails);
       this.filteredCandidateDetails = this.candidateDetails;
       this.temp = this.filteredCandidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
@@ -88,6 +90,32 @@ export default class ApplicantListPage extends NavigationMixin(
     if (status !== "All") {
       this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
         return item.Status === status;
+      });
+
+      console.log(
+        "this.filteredCandidateDetails------>",
+        JSON.stringify(this.filteredCandidateDetails)
+      );
+      this.filteredCandidateDetails.forEach((item) => {
+        if (item.AssesmentStatus === "Pending") {
+          this.showPending = true;
+          this.showEvaluateButton = false;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Given") {
+          this.showPending = false;
+          this.showEvaluateButton = true;
+          this.showScore = false;
+        } else if (item.AssesmentStatus === "Evaluated") {
+          this.showPending = false;
+          this.showEvaluateButton = false;
+          this.showScore = true;
+
+          getScore({ jobid: this.jobId, candidateid: item.Id }).then(
+            (result) => {
+              this.score = result;
+            }
+          );
+        }
       });
     } else {
       this.filteredCandidateDetails = this.candidateDetails;
