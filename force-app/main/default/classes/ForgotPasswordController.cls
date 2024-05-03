@@ -17,9 +17,9 @@ public with sharing class ForgotPasswordController {
         return null;
     }
     
-    /*public PageReference onCancel() {
+    public PageReference onCancel() {
         PageReference page = Page.CandidateLoginSetup;
         page.setRedirect(true);
         return page;
-    }*/
+    }
 }
