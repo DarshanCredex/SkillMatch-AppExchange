@@ -37,7 +37,6 @@ export default class ApplicantListPage extends NavigationMixin(
   connectedCallback() {
     if (sessionStorage.getItem("uniquejobId")) {
       this.jobId = sessionStorage.getItem("uniquejobId");
-      console.log("this.jobId---->", this.jobId);
     }
     this.fetchJobDetails();
   }
@@ -47,7 +46,6 @@ export default class ApplicantListPage extends NavigationMixin(
     this.wiredResult = result;
     if (result.data) {
       this.candidateDetails = result.data; // source of truth
-      console.log("this.candidateDetails-------->", this.candidateDetails);
       this.filteredCandidateDetails = this.candidateDetails;
       this.temp = this.filteredCandidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;
@@ -91,11 +89,6 @@ export default class ApplicantListPage extends NavigationMixin(
       this.filteredCandidateDetails = this.candidateDetails.filter((item) => {
         return item.Status === status;
       });
-
-      console.log(
-        "this.filteredCandidateDetails------>",
-        JSON.stringify(this.filteredCandidateDetails)
-      );
       this.filteredCandidateDetails.forEach((item) => {
         if (item.AssesmentStatus === "Pending") {
           this.showPending = true;

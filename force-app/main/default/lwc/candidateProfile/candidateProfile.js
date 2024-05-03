@@ -68,7 +68,7 @@ export default class CandidateProfile extends NavigationMixin(
         this.profileProgress += 20;
       }
     } else if (result.error) {
-      console.log("Error received in wire-----", result.error);
+      return;
     }
     this.isLoadingFullScreen = false;
   }
@@ -226,8 +226,6 @@ handleEditExperience(event) {
   handleDeleteExperience() {
     deleteWorkExperience({ workExpId: this.experienceToUpdate })
       .then(() => {
-        console.log("deleted");
-
         refreshApex(this.candidateDetailsWire);
         this.dispatchEvent(
           new ShowToastEvent({
