@@ -8,7 +8,7 @@ import emptyBox from "@salesforce/resourceUrl/empty_box";
 import { NavigationMixin } from "lightning/navigation";
 
 export default class JobList extends NavigationMixin(LightningElement) {
-  
+
   companyLogo = alternateCompanyLogo;
   emptyBox = emptyBox;
 
@@ -170,15 +170,10 @@ export default class JobList extends NavigationMixin(LightningElement) {
     let jobId = event.currentTarget.id;
     jobId = jobId.split("-");
     this[NavigationMixin.GenerateUrl]({
-    this[NavigationMixin.GenerateUrl]({
       type: "standard__webPage",
       attributes: {
         url: "/s/job-detail?id=" + jobId[0]
-        url: "/s/job-detail?id=" + jobId[0]
       }
-    }).then((generatedUrl) => {
-      window.open(generatedUrl);
-    });
     }).then((generatedUrl) => {
       window.open(generatedUrl);
     });
