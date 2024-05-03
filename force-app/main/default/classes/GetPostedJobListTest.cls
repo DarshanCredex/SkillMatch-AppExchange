@@ -21,61 +21,30 @@
  */
 @isTest
 private class GetPostedJobListTest {
-  
-  // Test Data
-  private static User createDummyUser() {
-    User dummyUser = new User(
-      FirstName = 'Test',
-      LastName = 'User',
-      Email = 'test@example.com',
-      Username = 'te1212121st@example.com',
-      Alias = 'testu',
-      EmailEncodingKey = 'UTF-8',
-      LanguageLocaleKey = 'en_US',
-      LocaleSidKey = 'en_US',
-      TimeZoneSidKey = 'America/Los_Angeles',
-      ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User']
-      .Id
-    );
-    insert dummyUser;
-    return dummyUser;
-  }
-
-
   @isTest
   static void TestGetPostedJobList() {
-    User dummyUser = createDummyUser();
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Completed'
+    user user = TestDataFactory.createDummyUser();
+    Job__c job = TestDataFactory.createJob();
+    Candidate_Details__c candidate = TestDataFactory.createCandidateDetails();
+    Job_Applicants__c applicant = TestDataFactory.createJobApplicant(
+      candidate.id,
+      job.id
     );
-    insert job;
-
-    list<job__c> result = GetPostedJobList.getPostedJobList(dummyUser.Id);
-
+    List<GetPostedJobList.JobWrapper> result = GetPostedJobList.getJobs(
+      user.id
+    );
     System.assertEquals(1, result.size());
   }
 
   @isTest
-  static void TestGetDraftedJobList() {
-    User dummyUser = createDummyUser();
-    Job__c job = new Job__c(
-      Title_of_position__c = 'Sales Manager',
-      City__c = 'Gurgaon',
-      Country__c = 'India',
-      Type__c = 'Temporary',
-      Experience__c = '1 to 3 years',
-      Industry__c = 'Information Technology',
-      Status__c = 'Draft'
+  static void TestGetApplicants() {
+    user user = TestDataFactory.createDummyUser();
+    Job__c job = TestDataFactory.createJob();
+    Candidate_Details__c candidate = TestDataFactory.createCandidateDetails();
+    Job_Applicants__c applicant = TestDataFactory.createJobApplicant(
+      candidate.id,
+      job.id
     );
-    insert job;
-
-    list<job__c> result = GetPostedJobList.getDraftedJobList(dummyUser.Id);
-    System.assertEquals(1, result.size());
+    System.assert(GetPostedJobList.getApplicants(job.id) != 0);
   }
 }
