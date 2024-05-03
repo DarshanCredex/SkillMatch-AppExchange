@@ -116,46 +116,52 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
   }
   @wire(getApplicantsList, { userId: "$userId" })
   wiredGetApplicantsList({ error, data }) {
+     if (error) {
+       return;
+     }
     if (data) {
-      console.log("this.applicantsList------>", data);
       this.applicantsList = data;
       if (this.applicantsList.length > 0) {
         this.showApplicants = true;
       }
-    } else {
-      console.log("error------->", error);
     }
   }
   @wire(getDraftJobList, { userId: "$userId" })
   wiredGetDraftJobList({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.draftJobList = data;
       this.showDrafts = true;
-    } else if (error) {
-      console.error("Error fetching draft job list", error);
-    }
+    } 
   }
 
   @wire(getNumberOfApplicants, { userId: "$userId" })
   wiredGetNumebrOfApplicants({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.numberOfApplicants = data;
-    } else {
-      console.log("error--------->", error);
-    }
+    } 
   }
 
   @wire(getNumberOfJobsPosted, { userId: "$userId" })
   wiredJobsPosted({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.numberOfJobsPosted = data;
-    } else {
-      console.log("error-------->", error);
-    }
+    } 
   }
 
   @wire(getApplicantDataset, { userId: "$userId" })
   applicants({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.applicantChartDataset = data;
 
@@ -170,15 +176,13 @@ export default class HrLandingPage extends NavigationMixin(LightningElement) {
           this.doughnutChart = new window.Chart(ctx, this.config);
         });
       }
-    } else {
-      console.error("Error fetching applicant data", error);
     }
   }
 
   @wire(numberOfApplicantsShortlistedAndRejected, { userId: "$userId" })
   wiredNumberOfApplicantsShortlistedAndRejected({ error, data }) {
     if (error) {
-      console.error("error rejected applicant----->", error.message);
+      return;
     }
     if (data) {
       this.shortlistedRejectedApplicant = data;

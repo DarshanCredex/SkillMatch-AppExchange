@@ -124,7 +124,6 @@ export default class Analytics extends LightningElement {
   @wire(numberofQuestionsVsJobPosted, { userId: "$userId" })
   async handleNumberOfQuestionsVsJObPosted({ error, data }) {
     if (error) {
-      console.error("error------->", error);
       return;
     }
     if (data) {
@@ -174,7 +173,6 @@ export default class Analytics extends LightningElement {
   @wire(industryJobsDataset, { userId: "$userId" })
   async handleIndustryData({ error, data }) {
     if (error) {
-      console.error("Error in industryJobsDataset:", error);
       return;
     }
     if (data) {

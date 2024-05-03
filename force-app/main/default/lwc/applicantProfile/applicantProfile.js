@@ -12,19 +12,22 @@ import Id from "@salesforce/user/Id";
 export default class ApplicantProfile extends NavigationMixin(
   LightningElement
 ) {
-  applicantId;
   applicantDetails = [];
   workExpDetails = [];
+
   status;
+  applicantId;
   skills;
-  IsAccepted = false;
-  IsRejected = false;
   appliedJob;
   value;
   contentDocumentId;
   pdfUrl;
   jobId;
+
   userId = Id;
+
+  IsAccepted = false;
+  IsRejected = false;
 
   connectedCallback() {
     this.jobId = sessionStorage.getItem("uniquejobId");
@@ -34,7 +37,7 @@ export default class ApplicantProfile extends NavigationMixin(
   @wire(GetApplicantDataMethod, { applicantId: "$applicantId" })
   wiredGetApplicantDataMethod({ error, data }) {
     if (error) {
-      console.log("error------->", error);
+      return;
     }
     if (data) {
       this.applicantDetails = data;
@@ -48,16 +51,17 @@ export default class ApplicantProfile extends NavigationMixin(
 
   @wire(getAppliedJobById, { jobId: "$jobId", userId: "$userId" })
   wiredGetAppliedJobById({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.appliedJob = data;
-    } else {
-      console.log("error in fetching applied jobs------->", error);
     }
   }
   @wire(GetWorkExperienceData, { applicantId: "$applicantId" })
   wiredGetWorkExperienceData({ error, data }) {
     if (error) {
-      console.log("error--->", error);
+      return;
     }
     if (data) {
       this.workExpDetails = data;
@@ -71,7 +75,6 @@ export default class ApplicantProfile extends NavigationMixin(
       applicantId: this.applicantId,
       jobId: this.jobId
     }).then(() => {
-      console.log("true");
       this.showToast("Success", "Candidate Shortlisted", "success");
     });
     this.IsAccepted = true;
@@ -84,7 +87,6 @@ export default class ApplicantProfile extends NavigationMixin(
       applicantId: this.applicantId,
       jobId: this.jobId
     }).then(() => {
-      console.log("true");
       this.showToast("Rejected", "Candidate rejected", "Error");
     });
     this.IsRejected = true;
