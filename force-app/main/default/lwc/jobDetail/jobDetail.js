@@ -12,52 +12,37 @@ export default class JobDetail extends LightningElement {
   @track jobDetails = [];
   @track jobStatus = false;
 
-  emailId;
-  showUser = true;
-
-  connectedCallback() {
-    this.emailId = localStorage.getItem("emailId");
-    console.log("this.emailId------>", this.emailId);
-    if (this.emailId === null) {
-      this.showUser = false;
-      console.log("this.showUser-------->", this.showUser);
-    }
-  }
-
   @wire(CurrentPageReference)
   getPageReferenceParameters(currentPageReference) {
     console.log(currentPageReference);
     if (currentPageReference && currentPageReference.state.id) {
       this.jobId = currentPageReference.state.id;
-      console.log("inside page reference---", this.jobId);
     }
   }
 
-  @wire(checkJobStatus, { email: "$emailId", jobId: "$jobId" })
-  wiredcheckJobStatus({ error, data }) {
+  @wire(checkJobStatus, { userId: USER_ID, jobId: "$jobId" })
+  checkJobStatus({ error, data }) {
+    if (error) {
+      return;
+    }
     if (data) {
       this.jobStatus = data;
-      console.log("status-->", this.jobStatus);
-    } else {
-      console.log("Error in getting status", error);
     }
   }
 
   @wire(getJobDetails, { jobId: "$jobId" })
   wiredgetJobDetail({ error, data }) {
     if (error) {
-      console.error("error----->", error);
+      return;
     }
     if (data) {
       this.jobDetails = data;
-      console.log("this.jobDetails-------->", this.jobDetails);
     }
   }
 
   handleApply() {
-    console.log('inside apply method');
-    if (this.emailId !== null && this.jobId !== null) {
-      createJobApplicants({ email: this.emailId, jobId: this.jobId })
+    if (USER_ID != null && this.jobId != null) {
+      createJobApplicants({ userId: USER_ID, jobId: this.jobId })
         .then((result) => {
           this.jobStatus = result;
           console.log("this.jobStatus", this.jobStatus);
@@ -66,6 +51,7 @@ export default class JobDetail extends LightningElement {
         .catch((error) => {
           console.log("error-->", error);
         });
+      refreshApex(this.checkJobStatus);
     }
   }
 }

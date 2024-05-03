@@ -2,7 +2,7 @@
  * @description       : To extract the picklist field values in job custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 02-13-2024
+ * @last modified on  : 04-29-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobPicklistController {
@@ -22,9 +22,8 @@ public with sharing class JobPicklistController {
       for (Schema.PicklistEntry entry : fieldDescribe.getPicklistValues()) {
         picklistValues.add(entry.getLabel());
       }
-      System.debug('picklistValues------->' + picklistValues);
     } catch (Exception e) {
-      System.debug('Error---->' + e.getMessage()+'--------->'+e.getLineNumber());
+      throw new AuraHandledException(e.getMessage()+e.getLineNumber());
     }
 
     return picklistValues;
@@ -32,7 +31,6 @@ public with sharing class JobPicklistController {
 
   @AuraEnabled
   public static List<String> experienceFieldValues() {
-    System.debug('started');
 
     String fieldName = 'experience__c';
     String objectApiName = 'Job__c';
@@ -44,14 +42,10 @@ public with sharing class JobPicklistController {
       fieldName
     );
 
-    System.debug('Picklist Values: ' + picklistValues);
-
     return picklistValues;
   }
   @AuraEnabled
   public static list<string> typePickListValues() {
-    System.debug('started');
-
     String fieldName = 'type__c';
     String objectApiName = 'Job__c';
 
@@ -59,23 +53,23 @@ public with sharing class JobPicklistController {
 
     List<String> picklistValues = controller.getPicklistValues(objectApiName,fieldName);
 
-    System.debug('Picklist Values: ' + picklistValues);
-
     return picklistValues;
 }
 @AuraEnabled
   public static list<string> IndustryPickListValues() {
-    System.debug('started');
-
     String fieldName = 'Industry__c';
     String objectApiName = 'Job__c';
-
     JobPicklistController controller = new JobPicklistController();
-
     List<String> picklistValues = controller.getPicklistValues(objectApiName,fieldName);
+    return picklistValues;
+}
 
-    System.debug('Picklist Values: ' + picklistValues);
-
+@AuraEnabled
+  public static list<string> TimingsPickListValues() {
+    String fieldName = 'Test_Timing__c';
+    String objectApiName = 'Job__c';
+    JobPicklistController controller = new JobPicklistController();
+    List<String> picklistValues = controller.getPicklistValues(objectApiName,fieldName);
     return picklistValues;
 }
 }

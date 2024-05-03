@@ -41,7 +41,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(LightningEleme
   wiredAppliedJobList({ data, error }) {
     if (data) {
       this.isLoading = true;
-      console.log("Received data-->", data);
       this.appliedJob = data;
 
       this.appliedJob.jobWrapperList.forEach((item) => {
@@ -59,8 +58,6 @@ export default class CandidateAppliedJobs extends NavigationMixin(LightningEleme
         this.handleTabChange();
       }
       this.isLoading = false;
-    } else {
-      console.log("Received error-->", error);
     }
   }
 

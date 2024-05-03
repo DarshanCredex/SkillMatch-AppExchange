@@ -72,7 +72,6 @@ export default class AddJobsPage extends NavigationMixin(LightningElement) {
 
   handleTimingChange(event) {
     this.timingValue = event.target.value;
-    console.log("this.timingValue", this.timingValue);
   }
 
   getInput() {

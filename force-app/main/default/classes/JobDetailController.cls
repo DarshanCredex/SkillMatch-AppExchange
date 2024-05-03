@@ -1,16 +1,14 @@
 /**
- * @description       : 
- * @author            : Sagar Medatwal
+ * @description       :
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             :
- * @last modified on  : 03-12-2024
+ * @last modified on  : 04-30-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobDetailController {
   @AuraEnabled
-  public static Boolean createJobApplicants(string email, string jobId) {
-    System.debug('jobId---->' + jobId);
-    system.debug('email------>'+email);
-    if (email != null) {
+  public static Boolean createJobApplicants(Id userId, Id jobId) {
+    if (userId != null) {
       List<Candidate_Details__c> candidate = [
         SELECT Id
         FROM Candidate_Details__c
@@ -26,7 +24,7 @@ public with sharing class JobDetailController {
           insert applicant;
           return true;
         } catch (DMLException e) {
-          return false;
+          throw new AuraHandledException(e.getMessage() + e.getLineNumber());
         }
       }
     }
@@ -34,8 +32,8 @@ public with sharing class JobDetailController {
   }
 
   @AuraEnabled(cacheable=true)
-  public static Boolean checkJobStatus(String email, String jobId) {
-    if (email != null && jobId != null) {
+  public static Boolean checkJobStatus(String userId, String jobId) {
+    if (userId != null && jobId != null) {
       List<Candidate_Details__c> CandidateId = [
         SELECT Id
         FROM Candidate_Details__c
@@ -43,7 +41,7 @@ public with sharing class JobDetailController {
         LIMIT 1
       ];
       if (CandidateId.size() > 0) {
-        String candId = CandidateId[0].Id;
+        Id candId = CandidateId[0].Id;
         List<Job_Applicants__c> jobApplication = [
           SELECT Id
           FROM Job_Applicants__c
@@ -60,7 +58,6 @@ public with sharing class JobDetailController {
 
   @AuraEnabled(cacheable=true)
   public static List<JobDetailWrapper> getJobDescription(String jobId) {
-    System.debug('jobId---->' + jobId);
     Job__c jobDetail = [
       SELECT
         Id,
@@ -144,5 +141,4 @@ public with sharing class JobDetailController {
       return daysAgo;
     }
   }
-  
 }

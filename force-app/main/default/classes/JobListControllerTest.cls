@@ -48,34 +48,13 @@ private class JobListControllerTest {
   @isTest
   static void testGetJobList() {
     List<Job__c> testJobs = new List<Job__c>();
-    testJobs.add(
-      new Job__c(
-        Title_of_position__c = 'Java Developer',
-        City__c = 'Noida',
-        Country__c = 'India',
-        Type__c = 'Temporary',
-        Experience__c = '1 to 3 years',
-        Industry__c = 'Information Technology',
-        Status__c = 'Completed'
-      )
-    );
-    testJobs.add(
-      new Job__c(
-        Title_of_position__c = 'Sales Manager',
-        City__c = 'Gurgaon',
-        Country__c = 'India',
-        Type__c = 'Temporary',
-        Experience__c = '1 to 3 years',
-        Industry__c = 'Information Technology',
-        Status__c = 'Completed'
-      )
-    );
-    insert testJobs;
+    Job__c job = TestDataFactory.createJob();
+    testJobs.add(job);
 
     System.assertEquals(
       JobListController.getJobList(
-          'Java',
-          'Noida',
+          'Sales Manager',
+          'Gurgaon',
           new List<string>{ 'Temporary' },
           new List<string>{ '1 to 3 years' },
           new List<string>{ 'Information Technology' }

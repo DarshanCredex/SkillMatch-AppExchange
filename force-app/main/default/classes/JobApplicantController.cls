@@ -2,7 +2,7 @@
  * @description       : controller for job Applicants custom object
  * @author            : Rudransh Shukla
  * @group             :
- * @last modified on  : 04-25-2024
+ * @last modified on  : 04-30-2024
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  **/
 public with sharing class JobApplicantController {
@@ -78,7 +78,6 @@ public with sharing class JobApplicantController {
     List<Job_Applicants__c> candidateIdList = new List<Job_Applicants__c>();
     List<CandidateWrapper> candidateRecords = new List<CandidateWrapper>();
 
-
     // Required Skills of job
     List<Job__c> jobs = [
       SELECT Skills_Required__c
@@ -130,10 +129,7 @@ public with sharing class JobApplicantController {
         candidate.ParsedSkills__c
       );
       string Status = getApplicantStatus(candidate.Id, jobId);
-      System.debug('status assessment--->' + Status);
-
       string assessmentStatus = getAssessmentStatus(candidate.Id, jobId);
-      System.debug('assessmentStatus------->' + assessmentStatus);
 
       candidateRecords.add(
         new CandidateWrapper(
@@ -330,7 +326,7 @@ public with sharing class JobApplicantController {
     for (Job_Applicants__c applicant : [
       SELECT Assesment_Status__c
       FROM Job_Applicants__c
-      WHERE CandidateId__c = :candidateId and Job_Id__c = :jobId
+      WHERE CandidateId__c = :candidateId AND Job_Id__c = :jobId
     ]) {
       status = applicant.Assesment_Status__c;
     }
