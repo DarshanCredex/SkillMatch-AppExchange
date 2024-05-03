@@ -8,7 +8,6 @@ import changeStatus from "@salesforce/apex/JobApplicantController.changeStatus";
 import { refreshApex } from "@salesforce/apex";
 import getScore from "@salesforce/apex/JobApplicantController.getScore";
 
-
 export default class ApplicantListPage extends NavigationMixin(
   LightningElement
 ) {
@@ -22,8 +21,8 @@ export default class ApplicantListPage extends NavigationMixin(
 
   candidateId;
   jobId;
-
   emptyBox = emptyBox;
+  score = 0;
 
   candiateListIsEmpty = false;
   filteredListIsEmpty = false;
@@ -48,6 +47,7 @@ export default class ApplicantListPage extends NavigationMixin(
     this.wiredResult = result;
     if (result.data) {
       this.candidateDetails = result.data; // source of truth
+      console.log("this.candidateDetails-------->", this.candidateDetails);
       this.filteredCandidateDetails = this.candidateDetails;
       this.temp = this.filteredCandidateDetails;
       this.candiateListIsEmpty = this.filteredCandidateDetails.length === 0;

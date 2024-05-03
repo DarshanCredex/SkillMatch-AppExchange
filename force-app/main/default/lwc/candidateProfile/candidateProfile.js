@@ -129,19 +129,20 @@ export default class CandidateProfile extends NavigationMixin(
   closeResumeModal() {
     refreshApex(this.resumeDetailWire);
     this.isResumeModalOpen = false;
-  }
+}
 
-  closeModal() {
+closeModal() {
     this.isExpModalOpen = false;
     this.isToDateDisabled = false;
     this.isLoading = false;
-  }
+  
+}
 
-  closeEditModal() {
+closeEditModal() {
     this.isEditModalOpen = false;
     this.isToDateDisabled = false;
     this.isLoading = false;
-  }
+}
 
   closeEditExpModal() {
     this.isEditExpModalOpen = false;
@@ -205,10 +206,9 @@ export default class CandidateProfile extends NavigationMixin(
     this.isLoadingFullScreen = false;
   }
 
-  handleEditExperience(event) {
+handleEditExperience(event) {
     this.isLoading = true;
     this.experienceToUpdate = event.currentTarget.dataset.id;
-    console.log("this.experienceToUpdate----->", this.experienceToUpdate);
     this.isEditExpModalOpen = true;
     this.isLoading = false;
   }
